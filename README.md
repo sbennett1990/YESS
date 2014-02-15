@@ -8,5 +8,5 @@ less a subset of x86. Y86 embodies elements of RISC and CISC archetectures.
 
 
 Use:
-unix> ./yess <filename>.yo
+unix> ./yess \<filename\>.yo
 
