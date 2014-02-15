@@ -1,4 +1,4 @@
-CC = gcc -march=opteron 
+CC = gcc #-march=opteron 
 
 yess: tools.o registers.o memory.o fetchStage.o decodeStage.o executeStage.o \
       memoryStage.o writebackStage.o loader.o dump.o main.o
