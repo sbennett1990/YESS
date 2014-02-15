@@ -1,0 +1,95 @@
+#Author Alex Savarda
+
+    .pos 0
+
+#forward e_valE for valA
+irmovl $3, %ecx
+subl %ecx, %eax
+
+dump 7
+
+#forward M_valE for valA
+irmovl $3, %eax
+nop
+subl %eax, %edx
+
+dump 7
+
+#forward W_valE for valA
+irmovl $3, %ebx
+nop
+nop
+subl %ebx, %edx
+
+dump 7
+
+#forward m_valM for valA
+mrmovl (%edi), %ebx
+nop
+addl %ebx, %edx
+
+dump 7
+
+#forward W_valM for valA
+mrmovl (%edi), %ebx
+nop
+nop
+addl %ebx, %edx
+
+dump 7
+
+#forward register file valA
+irmovl $3, %ecx
+nop
+nop
+nop
+subl %ecx, %eax
+
+dump 7
+
+#forward e_valE for valB
+irmovl $3, %ecx
+subl %eax, %ecx
+
+dump 7
+
+#forward M_valE for valB
+irmovl $3, %ecx
+nop
+subl %eax, %ecx
+
+dump 7
+
+#forward W_valE for valB
+irmovl $3, %ecx
+nop
+nop
+subl %eax, %ecx
+
+dump 7
+
+#forward m_valM for valB
+mrmovl (%edi), %ecx
+nop
+addl %eax, %ecx
+
+dump 7
+
+#forward W_valM for valB
+mrmovl (%eax), %ecx
+nop
+nop
+addl %edi, %ecx
+
+dump 7
+
+#forward register file valB
+irmovl $3, %ecx
+nop
+nop
+nop
+addl %eax, %ecx
+
+dump 7
+
+halt

@@ -1,0 +1,50 @@
+# 
+# This program copies the elements of one array into another
+# array. There is no looping, so the source array is small.
+#
+# Author: Scott Bennett
+#
+            .pos 0
+#
+            irmovl array, %ecx     # %ecx holds address of array
+            irmovl destArray, %edx # %edx holds address of destArray
+            nop
+#
+            mrmovl (%ecx), %eax    # This block copies the first
+            nop                    # element of array into the
+            nop                    # first index of destArray
+            rmmovl %eax, (%edx)    #
+#
+#           Move second element
+            mrmovl 4(%ecx), %eax  
+            nop                   
+            nop                   
+            rmmovl %eax, 4(%edx)  
+#
+#           Move third element
+            mrmovl 8(%ecx), %eax  
+            nop                   
+            nop                   
+            rmmovl %eax, 8(%edx)  
+#
+#           Move fourth element
+            mrmovl 12(%ecx), %eax  
+            nop                    
+            nop                    
+            rmmovl %eax, 12(%edx)  
+#
+            dump   7
+            halt
+#
+            .pos 0x100
+# Array of 4 elements
+            .align 4
+array:      .long 0x00a
+            .long 0x00b
+            .long 0x00c
+            .long 0x123
+#
+# Destination array
+            .align 4
+destArray:
+

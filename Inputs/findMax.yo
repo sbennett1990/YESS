@@ -1,0 +1,77 @@
+                      | 
+                      | # This program calls a findMax function that returns the
+                      | # maximum value in a NULL terminated list of positive numbers
+                      | 
+  0x000:              |          .pos 0
+                      | # set up the stack for parameter passing and jump to Main
+  0x000: 30f400010000 | init:    irmovl Stack, %esp
+  0x006: 30f500010000 |          irmovl Stack, %ebp
+  0x00c: 7038000000   |          jmp Main
+                      | 
+                      | # list of positive numbers
+  0x014:              | .align 4
+  0x014: 0a000000     | list:    .long 0x00a
+  0x018: b0000000     |          .long 0x0b0
+  0x01c: 000c0000     |          .long 0xc00
+  0x020: 120d0000     |          .long 0xd12
+  0x024: 010c0000     |          .long 0xc01
+  0x028: 200b0000     |          .long 0xb20
+  0x02c: 30000000     |          .long 0x030
+  0x030: 21000000     |          .long 0x021
+  0x034: 00000000     |          .long 0        # end of list
+                      | 
+                      | # Main function:
+                      | # push the starting address of list onto the stack in
+                      | # order to pass it as a parameter to findMax and
+                      | # call findMax
+  0x038: 30f214000000 | Main:    irmovl list, %edx 
+  0x03e: a02f         |          pushl %edx
+  0x040: 8046000000   |          call findMax
+  0x045: 00           |          halt
+                      | 
+                      | # findMax function:
+                      | # input:  parameter that is the starting address of a NULL
+                      | #         terminated list of numbers
+                      | #
+                      | # output: returns in register %eax the maximum value in the list
+                      | #
+  0x046: a05f         | findMax:  pushl %ebp
+  0x048: 2045         |           rrmovl %esp, %ebp
+                      | #
+                      |           # %ecx set to starting address of NULL terminated list
+  0x04a: 501508000000 |           mrmovl 8(%ebp), %ecx         
+                      | #
+                      | #         Your code goes here.  Be sure to return the result in
+                      | #         register %eax.
+                      | #
+                      | ######################################################################
+  0x050: 500100000000 |           mrmovl (%ecx), %eax # Initialize %eax to first item
+  0x056: 506100000000 |           mrmovl (%ecx), %esi
+                      |           
+  0x05c:              | loop:
+  0x05c: 506104000000 |           mrmovl 4(%ecx), %esi
+  0x062: 30f700000000 |           irmovl 0, %edi
+  0x068: 6167         |           subl %esi, %edi # Test if (%ecx) == 0
+  0x06a: 7394000000   |           je done         # jmp to done if 0 is encountered
+                      | 
+  0x06f: 2063         |           rrmovl %esi, %ebx    # %ebx holds "permanent" next value
+  0x071: 6106         |           subl %eax, %esi
+  0x073: 7685000000   |           jg leftlt            # If %esi < 0, then %eax < %ebx, jump
+                      |                                  # else %eax > %ebx, don't jump
+  0x078: 30f604000000 |           irmovl 4, %esi  # %eax > %ebx, don't modify %eax          
+  0x07e: 6061         |           addl %esi, %ecx # Increment %ecx by 1 memory location
+  0x080: 705c000000   |           jmp loop
+                      | 
+  0x085:              | leftlt:   # %ebx > %eax, put value in %ebx into %eax
+  0x085: 2030         |           rrmovl %ebx, %eax  
+  0x087: 30f604000000 |           irmovl 4, %esi
+  0x08d: 6061         |           addl %esi, %ecx # Increment %ecx by 1 memory location
+  0x08f: 705c000000   |           jmp loop
+                      | 
+  0x094:              | done:     
+  0x094: c007000000   |           dump 7
+  0x099: 90           |           ret
+                      | ######################################################################
+  0x100:              |     .pos 0x100
+  0x100:              | Stack:
+                      | 

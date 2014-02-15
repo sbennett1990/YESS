@@ -1,0 +1,93 @@
+                      | 
+                      | # 
+                      | # This program copies the elements of one array into another
+                      | # array using pushes and pops (not mrmovl nor rmmovl).
+                      | # There is no looping, so the source array is small.
+                      | #
+                      | # Author: Scott Bennett
+                      | #
+  0x000:              |             .pos 0
+                      | #
+  0x000: 30f100010000 |             irmovl array, %ecx      # %ecx holds address of array
+  0x006: 30f210010000 |             irmovl destArray, %edx  # %edx holds address of destArray
+  0x00c: 10           |             nop
+                      | #
+  0x00d: 2014         |             rrmovl %ecx, %esp       # %esp holds address of array
+  0x00f: 10           |             nop                     #
+  0x010: 10           |             nop                     #
+  0x011: b00f         |             popl %eax               # pop first element
+  0x013: 2024         |             rrmovl %edx, %esp       # stack points to destArray
+  0x015: 30f304000000 |             irmovl 0x4, %ebx        # 
+  0x01b: 10           |             nop                     #
+  0x01c: 10           |             nop                     #
+  0x01d: 6034         |             addl %ebx, %esp         # adjust stack pointer
+  0x01f: 10           |             nop                     #
+  0x020: 10           |             nop                     #
+  0x021: a00f         |             pushl %eax              # push first element into destArray
+                      | #
+  0x023: 2014         |             rrmovl %ecx, %esp       # stack points to array
+  0x025: 30f304000000 |             irmovl 0x4, %ebx        # 
+  0x02b: 10           |             nop                     #
+  0x02c: 10           |             nop                     #
+  0x02d: 6034         |             addl %ebx, %esp         # stack points to second element
+  0x02f: 10           |             nop                     #
+  0x030: 10           |             nop                     #
+  0x031: b00f         |             popl %eax               # pop second element
+  0x033: 2024         |             rrmovl %edx, %esp       # stack points to destArray
+  0x035: 30f308000000 |             irmovl 0x8, %ebx        #
+  0x03b: 10           |             nop                     #
+  0x03c: 10           |             nop                     #
+  0x03d: 6034         |             addl %ebx, %esp         # adjust stack pointer
+  0x03f: 10           |             nop                     #
+  0x040: 10           |             nop                     #
+  0x041: a00f         |             pushl %eax              # push second element into destArray
+                      | #
+  0x043: 2014         |             rrmovl %ecx, %esp       # stack points to array
+  0x045: 30f308000000 |             irmovl 0x8, %ebx        # 
+  0x04b: 10           |             nop                     #
+  0x04c: 10           |             nop                     #
+  0x04d: 6034         |             addl %ebx, %esp         # stack points to third element
+  0x04f: 10           |             nop                     #
+  0x050: 10           |             nop                     #
+  0x051: b00f         |             popl %eax               # pop third element
+  0x053: 2024         |             rrmovl %edx, %esp       # stack points to destArray
+  0x055: 30f30c000000 |             irmovl 0xC, %ebx        # 
+  0x05b: 10           |             nop                     #
+  0x05c: 10           |             nop                     #
+  0x05d: 6034         |             addl %ebx, %esp         # adjust stack pointer
+  0x05f: 10           |             nop                     #
+  0x060: 10           |             nop                     #
+  0x061: a00f         |             pushl %eax              # push third element into destArray
+                      | #
+  0x063: 2014         |             rrmovl %ecx, %esp       # stack points to array
+  0x065: 30f30c000000 |             irmovl 0xC, %ebx        # 
+  0x06b: 10           |             nop                     #
+  0x06c: 10           |             nop                     #
+  0x06d: 6034         |             addl %ebx, %esp         # stack points to fourth element
+  0x06f: 10           |             nop                     #
+  0x070: 10           |             nop                     #
+  0x071: b00f         |             popl %eax               # pop fourth element
+  0x073: 2024         |             rrmovl %edx, %esp       # stack points to destArray
+  0x075: 30f310000000 |             irmovl 0x10, %ebx       # 
+  0x07b: 10           |             nop                     #
+  0x07c: 10           |             nop                     #
+  0x07d: 6034         |             addl %ebx, %esp         # adjust stack pointer
+  0x07f: 10           |             nop                     #
+  0x080: 10           |             nop                     #
+  0x081: a00f         |             pushl %eax              # push fourth element into destArray
+                      | #
+  0x083: c007000000   |             dump   7
+  0x088: 00           |             halt
+                      | #
+  0x100:              |             .pos 0x100
+                      | # Array of 4 elements
+  0x100:              |             .align 4
+  0x100: 0a000000     | array:      .long 0x00a
+  0x104: 0b000000     |             .long 0x00b
+  0x108: 0c000000     |             .long 0x00c
+  0x10c: 23010000     |             .long 0x123
+                      | #
+                      | # Destination array
+  0x110:              |             .align 4
+  0x110:              | destArray:
+                      | 

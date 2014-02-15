@@ -1,0 +1,51 @@
+                      | 
+                      | # 
+                      | # This program copies the elements of one array into another
+                      | # array. There is no looping, so the source array is small.
+                      | #
+                      | # Author: Scott Bennett
+                      | #
+  0x000:              |             .pos 0
+                      | #
+  0x000: 30f100010000 |             irmovl array, %ecx     # %ecx holds address of array
+  0x006: 30f210010000 |             irmovl destArray, %edx # %edx holds address of destArray
+  0x00c: 10           |             nop
+                      | #
+  0x00d: 500100000000 |             mrmovl (%ecx), %eax    # This block copies the first
+  0x013: 10           |             nop                    # element of array into the
+  0x014: 10           |             nop                    # first index of destArray
+  0x015: 400200000000 |             rmmovl %eax, (%edx)    #
+                      | #
+                      | #           Move second element
+  0x01b: 500104000000 |             mrmovl 4(%ecx), %eax  
+  0x021: 10           |             nop                   
+  0x022: 10           |             nop                   
+  0x023: 400204000000 |             rmmovl %eax, 4(%edx)  
+                      | #
+                      | #           Move third element
+  0x029: 500108000000 |             mrmovl 8(%ecx), %eax  
+  0x02f: 10           |             nop                   
+  0x030: 10           |             nop                   
+  0x031: 400208000000 |             rmmovl %eax, 8(%edx)  
+                      | #
+                      | #           Move fourth element
+  0x037: 50010c000000 |             mrmovl 12(%ecx), %eax  
+  0x03d: 10           |             nop                    
+  0x03e: 10           |             nop                    
+  0x03f: 40020c000000 |             rmmovl %eax, 12(%edx)  
+                      | #
+  0x045: c007000000   |             dump   7
+  0x04a: 00           |             halt
+                      | #
+  0x100:              |             .pos 0x100
+                      | # Array of 4 elements
+  0x100:              |             .align 4
+  0x100: 0a000000     | array:      .long 0x00a
+  0x104: 0b000000     |             .long 0x00b
+  0x108: 0c000000     |             .long 0x00c
+  0x10c: 23010000     |             .long 0x123
+                      | #
+                      | # Destination array
+  0x110:              |             .align 4
+  0x110:              | destArray:
+                      | 

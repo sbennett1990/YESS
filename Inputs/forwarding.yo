@@ -1,0 +1,96 @@
+                      | 
+                      | #Author Alex Savarda
+                      | 
+  0x000:              |     .pos 0
+                      | 
+                      | #forward e_valE for valA
+  0x000: 30f103000000 | irmovl $3, %ecx
+  0x006: 6110         | subl %ecx, %eax
+                      | 
+  0x008: c007000000   | dump 7
+                      | 
+                      | #forward M_valE for valA
+  0x00d: 30f003000000 | irmovl $3, %eax
+  0x013: 10           | nop
+  0x014: 6102         | subl %eax, %edx
+                      | 
+  0x016: c007000000   | dump 7
+                      | 
+                      | #forward W_valE for valA
+  0x01b: 30f303000000 | irmovl $3, %ebx
+  0x021: 10           | nop
+  0x022: 10           | nop
+  0x023: 6132         | subl %ebx, %edx
+                      | 
+  0x025: c007000000   | dump 7
+                      | 
+                      | #forward m_valM for valA
+  0x02a: 503700000000 | mrmovl (%edi), %ebx
+  0x030: 10           | nop
+  0x031: 6032         | addl %ebx, %edx
+                      | 
+  0x033: c007000000   | dump 7
+                      | 
+                      | #forward W_valM for valA
+  0x038: 503700000000 | mrmovl (%edi), %ebx
+  0x03e: 10           | nop
+  0x03f: 10           | nop
+  0x040: 6032         | addl %ebx, %edx
+                      | 
+  0x042: c007000000   | dump 7
+                      | 
+                      | #forward register file valA
+  0x047: 30f103000000 | irmovl $3, %ecx
+  0x04d: 10           | nop
+  0x04e: 10           | nop
+  0x04f: 10           | nop
+  0x050: 6110         | subl %ecx, %eax
+                      | 
+  0x052: c007000000   | dump 7
+                      | 
+                      | #forward e_valE for valB
+  0x057: 30f103000000 | irmovl $3, %ecx
+  0x05d: 6101         | subl %eax, %ecx
+                      | 
+  0x05f: c007000000   | dump 7
+                      | 
+                      | #forward M_valE for valB
+  0x064: 30f103000000 | irmovl $3, %ecx
+  0x06a: 10           | nop
+  0x06b: 6101         | subl %eax, %ecx
+                      | 
+  0x06d: c007000000   | dump 7
+                      | 
+                      | #forward W_valE for valB
+  0x072: 30f103000000 | irmovl $3, %ecx
+  0x078: 10           | nop
+  0x079: 10           | nop
+  0x07a: 6101         | subl %eax, %ecx
+                      | 
+  0x07c: c007000000   | dump 7
+                      | 
+                      | #forward m_valM for valB
+  0x081: 501700000000 | mrmovl (%edi), %ecx
+  0x087: 10           | nop
+  0x088: 6001         | addl %eax, %ecx
+                      | 
+  0x08a: c007000000   | dump 7
+                      | 
+                      | #forward W_valM for valB
+  0x08f: 501000000000 | mrmovl (%eax), %ecx
+  0x095: 10           | nop
+  0x096: 10           | nop
+  0x097: 6071         | addl %edi, %ecx
+                      | 
+  0x099: c007000000   | dump 7
+                      | 
+                      | #forward register file valB
+  0x09e: 30f103000000 | irmovl $3, %ecx
+  0x0a4: 10           | nop
+  0x0a5: 10           | nop
+  0x0a6: 10           | nop
+  0x0a7: 6001         | addl %eax, %ecx
+                      | 
+  0x0a9: c007000000   | dump 7
+                      | 
+  0x0ae: 00           | halt

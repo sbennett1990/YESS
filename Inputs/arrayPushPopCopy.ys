@@ -1,0 +1,92 @@
+# 
+# This program copies the elements of one array into another
+# array using pushes and pops (not mrmovl nor rmmovl).
+# There is no looping, so the source array is small.
+#
+# Author: Scott Bennett
+#
+            .pos 0
+#
+            irmovl array, %ecx      # %ecx holds address of array
+            irmovl destArray, %edx  # %edx holds address of destArray
+            nop
+#
+            rrmovl %ecx, %esp       # %esp holds address of array
+            nop                     #
+            nop                     #
+            popl %eax               # pop first element
+            rrmovl %edx, %esp       # stack points to destArray
+            irmovl 0x4, %ebx        # 
+            nop                     #
+            nop                     #
+            addl %ebx, %esp         # adjust stack pointer
+            nop                     #
+            nop                     #
+            pushl %eax              # push first element into destArray
+#
+            rrmovl %ecx, %esp       # stack points to array
+            irmovl 0x4, %ebx        # 
+            nop                     #
+            nop                     #
+            addl %ebx, %esp         # stack points to second element
+            nop                     #
+            nop                     #
+            popl %eax               # pop second element
+            rrmovl %edx, %esp       # stack points to destArray
+            irmovl 0x8, %ebx        #
+            nop                     #
+            nop                     #
+            addl %ebx, %esp         # adjust stack pointer
+            nop                     #
+            nop                     #
+            pushl %eax              # push second element into destArray
+#
+            rrmovl %ecx, %esp       # stack points to array
+            irmovl 0x8, %ebx        # 
+            nop                     #
+            nop                     #
+            addl %ebx, %esp         # stack points to third element
+            nop                     #
+            nop                     #
+            popl %eax               # pop third element
+            rrmovl %edx, %esp       # stack points to destArray
+            irmovl 0xC, %ebx        # 
+            nop                     #
+            nop                     #
+            addl %ebx, %esp         # adjust stack pointer
+            nop                     #
+            nop                     #
+            pushl %eax              # push third element into destArray
+#
+            rrmovl %ecx, %esp       # stack points to array
+            irmovl 0xC, %ebx        # 
+            nop                     #
+            nop                     #
+            addl %ebx, %esp         # stack points to fourth element
+            nop                     #
+            nop                     #
+            popl %eax               # pop fourth element
+            rrmovl %edx, %esp       # stack points to destArray
+            irmovl 0x10, %ebx       # 
+            nop                     #
+            nop                     #
+            addl %ebx, %esp         # adjust stack pointer
+            nop                     #
+            nop                     #
+            pushl %eax              # push fourth element into destArray
+#
+            dump   7
+            halt
+#
+            .pos 0x100
+# Array of 4 elements
+            .align 4
+array:      .long 0x00a
+            .long 0x00b
+            .long 0x00c
+            .long 0x123
+#
+# Destination array
+            .align 4
+destArray:
+

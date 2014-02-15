@@ -1,0 +1,75 @@
+# This program calls a findMax function that returns the
+# maximum value in a NULL terminated list of positive numbers
+
+         .pos 0
+# set up the stack for parameter passing and jump to Main
+init:    irmovl Stack, %esp
+         irmovl Stack, %ebp
+         jmp Main
+
+# list of positive numbers
+.align 4
+list:    .long 0x00a
+         .long 0x0b0
+         .long 0xc00
+         .long 0xd12
+         .long 0xc01
+         .long 0xb20
+         .long 0x030
+         .long 0x021
+         .long 0        # end of list
+
+# Main function:
+# push the starting address of list onto the stack in
+# order to pass it as a parameter to findMax and
+# call findMax
+Main:    irmovl list, %edx 
+         pushl %edx
+         call findMax
+         halt
+
+# findMax function:
+# input:  parameter that is the starting address of a NULL
+#         terminated list of numbers
+#
+# output: returns in register %eax the maximum value in the list
+#
+findMax:  pushl %ebp
+          rrmovl %esp, %ebp
+#
+          # %ecx set to starting address of NULL terminated list
+          mrmovl 8(%ebp), %ecx         
+#
+#         Your code goes here.  Be sure to return the result in
+#         register %eax.
+#
+######################################################################
+          mrmovl (%ecx), %eax # Initialize %eax to first item
+          mrmovl (%ecx), %esi
+          
+loop:
+          mrmovl 4(%ecx), %esi
+          irmovl 0, %edi
+          subl %esi, %edi # Test if (%ecx) == 0
+          je done         # jmp to done if 0 is encountered
+
+          rrmovl %esi, %ebx    # %ebx holds "permanent" next value
+          subl %eax, %esi
+          jg leftlt            # If %esi < 0, then %eax < %ebx, jump
+                                 # else %eax > %ebx, don't jump
+          irmovl 4, %esi  # %eax > %ebx, don't modify %eax          
+          addl %esi, %ecx # Increment %ecx by 1 memory location
+          jmp loop
+
+leftlt:   # %ebx > %eax, put value in %ebx into %eax
+          rrmovl %ebx, %eax  
+          irmovl 4, %esi
+          addl %esi, %ecx # Increment %ecx by 1 memory location
+          jmp loop
+
+done:     
+          ret
+######################################################################
+    .pos 0x100
+Stack:
+
