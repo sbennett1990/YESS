@@ -22,15 +22,15 @@
 // Prototypes for "private" functions
 void initialize(void);
 
-/**
+/*
  * main
  */
-int main(int argv, char * args[]) {
+int main(int argc, char * argv[]) {
     (void)initialize();
     
     // Load the file
     // Terminate the program if there is a problem loading
-    if (!(load(argv, args))) {
+    if (!(load(argc, argv))) {
         dumpMemory();
         (void)exit(EXIT_FAILURE);
     }
@@ -54,7 +54,7 @@ int main(int argv, char * args[]) {
     printf("\nTotal clock cycles = %d\n", clockCount);
 }
 
-/**
+/*
  * Initialize the "memory" and pipelined registers in
  * the Y86 processor. Also initialize the function
  * pointer array used in executeStage.c
@@ -70,4 +70,5 @@ void initialize() {
     (void)clearMregister();
     (void)clearWregister();
 }
+
 
