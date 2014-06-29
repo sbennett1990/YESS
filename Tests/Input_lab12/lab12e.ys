@@ -1,0 +1,23 @@
+#
+#   This file tests the JNE instruction and bubbling
+#
+    irmovl  4, %eax
+    irmovl  3, %ecx
+    addl    %ecx, %eax
+    jne   target1          #take branch
+    dump 4                 #This shouldn't be executed
+    dump 4                 #This shouldn't be executed
+    halt
+target1:
+    dump 1                 #This should be executed
+    dump 1                 #This should be executed
+    irmovl  3, %eax
+    irmovl  -3, %ecx
+    addl    %ecx, %eax
+    jne target2            #don't take branch
+    dump 1                 #This should be executed
+    dump 1                 #This should be executed
+    halt
+target2:
+    dump 4                 #This dump and halt will be
+    halt                   #changed to nops

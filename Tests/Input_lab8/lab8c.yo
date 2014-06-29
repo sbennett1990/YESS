@@ -1,0 +1,46 @@
+                      | 
+                      | #
+                      | #      This file tests MRMOVL instructions.
+                      | #
+  0x000:              |         .pos 0 
+  0x000: c007000000   |         dump 7 
+  0x005: 30f05c000000 |         irmovl array, %eax          #put starting address of array in %eax
+  0x00b: 30f104000000 |         irmovl 4, %ecx              #increment to add to %eax
+  0x011: c007000000   |         dump 7 
+  0x016: 10           |         nop
+  0x017: 502000000000 |         mrmovl 0(%eax), %edx
+  0x01d: 6010         |         addl %ecx, %eax
+  0x01f: 10           |         nop
+  0x020: 10           |         nop
+  0x021: 503000000000 |         mrmovl 0(%eax), %ebx
+  0x027: 6010         |         addl %ecx, %eax
+  0x029: 10           |         nop
+  0x02a: 10           |         nop
+  0x02b: 504000000000 |         mrmovl 0(%eax), %esp
+  0x031: 6010         |         addl %ecx, %eax
+  0x033: 10           |         nop
+  0x034: 10           |         nop
+  0x035: 505000000000 |         mrmovl 0(%eax), %ebp
+  0x03b: 6010         |         addl %ecx, %eax
+  0x03d: 10           |         nop
+  0x03e: 10           |         nop
+  0x03f: 506000000000 |         mrmovl 0(%eax), %esi
+  0x045: 6010         |         addl %ecx, %eax
+  0x047: 10           |         nop
+  0x048: 10           |         nop
+  0x049: 507000000000 |         mrmovl 0(%eax), %edi    
+  0x04f: c007000000   |         dump 7
+  0x054: 00           |         halt
+  0x055: 10           |         nop
+  0x056: 10           |         nop
+  0x057: 10           |         nop
+  0x058: 10           |         nop
+  0x059: 10           |         nop
+  0x05c:              |         .align  4
+  0x05c: 01000000     | array:  .long   1
+  0x060: 02000000     |         .long   2
+  0x064: 03000000     |         .long   3
+  0x068: 04000000     |         .long   4
+  0x06c: 05000000     |         .long   5
+  0x070: 06000000     |         .long   6
+  0x074: 07000000     |         .long   7

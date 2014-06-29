@@ -1,0 +1,23 @@
+                      | 
+                      | 
+                      | #
+                      | # Test of push semantics for Y86.  It should match the
+                      | # semantics if the IA32;  that is the original value of the stack pointer
+                      | # is pushed. 
+                      | #
+  0x000: 30f400010000 |  	irmovl $0x100,%esp  # Initialize stack pointer
+  0x006: 10           |  	nop
+  0x007: 10           |  	nop
+  0x008: 2040         |  	rrmovl %esp,%eax    # Save stack pointer
+  0x00a: a04f         |  	pushl %esp          # Push the stack pointer (old or new?)
+  0x00c: 10           |  	nop
+  0x00d: 10           |  	nop
+  0x00e: b02f         |  	popl  %edx          # Get it back
+  0x010: 10           |  	nop
+  0x011: 10           |  	nop
+  0x012: 6120         |  	subl  %edx,%eax     # Compute difference.  Either 0 (old) or 4 (new).
+  0x014: c007000000   |  	dump 7              # %eax should be 0
+  0x019: 00           |  	halt
+  0x01a: 10           |  	nop
+  0x01b: 10           |  	nop
+  0x01c: 10           |  	nop

@@ -1,0 +1,33 @@
+                      | 
+                      | /* This input file tests the IRMOVL instruction. */    
+  0x000: 30f001000000 |     irmovl  $1, %eax
+  0x006: c003000000   |     dump 3
+  0x00b: 30f102000000 |     irmovl  $2, %ecx
+  0x011: c003000000   |     dump 3
+  0x016: 30f203000000 |     irmovl  $3, %edx
+  0x01c: c003000000   |     dump 3
+  0x021: 30f304000000 |     irmovl  $4, %ebx
+  0x027: c003000000   |     dump 3
+  0x02c: 30f405000000 |     irmovl  $5, %esp
+  0x032: c003000000   |     dump 3
+  0x037: 30f506000000 |     irmovl  $6, %ebp
+  0x03d: c003000000   |     dump 3
+  0x042: 30f607000000 |     irmovl  $7, %esi
+  0x048: c003000000   |     dump 3
+  0x04d: 30f708000000 |     irmovl  $8, %edi
+  0x053: 30f0ffffffff |     irmovl 0xffffffff, %eax
+  0x059: 30f1feffffff |     irmovl 0xfffffffe, %ecx
+  0x05f: 30f2fdffffff |     irmovl 0xfffffffd, %edx
+  0x065: 30f3fcffffff |     irmovl 0xfffffffc, %ebx
+  0x06b: 30f4fbffffff |     irmovl 0xfffffffb, %esp
+  0x071: 30f5faffffff |     irmovl 0xfffffffa, %ebp
+  0x077: c003000000   |     dump 3
+  0x07c: 30f6f9ffffff |     irmovl 0xfffffff9, %esi
+  0x082: 30f7faffffff |     irmovl 0xfffffffa, %edi
+  0x088: c003000000   |     dump 3
+  0x08d: 00           |     halt
+  0x08e: 10           |     nop
+  0x08f: 10           |     nop
+  0x090: 10           |     nop
+  0x091: 10           |     nop
+  0x092: 10           |     nop

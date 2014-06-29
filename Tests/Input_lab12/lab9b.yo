@@ -1,0 +1,13 @@
+                      | 
+  0x000: 30f440000000 |     irmovl var, %esp
+  0x006: 30f100000000 |     irmovl 0, %ecx
+  0x00c: c007000000   |     dump 7
+  0x011: b01f         |     popl %ecx
+  0x013: c007000000   |     dump 7
+  0x018: 00           |     halt
+  0x019: 10           |     nop
+  0x01a: 10           |     nop
+  0x01b: 10           |     nop
+  0x01c: 10           |     nop
+  0x040:              |     .pos 0x40
+  0x040: ffffffff     | var: .long   0xffffffff

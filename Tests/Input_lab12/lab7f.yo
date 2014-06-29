@@ -1,0 +1,25 @@
+                      | 
+                      |     /* This input file tests the OPL instructions. */ 
+  0x000: 30f003000000 |     irmovl  3, %eax
+  0x006: 30f104000000 |     irmovl  4, %ecx
+  0x00c: 30f205000000 |     irmovl  5, %edx
+  0x012: 30f306000000 |     irmovl  6, %ebx
+  0x018: 30f607000000 |     irmovl  7, %esi
+  0x01e: 30f408000000 |     irmovl  8, %esp
+  0x024: 30f509000000 |     irmovl  9, %ebp
+  0x02a: 30f70a000000 |     irmovl 10, %edi
+  0x030: 6001         |     addl %eax, %ecx                # %ecx is 7, ZF = 0, SF = 0, OF = 0
+  0x032: 6102         |     subl %eax, %edx                # %edx is 2, ZF = 0, SF = 0, OF = 0
+  0x034: c003000000   |     dump  3
+  0x039: 6203         |     andl %eax, %ebx                # %ebx is 2, ZF = 0, SF = 0, OF = 0
+  0x03b: 6306         |     xorl %eax, %esi                # %esi is 4, ZF = 0, SF = 0, OF = 0
+  0x03d: c003000000   |     dump  3
+  0x042: 6014         |     addl %ecx, %esp                # %esp is 15 (f), flags are 0
+  0x044: 6125         |     subl %edx, %ebp                # %ebp is 7, flags are 0 
+  0x046: c003000000   |     dump 3
+  0x04b: 00           |     halt
+  0x04c: 10           |     nop
+  0x04d: 10           |     nop
+  0x04e: 10           |     nop
+  0x04f: 10           |     nop
+  0x050: 10           |     nop

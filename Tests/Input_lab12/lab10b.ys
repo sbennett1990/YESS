@@ -1,0 +1,48 @@
+#This file tests forwarding from the RRMOVL instruction to valA
+    irmovl 5, %eax
+    nop
+    rrmovl %eax, %ecx
+    addl   %ecx, %eax             #eax should be set to 10
+    dump 1
+#
+    irmovl 6, %eax
+    rrmovl %eax, %ecx
+    rrmovl %ecx, %edx             #edx should be set to 6
+    dump 1
+#
+    irmovl 0, %eax
+    irmovl 0, %ecx
+    irmovl 0, %edx
+    irmovl Stack, %esp
+    irmovl 8, %eax
+    rrmovl %eax, %ecx
+    pushl %ecx          #Memory location 0xfc should contain 8
+    dump 5
+#
+    irmovl 0, %eax
+    irmovl Data, %ebx
+    irmovl 0, %ecx
+    irmovl 0, %edx
+    irmovl 0, %esp
+    irmovl 8, %eax
+    rmmovl %eax, 0(%ebx)
+    dump 5             #Memory location m[Data] should contain 8
+#
+    irmovl 0, %eax
+    irmovl Data, %ebx
+    irmovl 0, %ecx
+    irmovl 0, %edx
+    irmovl 0, %esp
+    irmovl 0xf, %eax
+    nop
+    rmmovl %eax, 0(%ebx)
+    dump 5             #Memory location m[Data] should contain 0xf
+    halt 
+    nop
+    nop
+    nop
+    nop
+    .align 4
+Data: .long 0
+    .pos 0x100
+Stack: .long 0

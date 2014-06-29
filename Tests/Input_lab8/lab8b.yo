@@ -1,0 +1,31 @@
+                      | 
+                      | #
+                      | #This file tests the MRMOVL instruction.
+                      | #
+  0x000:              |         .pos 0 
+  0x000: c007000000   |         dump 7 
+  0x005: 30f048000000 |         irmovl array, %eax          #starting location of the array
+  0x00b: c007000000   |         dump 7 
+  0x010: 10           |         nop
+  0x011: 501000000000 |         mrmovl 0(%eax), %ecx        #load each element of the array
+  0x017: 502004000000 |         mrmovl 4(%eax), %edx
+  0x01d: 503008000000 |         mrmovl 8(%eax), %ebx
+  0x023: 50400c000000 |         mrmovl 12(%eax), %esp
+  0x029: 505010000000 |         mrmovl 16(%eax), %ebp
+  0x02f: 506014000000 |         mrmovl 20(%eax), %esi
+  0x035: 507018000000 |         mrmovl 24(%eax), %edi    
+  0x03b: c007000000   |         dump 7
+  0x040: 00           |         halt
+  0x041: 10           |         nop
+  0x042: 10           |         nop
+  0x043: 10           |         nop
+  0x044: 10           |         nop
+  0x045: 10           |         nop
+  0x048:              |         .align  4
+  0x048: 01000000     | array:  .long   1
+  0x04c: 02000000     |         .long   2
+  0x050: 03000000     |         .long   3
+  0x054: 04000000     |         .long   4
+  0x058: 05000000     |         .long   5
+  0x05c: 06000000     |         .long   6
+  0x060: 07000000     |         .long   7

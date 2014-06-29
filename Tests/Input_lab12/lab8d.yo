@@ -1,0 +1,52 @@
+                      | 
+                      | #       
+                      | #       This file tests the RMMOVL instruction.
+                      | #       Values 1 through 7 are copied into the array defined below.
+                      | #
+  0x000:              |         .pos 0 
+  0x000: c007000000   |         dump 7 
+  0x005: 30f06c000000 |         irmovl array, %eax
+  0x00b: 30f201000000 |         irmovl 1, %edx
+  0x011: 30f301000000 |         irmovl 1, %ebx
+  0x017: c007000000   |         dump 7 
+  0x01c: 402000000000 |         rmmovl %edx, 0(%eax)      #array[0] = 1
+  0x022: 6032         |         addl %ebx, %edx
+  0x024: 10           |         nop
+  0x025: 10           |         nop
+  0x026: 402004000000 |         rmmovl %edx, 4(%eax)      #array[1] = 2
+  0x02c: 6032         |         addl %ebx, %edx
+  0x02e: 10           |         nop
+  0x02f: 10           |         nop
+  0x030: 402008000000 |         rmmovl %edx, 8(%eax)      #array[2] = 3
+  0x036: 6032         |         addl %ebx, %edx
+  0x038: 10           |         nop
+  0x039: 10           |         nop
+  0x03a: 40200c000000 |         rmmovl %edx, 12(%eax)     #array[3] = 4
+  0x040: 6032         |         addl %ebx, %edx
+  0x042: 10           |         nop
+  0x043: 10           |         nop
+  0x044: 402010000000 |         rmmovl %edx, 16(%eax)     #array[4] = 5
+  0x04a: 6032         |         addl %ebx, %edx
+  0x04c: 10           |         nop
+  0x04d: 10           |         nop
+  0x04e: 402014000000 |         rmmovl %edx, 20(%eax)     #array[5] = 6
+  0x054: 6032         |         addl %ebx, %edx
+  0x056: 10           |         nop
+  0x057: 10           |         nop
+  0x058: 402018000000 |         rmmovl %edx, 24(%eax)     #array[6] = 7
+  0x05e: 6032         |         addl %ebx, %edx
+  0x060: c007000000   |         dump 7
+  0x065: 00           |         halt
+  0x066: 10           |         nop
+  0x067: 10           |         nop
+  0x068: 10           |         nop
+  0x069: 10           |         nop
+  0x06a: 10           |         nop
+  0x06c:              |         .align  4
+  0x06c: 00000000     | array:  .long   0
+  0x070: 00000000     |         .long   0
+  0x074: 00000000     |         .long   0
+  0x078: 00000000     |         .long   0
+  0x07c: 00000000     |         .long   0
+  0x080: 00000000     |         .long   0
+  0x084: 00000000     |         .long   0

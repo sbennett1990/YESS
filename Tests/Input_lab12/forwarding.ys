@@ -1,0 +1,73 @@
+#This program test all six cases of forwarding for valA and
+#all 6 cases of forwarding for valB
+
+    .pos 0
+
+#forward e_valE for valA
+    irmovl $3, %ecx
+    subl %ecx, %edx
+    dump 7
+#forward m_valM for valA
+    mrmovl (%edi), %ebx
+    nop
+    addl %ebx, %edx
+    dump 7
+#forward M_valE for valA 
+    irmovl $3, %eax
+    nop
+    subl %eax, %edx
+    dump 7
+#forward W_valM for valA
+    mrmovl (%edi), %ecx
+    nop
+    nop
+    addl %ecx, %edx
+    dump 7
+#forward W_valE for valA
+    irmovl $3, %ebx
+    nop
+    nop
+    subl %ebx, %edx
+    dump 7
+#forward value from register file for valA 
+    irmovl $3, %eax
+    nop
+    nop
+    nop
+    subl %eax, %edx
+    dump 7
+#forward e_valE for valB
+    irmovl $3, %ecx
+    subl %edx, %ecx
+    dump 7
+#forward m_valM for valB
+    mrmovl (%edi), %ebx
+    nop
+    addl %edx, %ebx
+    dump 7
+#forward M_valE for valB
+    irmovl $3, %eax
+    nop
+    subl %edx, %eax
+    dump 7
+#forward W_valM for valB
+    mrmovl (%edi), %ecx
+    nop
+    nop
+    addl %edx, %ecx
+    dump 7
+#forward W_valE for valB
+    irmovl $3, %ebx
+    nop
+    nop
+    subl %edx, %ebx
+    dump 7
+#forward value from register file for valB
+    irmovl $3, %eax
+    nop
+    nop
+    nop
+    subl %edx, %eax
+    dump 7
+    halt
+

@@ -1,0 +1,48 @@
+                      | 
+                      | #This file tests the RRMOVL instruction 
+                      | #using different registers for source and destination
+  0x000: 30f001000000 |     irmovl 1, %eax
+  0x006: 10           |     nop                   #two nops since there is no forwarding
+  0x007: 10           |     nop                   #except through register file
+  0x008: 2001         |     rrmovl %eax, %ecx
+  0x00a: c001000000   |     dump 1                #both %eax, %ecx are 1
+  0x00f: 30f102000000 |     irmovl 2, %ecx
+  0x015: 10           |     nop
+  0x016: 10           |     nop
+  0x017: 2012         |     rrmovl %ecx, %edx     #both %ecx, %edx are 2
+  0x019: c001000000   |     dump 1
+  0x01e: 30f203000000 |     irmovl 3, %edx
+  0x024: 10           |     nop
+  0x025: 10           |     nop
+  0x026: 2023         |     rrmovl %edx, %ebx     #both %edx, %ebx are 3
+  0x028: c001000000   |     dump 1
+  0x02d: 30f304000000 |     irmovl 4, %ebx
+  0x033: 10           |     nop
+  0x034: 10           |     nop
+  0x035: 2034         |     rrmovl %ebx, %esp     #both %ebx, %esp are 4
+  0x037: c001000000   |     dump 1
+  0x03c: 30f405000000 |     irmovl 5, %esp
+  0x042: 10           |     nop
+  0x043: 10           |     nop
+  0x044: 2045         |     rrmovl %esp, %ebp     #both %esp, %ebp are 5
+  0x046: c001000000   |     dump 1
+  0x04b: 30f506000000 |     irmovl 6, %ebp
+  0x051: 10           |     nop
+  0x052: 10           |     nop
+  0x053: 2056         |     rrmovl %ebp, %esi     #both %ebp, %esi are 6
+  0x055: c001000000   |     dump 1
+  0x05a: 30f607000000 |     irmovl 7, %esi
+  0x060: 10           |     nop
+  0x061: 10           |     nop
+  0x062: 2067         |     rrmovl %esi, %edi     #both %esi, %edi are 7
+  0x064: c001000000   |     dump 1
+  0x069: 30f708000000 |     irmovl 8, %edi
+  0x06f: 10           |     nop
+  0x070: 10           |     nop
+  0x071: 2070         |     rrmovl %edi, %eax     #both %edi, %eax are 8
+  0x073: c001000000   |     dump 1
+  0x078: 00           |     halt
+  0x079: 10           |     nop
+  0x07a: 10           |     nop
+  0x07b: 10           |     nop
+  0x07c: 10           |     nop

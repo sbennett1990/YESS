@@ -1,0 +1,26 @@
+                      | 
+  0x000: 30f480000000 |     irmovl array, %esp
+  0x006: 10           |     nop
+  0x007: 10           |     nop
+  0x008: 10           |     nop
+  0x009: b00f         |     popl %eax
+  0x00b: 10           |     nop
+  0x00c: 10           |     nop
+  0x00d: b01f         |     popl %ecx
+  0x00f: 10           |     nop
+  0x010: 10           |     nop
+  0x011: b02f         |     popl %edx
+  0x013: 10           |     nop
+  0x014: 10           |     nop
+  0x015: b03f         |     popl %ebx
+  0x017: c007000000   |     dump 7
+  0x01c: 00           |     halt
+  0x01d: 10           |     nop
+  0x01e: 10           |     nop
+  0x01f: 10           |     nop
+  0x020: 10           |     nop
+  0x080:              |     .pos 0x80
+  0x080: 01000000     | array:  .long   1
+  0x084: 02000000     |         .long   2
+  0x088: 03000000     |         .long   3
+  0x08c: 04000000     |         .long   4

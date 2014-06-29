@@ -1,0 +1,50 @@
+# The program copies one array into another.(array values go into copy)
+# This is accomplished by simply using a pointer to the elements in the array 
+# and setting the values there equal to the values placed in the temp register.
+# %eax = array pointer
+# %ebx = copy pointer
+# %ecx = temperary value holder
+
+    .pos 0
+    irmovl array, %eax
+    irmovl copy, %ebx
+    nop
+    mrmovl (%eax), %ecx
+    nop
+    nop
+    rmmovl %ecx, (%ebx)
+    mrmovl 4(%eax), %ecx
+    nop
+    nop
+    rmmovl %ecx, 4(%ebx)
+    mrmovl 8(%eax), %ecx
+    nop
+    nop
+    rmmovl %ecx, 8(%ebx)
+    mrmovl 12(%eax), %ecx
+    nop
+    nop
+    rmmovl %ecx, 12(%ebx)
+    nop
+    dump 7 
+    halt
+
+
+#the following at position 0x100 is the array that will be copied.
+#it is simply an array with four elements(values = index + 1)
+    .pos 0x100
+    .align 4
+array:  .long 0x1
+        .long 0x2
+        .long 0x3
+        .long 0x4
+
+#the following at position 0x160 is the array that is having its
+#positions filled with the values from the label 'array'
+    .pos 0x160
+    .align 4
+copy:   .long 0
+        .long 0
+        .long 0
+        .long 0
+

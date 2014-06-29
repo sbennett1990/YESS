@@ -1,0 +1,49 @@
+#
+#    This file tests the call and return instructions
+#
+    .pos 0
+    irmovl Stack, %esp
+    irmovl Stack, %ebp
+    jmp Main
+#
+Main:   irmovl $6, %eax                  #top
+        pushl %eax
+        irmovl $2, %eax                  #bottom
+        pushl %eax           
+        call Sum
+        dump 7
+        halt
+#
+#       int Sum(int bottom, int top)
+#       {
+#          if (bottom > top)
+#              return 0;
+#          else
+#              return bottom + sum(bottom + 1, top);
+#
+#       }
+#
+Sum:    pushl %ebp
+        rrmovl %esp, %ebp
+        mrmovl 12(%ebp), %edx        #edx should be top
+        mrmovl 8(%ebp), %ecx         #ecx should be bottom
+        rrmovl %ecx, %ebx
+        subl %edx, %ebx              #compute bottom - top
+        jg done
+        irmovl 1, %ebx
+        addl   %ebx, %ecx
+        pushl  %edx
+        pushl  %ecx
+        call Sum
+        mrmovl 8(%ebp), %ecx         #get bottom again
+        addl %ecx, %eax              #add bottom to value returned from call
+        rrmovl %ebp, %esp
+        popl %ebp
+        ret
+done:   irmovl 0, %eax 
+        rrmovl %ebp, %esp
+        popl %ebp
+        ret
+        .pos 0x200
+Stack:
+

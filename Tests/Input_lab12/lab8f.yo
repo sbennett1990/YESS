@@ -1,0 +1,57 @@
+                      | 
+                      | #This file tests the CMOVXX instruction 
+                      | #specifically for when an overflow occurs
+  0x000: 30f000000000 |     irmovl 0, %eax
+  0x006: 30f3ffffff7f |     irmovl 0x7fffffff, %ebx
+  0x00c: 30f1ffffff7f |     irmovl 0x7fffffff, %ecx
+  0x012: 10           |     nop                   #two nops since there is no forwarding
+  0x013: 10           |     nop                  
+  0x014: 6031         |     addl %ebx, %ecx
+  0x016: 10           |     nop
+  0x017: 10           |     nop
+  0x018: 2610         |     cmovg %ecx, %eax      #should do the move since result is greater than 0
+  0x01a: 10           |     nop
+  0x01b: 10           |     nop
+  0x01c: c001000000   |     dump 1
+  0x021: 30f000000000 |     irmovl 0, %eax
+  0x027: 30f300000080 |     irmovl 0x80000000, %ebx
+  0x02d: 30f100000080 |     irmovl 0x80000000, %ecx
+  0x033: 10           |     nop                   #two nops since there is no forwarding
+  0x034: 10           |     nop                  
+  0x035: 6031         |     addl %ebx, %ecx
+  0x037: 10           |     nop
+  0x038: 10           |     nop
+  0x039: 2230         |     cmovl %ebx, %eax      #result: x100000000, overflow, should do move
+  0x03b: 10           |     nop
+  0x03c: 10           |     nop
+  0x03d: c001000000   |     dump 1
+  0x042: 30f000000000 |     irmovl 0, %eax
+  0x048: 30f300000080 |     irmovl 0x80000000, %ebx
+  0x04e: 30f101000080 |     irmovl 0x80000001, %ecx
+  0x054: 10           |     nop                   #two nops since there is no forwarding
+  0x055: 10           |     nop                  
+  0x056: 6031         |     addl %ebx, %ecx
+  0x058: 10           |     nop
+  0x059: 10           |     nop
+  0x05a: 2130         |     cmovle %ebx, %eax      #result: x100000000, overflow, should do move
+  0x05c: 10           |     nop
+  0x05d: 10           |     nop
+  0x05e: c001000000   |     dump 1
+  0x063: 30f000000000 |     irmovl 0, %eax
+  0x069: 30f3ffffff7f |     irmovl 0x7fffffff, %ebx
+  0x06f: 30f1feffff7f |     irmovl 0x7ffffffe, %ecx
+  0x075: 10           |     nop                   #two nops since there is no forwarding
+  0x076: 10           |     nop                  
+  0x077: 6031         |     addl %ebx, %ecx
+  0x079: 10           |     nop
+  0x07a: 10           |     nop
+  0x07b: 2510         |     cmovge %ecx, %eax      #result: xfffffffd, overflow, should do move
+  0x07d: 10           |     nop
+  0x07e: 10           |     nop
+  0x07f: c001000000   |     dump 1
+  0x084: 00           |     halt
+  0x085: 10           |     nop
+  0x086: 10           |     nop
+  0x087: 10           |     nop
+  0x088: 10           |     nop
+  0x089: 10           |     nop

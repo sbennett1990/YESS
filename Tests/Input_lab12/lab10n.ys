@@ -1,0 +1,12 @@
+#
+#   test exception handling
+#
+    irmovl $-3, %esp
+    irmovl $4, %ecx
+    popl %ecx                #this will cause a memory error
+    andl %esp, %esp          #won't set condition codes because of error
+    halt
+    nop                      #need nop until stalls are implemented
+    nop
+    nop
+#

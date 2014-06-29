@@ -1,0 +1,74 @@
+                      | 
+                      | #This program test all six cases of forwarding for valA and
+                      | #all 6 cases of forwarding for valB
+                      | 
+  0x000:              |     .pos 0
+                      | 
+                      | #forward e_valE for valA
+  0x000: 30f103000000 |     irmovl $3, %ecx
+  0x006: 6112         |     subl %ecx, %edx
+  0x008: c007000000   |     dump 7
+                      | #forward m_valM for valA
+  0x00d: 503700000000 |     mrmovl (%edi), %ebx
+  0x013: 10           |     nop
+  0x014: 6032         |     addl %ebx, %edx
+  0x016: c007000000   |     dump 7
+                      | #forward M_valE for valA 
+  0x01b: 30f003000000 |     irmovl $3, %eax
+  0x021: 10           |     nop
+  0x022: 6102         |     subl %eax, %edx
+  0x024: c007000000   |     dump 7
+                      | #forward W_valM for valA
+  0x029: 501700000000 |     mrmovl (%edi), %ecx
+  0x02f: 10           |     nop
+  0x030: 10           |     nop
+  0x031: 6012         |     addl %ecx, %edx
+  0x033: c007000000   |     dump 7
+                      | #forward W_valE for valA
+  0x038: 30f303000000 |     irmovl $3, %ebx
+  0x03e: 10           |     nop
+  0x03f: 10           |     nop
+  0x040: 6132         |     subl %ebx, %edx
+  0x042: c007000000   |     dump 7
+                      | #forward value from register file for valA 
+  0x047: 30f003000000 |     irmovl $3, %eax
+  0x04d: 10           |     nop
+  0x04e: 10           |     nop
+  0x04f: 10           |     nop
+  0x050: 6102         |     subl %eax, %edx
+  0x052: c007000000   |     dump 7
+                      | #forward e_valE for valB
+  0x057: 30f103000000 |     irmovl $3, %ecx
+  0x05d: 6121         |     subl %edx, %ecx
+  0x05f: c007000000   |     dump 7
+                      | #forward m_valM for valB
+  0x064: 503700000000 |     mrmovl (%edi), %ebx
+  0x06a: 10           |     nop
+  0x06b: 6023         |     addl %edx, %ebx
+  0x06d: c007000000   |     dump 7
+                      | #forward M_valE for valB
+  0x072: 30f003000000 |     irmovl $3, %eax
+  0x078: 10           |     nop
+  0x079: 6120         |     subl %edx, %eax
+  0x07b: c007000000   |     dump 7
+                      | #forward W_valM for valB
+  0x080: 501700000000 |     mrmovl (%edi), %ecx
+  0x086: 10           |     nop
+  0x087: 10           |     nop
+  0x088: 6021         |     addl %edx, %ecx
+  0x08a: c007000000   |     dump 7
+                      | #forward W_valE for valB
+  0x08f: 30f303000000 |     irmovl $3, %ebx
+  0x095: 10           |     nop
+  0x096: 10           |     nop
+  0x097: 6123         |     subl %edx, %ebx
+  0x099: c007000000   |     dump 7
+                      | #forward value from register file for valB
+  0x09e: 30f003000000 |     irmovl $3, %eax
+  0x0a4: 10           |     nop
+  0x0a5: 10           |     nop
+  0x0a6: 10           |     nop
+  0x0a7: 6120         |     subl %edx, %eax
+  0x0a9: c007000000   |     dump 7
+  0x0ae: 00           |     halt
+                      | 

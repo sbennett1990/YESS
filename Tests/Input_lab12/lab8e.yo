@@ -1,0 +1,115 @@
+                      | 
+                      | #This file tests the CMOVXX instruction 
+                      | #using different registers for source and destination
+  0x000: 30f000000000 |     irmovl 0, %eax
+  0x006: 30f301000000 |     irmovl 1, %ebx
+  0x00c: 30f102000000 |     irmovl 2, %ecx
+  0x012: 10           |     nop                   #two nops since there is no forwarding
+  0x013: 10           |     nop                  
+  0x014: 6031         |     addl %ebx, %ecx
+  0x016: 10           |     nop
+  0x017: 10           |     nop
+  0x018: 2610         |     cmovg %ecx, %eax      #should do the move since result is greater than 0
+  0x01a: 10           |     nop
+  0x01b: 10           |     nop
+  0x01c: c001000000   |     dump 1
+  0x021: 30f000000000 |     irmovl 0, %eax
+  0x027: 30f301000000 |     irmovl 1, %ebx
+  0x02d: 30f1feffffff |     irmovl -2, %ecx
+  0x033: 10           |     nop                   #two nops since there is no forwarding
+  0x034: 10           |     nop                  
+  0x035: 6031         |     addl %ebx, %ecx
+  0x037: 10           |     nop
+  0x038: 10           |     nop
+  0x039: 2210         |     cmovl %ecx, %eax      #result: neg; cond: less than zero (do move)
+  0x03b: 10           |     nop
+  0x03c: 10           |     nop
+  0x03d: c001000000   |     dump 1
+  0x042: 30f000000000 |     irmovl 0, %eax
+  0x048: 30f301000000 |     irmovl 1, %ebx
+  0x04e: 30f1feffffff |     irmovl -2, %ecx
+  0x054: 10           |     nop                   #two nops since there is no forwarding
+  0x055: 10           |     nop                  
+  0x056: 6031         |     addl %ebx, %ecx
+  0x058: 10           |     nop
+  0x059: 10           |     nop
+  0x05a: 2410         |     cmovne %ecx, %eax     #result: neg; cond: not equal zero (do move)
+  0x05c: 10           |     nop
+  0x05d: 10           |     nop
+  0x05e: c001000000   |     dump 1
+  0x063: 30f000000000 |     irmovl 0, %eax
+  0x069: 30f302000000 |     irmovl 2, %ebx
+  0x06f: 30f1feffffff |     irmovl -2, %ecx
+  0x075: 10           |     nop                   #two nops since there is no forwarding
+  0x076: 10           |     nop                  
+  0x077: 6031         |     addl %ebx, %ecx
+  0x079: 2330         |     cmove %ebx, %eax      #result: zero; cond: equal zero (do move)
+  0x07b: 10           |     nop
+  0x07c: 10           |     nop
+  0x07d: c001000000   |     dump 1
+  0x082: 30f000000000 |     irmovl 0, %eax
+  0x088: 30f302000000 |     irmovl 2, %ebx
+  0x08e: 30f1feffffff |     irmovl -2, %ecx
+  0x094: 10           |     nop                   #two nops since there is no forwarding
+  0x095: 10           |     nop                  
+  0x096: 6031         |     addl %ebx, %ecx
+  0x098: 2130         |     cmovle %ebx, %eax     #result: zero; cond: less or equal zero (do move)
+  0x09a: 10           |     nop
+  0x09b: 10           |     nop
+  0x09c: c001000000   |     dump 1
+  0x0a1: 30f000000000 |     irmovl 0, %eax
+  0x0a7: 30f302000000 |     irmovl 2, %ebx
+  0x0ad: 30f1feffffff |     irmovl -2, %ecx
+  0x0b3: 10           |     nop                   #two nops since there is no forwarding
+  0x0b4: 10           |     nop                  
+  0x0b5: 6031         |     addl %ebx, %ecx
+  0x0b7: 2530         |     cmovge %ebx, %eax     #result: zero; cond: greater or equal zero (do move)
+  0x0b9: 10           |     nop
+  0x0ba: 10           |     nop
+  0x0bb: c001000000   |     dump 1
+  0x0c0: 30f00f000000 |     irmovl 0xf, %eax
+  0x0c6: 30f302000000 |     irmovl 2, %ebx
+  0x0cc: 30f1feffffff |     irmovl -2, %ecx
+  0x0d2: 10           |     nop                   #two nops since there is no forwarding
+  0x0d3: 10           |     nop                  
+  0x0d4: 6031         |     addl %ebx, %ecx
+  0x0d6: 2630         |     cmovg %ebx, %eax      #result: zero; cond: greater than zero (don't move)
+  0x0d8: 10           |     nop
+  0x0d9: 10           |     nop
+  0x0da: c001000000   |     dump 1
+  0x0df: 30f00f000000 |     irmovl 0xf, %eax
+  0x0e5: 30f302000000 |     irmovl 2, %ebx
+  0x0eb: 30f1feffffff |     irmovl -2, %ecx
+  0x0f1: 10           |     nop                   #two nops since there is no forwarding
+  0x0f2: 10           |     nop                  
+  0x0f3: 6031         |     addl %ebx, %ecx
+  0x0f5: 2230         |     cmovl %ebx, %eax      #result: zero; cond: less than zero (don't move)
+  0x0f7: 10           |     nop
+  0x0f8: 10           |     nop
+  0x0f9: c001000000   |     dump 1
+  0x0fe: 30f00f000000 |     irmovl 0xf, %eax
+  0x104: 30f303000000 |     irmovl 3, %ebx
+  0x10a: 30f1feffffff |     irmovl -2, %ecx
+  0x110: 10           |     nop                   #two nops since there is no forwarding
+  0x111: 10           |     nop                  
+  0x112: 6031         |     addl %ebx, %ecx
+  0x114: 2230         |     cmovl %ebx, %eax      #result: pos; cond: less than zero (don't move)
+  0x116: 10           |     nop
+  0x117: 10           |     nop
+  0x118: c001000000   |     dump 1
+  0x11d: 30f00f000000 |     irmovl 0xf, %eax
+  0x123: 30f301000000 |     irmovl 1, %ebx
+  0x129: 30f1feffffff |     irmovl -2, %ecx
+  0x12f: 10           |     nop                   #two nops since there is no forwarding
+  0x130: 10           |     nop                  
+  0x131: 6031         |     addl %ebx, %ecx
+  0x133: 2630         |     cmovg %ebx, %eax      #result: neg; cond: greater than zero (don't move)
+  0x135: 10           |     nop
+  0x136: 10           |     nop
+  0x137: c001000000   |     dump 1
+  0x13c: 00           |     halt
+  0x13d: 10           |     nop
+  0x13e: 10           |     nop
+  0x13f: 10           |     nop
+  0x140: 10           |     nop
+  0x141: 10           |     nop

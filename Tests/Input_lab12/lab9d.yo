@@ -1,0 +1,40 @@
+                      | 
+  0x000: 30f480000000 |     irmovl array, %esp
+  0x006: 30f001000000 |     irmovl 1, %eax
+  0x00c: 30f101000000 |     irmovl 1, %ecx
+  0x012: 10           |     nop
+  0x013: 10           |     nop
+  0x014: 10           |     nop
+  0x015: a01f         |     pushl %ecx
+  0x017: c007000000   |     dump 7
+  0x01c: 6001         |     addl %eax, %ecx
+  0x01e: 10           |     nop
+  0x01f: 10           |     nop
+  0x020: 10           |     nop
+  0x021: a01f         |     pushl %ecx
+  0x023: c007000000   |     dump 7
+  0x028: 6001         |     addl %eax, %ecx
+  0x02a: 10           |     nop
+  0x02b: 10           |     nop
+  0x02c: 10           |     nop
+  0x02d: a01f         |     pushl %ecx
+  0x02f: c007000000   |     dump 7
+  0x034: 6001         |     addl %eax, %ecx
+  0x036: 10           |     nop
+  0x037: 10           |     nop
+  0x038: 10           |     nop
+  0x039: a01f         |     pushl %ecx
+  0x03b: c007000000   |     dump 7
+  0x040: 6001         |     addl %eax, %ecx
+  0x042: 10           |     nop
+  0x043: 10           |     nop
+  0x044: 10           |     nop
+  0x045: a01f         |     pushl %ecx
+  0x047: c007000000   |     dump 7
+  0x04c: 00           |     halt
+  0x04d: 10           |     nop
+  0x04e: 10           |     nop
+  0x04f: 10           |     nop
+  0x050: 10           |     nop
+  0x080:              |     .pos 0x80
+  0x080: 00000000     | array: .long   0

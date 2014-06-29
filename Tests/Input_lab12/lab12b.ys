@@ -1,0 +1,11 @@
+#  
+#   This program tests the stall required after a mrmovl instruction
+#
+    irmovl 3, %ecx
+    irmovl array, %eax
+    mrmovl 0(%eax), %ebx
+    addl %ebx, %ecx
+    dump 7
+    halt
+    .align 4
+array:  .long 4

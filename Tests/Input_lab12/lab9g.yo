@@ -1,0 +1,18 @@
+                      | 
+                      | #
+                      | # Assembly Code to test semantics of popl
+                      | #
+  0x000: 30f400010000 |     irmovl 0x100, %esp
+  0x006: 30f1ffffffff |     irmovl -1, %ecx
+  0x00c: 10           |     nop
+  0x00d: 10           |     nop
+  0x00e: a01f         |     pushl %ecx
+  0x010: 10           |     nop
+  0x011: 10           |     nop
+  0x012: b04f         |     popl  %esp            # should set %esp to -1 instead of 0x100
+  0x014: c007000000   |     dump 7
+  0x019: 00           |     halt
+  0x01a: 10           |     nop
+  0x01b: 10           |     nop
+  0x01c: 10           |     nop
+  0x01d: 10           |     nop

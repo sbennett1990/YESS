@@ -1,0 +1,68 @@
+# The program copies one array into another.(array values go into copy)
+# This is accomplished by simply changing where the stack pointer is pointing.
+# Pop elemnts out of the original array and push them into the copy.
+# %eax = element 1
+# %ecx = element 2
+# %edx = element 3
+# %ebx = element 4
+# %esp = stack pointer
+
+    .pos 0 
+
+    # point stack pointer to array and copy each element into 
+    # a different register.
+    irmovl array, %esp
+    nop
+    nop
+    popl %eax 
+    nop
+    nop
+    popl %ecx
+    nop
+    nop
+    popl %edx
+    nop
+    nop
+    popl %ebx
+    nop
+    nop
+    # pointstack pointer to copy and put each element into
+    # corresponding spot.
+    irmovl copy, %esp
+    nop
+    nop
+    pushl %ebx
+    nop
+    nop
+    pushl %edx
+    nop
+    nop
+    pushl %ecx
+    nop
+    nop
+    pushl %eax
+    nop
+    nop
+    dump 7
+    halt
+    
+    
+#the following at position 0x100 is the array that will be copied.
+#it is simply an array with four elements(value = index +1)
+    .pos 0x100
+    .align 4
+array:  .long 0x1
+        .long 0x2
+        .long 0x3
+        .long 0x4
+        
+#the following at position 0x160 is the array that is having its
+#positions filled with the values from the lable 'array'
+        
+    .pos 0x160
+    .align 4
+        .long 0x0
+        .long 0x0
+        .long 0x0
+        .long 0x0
+copy:    

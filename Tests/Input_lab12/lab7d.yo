@@ -1,0 +1,42 @@
+                      | 
+                      |     /* This input file tests the ANDL instruction. */ 
+  0x000: 30f0feffffff |     irmovl  0xfffffffe, %eax
+  0x006: 30f1f1ffffff |     irmovl  0xfffffff1,  %ecx
+  0x00c: 10           |     nop
+  0x00d: 10           |     nop
+  0x00e: 10           |     nop
+  0x00f: c007000000   |     dump  7
+  0x014: 10           |     nop
+  0x015: 10           |     nop
+  0x016: 6201         |     andl  %eax, %ecx          #%ecx = %ecx & %eax
+  0x018: c003000000   |     dump  3                   #SF = 1, ZF = 0, OF = 0, %ecx = 0xfffffff0 
+  0x01d: 30f001000000 |     irmovl  1, %eax
+  0x023: 30f103000000 |     irmovl  3,  %ecx
+  0x029: 10           |     nop
+  0x02a: 10           |     nop
+  0x02b: 6201         |     andl  %eax, %ecx          #%ecx = %ecx & %eax
+  0x02d: c003000000   |     dump 3                    #SF = 0, ZF = 0, OF = 0, %ecx = 1
+  0x032: 30f0f0000000 |     irmovl  0xf0, %eax
+  0x038: 30f10f000000 |     irmovl  0x0f,  %ecx
+  0x03e: 10           |     nop
+  0x03f: 10           |     nop
+  0x040: 6201         |     andl  %eax, %ecx          #%ecx = %ecx & %eax
+  0x042: c003000000   |     dump 3                    #SF = 0, ZF = 1, OF = 0, %ecx = 0
+  0x047: 30f0ffffff7f |     irmovl  0x7fffffff, %eax
+  0x04d: 30f100000080 |     irmovl  0x80000000, %ecx
+  0x053: 10           |     nop
+  0x054: 10           |     nop
+  0x055: 6201         |     andl  %eax, %ecx          #%ecx = %ecx & %eax
+  0x057: c003000000   |     dump 3                    #SF = 0, ZF = 1, OF = 0, %ecx = 0
+  0x05c: 30f000000080 |     irmovl  0x80000000, %eax
+  0x062: 30f1ffffff7f |     irmovl  0x7FFFFFFF, %ecx
+  0x068: 10           |     nop
+  0x069: 10           |     nop
+  0x06a: 6201         |     andl  %eax, %ecx          #%ecx = %ecx & %eax
+  0x06c: c003000000   |     dump 3                    #SF = 0, ZF = 1, OF = 0, %ecx = 0
+  0x071: 00           |     halt
+  0x072: 10           |     nop
+  0x073: 10           |     nop
+  0x074: 10           |     nop
+  0x075: 10           |     nop
+  0x076: 10           |     nop

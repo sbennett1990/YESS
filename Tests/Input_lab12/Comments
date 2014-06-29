@@ -1,0 +1,27 @@
+Number of tests passed:
+
+forwarding.ys
+
+fetchStage.c
+    correctness
+    style
+
+decodeStage.c
+    correctness
+    style
+
+executeStage.c
+    correctness
+    style
+
+memoryStage.c
+    correctness
+    style
+
+writeBackStage.c
+    correctness
+    style
+
+-----------------------------------------------------------------------------
+correctness:
+style:

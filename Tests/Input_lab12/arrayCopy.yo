@@ -1,0 +1,51 @@
+                      | 
+                      | # The program copies one array into another.(array values go into copy)
+                      | # This is accomplished by simply using a pointer to the elements in the array 
+                      | # and setting the values there equal to the values placed in the temp register.
+                      | # %eax = array pointer
+                      | # %ebx = copy pointer
+                      | # %ecx = temperary value holder
+                      | 
+  0x000:              |     .pos 0
+  0x000: 30f000010000 |     irmovl array, %eax
+  0x006: 30f360010000 |     irmovl copy, %ebx
+  0x00c: 10           |     nop
+  0x00d: 501000000000 |     mrmovl (%eax), %ecx
+  0x013: 10           |     nop
+  0x014: 10           |     nop
+  0x015: 401300000000 |     rmmovl %ecx, (%ebx)
+  0x01b: 501004000000 |     mrmovl 4(%eax), %ecx
+  0x021: 10           |     nop
+  0x022: 10           |     nop
+  0x023: 401304000000 |     rmmovl %ecx, 4(%ebx)
+  0x029: 501008000000 |     mrmovl 8(%eax), %ecx
+  0x02f: 10           |     nop
+  0x030: 10           |     nop
+  0x031: 401308000000 |     rmmovl %ecx, 8(%ebx)
+  0x037: 50100c000000 |     mrmovl 12(%eax), %ecx
+  0x03d: 10           |     nop
+  0x03e: 10           |     nop
+  0x03f: 40130c000000 |     rmmovl %ecx, 12(%ebx)
+  0x045: 10           |     nop
+  0x046: c007000000   |     dump 7 
+  0x04b: 00           |     halt
+                      | 
+                      | 
+                      | #the following at position 0x100 is the array that will be copied.
+                      | #it is simply an array with four elements(values = index + 1)
+  0x100:              |     .pos 0x100
+  0x100:              |     .align 4
+  0x100: 01000000     | array:  .long 0x1
+  0x104: 02000000     |         .long 0x2
+  0x108: 03000000     |         .long 0x3
+  0x10c: 04000000     |         .long 0x4
+                      | 
+                      | #the following at position 0x160 is the array that is having its
+                      | #positions filled with the values from the label 'array'
+  0x160:              |     .pos 0x160
+  0x160:              |     .align 4
+  0x160: 00000000     | copy:   .long 0
+  0x164: 00000000     |         .long 0
+  0x168: 00000000     |         .long 0
+  0x16c: 00000000     |         .long 0
+                      | 

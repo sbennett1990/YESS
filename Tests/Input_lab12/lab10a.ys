@@ -1,0 +1,291 @@
+#This program tests forwarding into decode stage for valA
+#The value being forwarded is produced by an OPL instruction.
+    irmovl 1, %eax
+    irmovl 2, %ecx
+    irmovl 3, %edx
+    irmovl 4, %ebx
+    irmovl 5, %esp
+    irmovl 6, %ebp
+    irmovl 7, %esi
+    irmovl 8, %edi 
+    dump 1
+    addl %eax, %ecx      #%ecx should be 3
+    addl %ecx, %edx      #%edx should be 6
+    addl %edx, %ebx      #%ebx should be 10  (0xa) 
+    addl %ebx, %esp      #%esp should be 15  (0xf)
+    addl %esp, %ebp      #%ebp should be 21  (0x15)
+    addl %ebp, %esi      #%esi should be 28  (0x1c)
+    addl %esi, %edi      #%edi should be 36  (0x24)
+    dump 1                
+    subl %edi, %esi      #%esi - %edi = -8 (0xfffffff8)
+    subl %esi, %ebp      #%ebp - %esi = 29 (0x1d) 
+    subl %ebp, %esp      #%esp - %ebp = -14 (0xfffffff2)
+    subl %esp, %ebx      #0x18
+    subl %ebx, %edx      #0xffffffee
+    subl %edx, %ecx      #0x15
+    subl %ecx, %eax      #0xffffffec
+    dump 1
+    andl %eax, %ecx      #0x4
+    andl %ecx, %edx      #0x4
+    andl %edx, %ebx      #0x0
+    andl %ebx, %esp      #0x0
+    andl %esp, %ebp      #0x0
+    andl %ebp, %esi      #0x0
+    andl %esi, %edi      #0x0
+    dump 1
+    xorl %eax, %ecx      #0xffffffe8  
+    xorl %ecx, %edx      #0xffffffec
+    xorl %edx, %ebx      #0xffffffec
+    xorl %ebx, %esp      #0xffffffec
+    xorl %esp, %ebp      #0xffffffec
+    xorl %ebp, %esi      #0xffffffec
+    xorl %esi, %edi      #0xffffffec
+    dump 1
+#Value being forwarded is produced by an OPL instruction.
+#Forwarding is from W register to Decode stage.
+    irmovl 1, %eax
+    irmovl 2, %ecx
+    irmovl 3, %edx
+    irmovl 4, %ebx
+    irmovl 5, %esp
+    irmovl 6, %ebp
+    irmovl 7, %esi
+    irmovl 8, %edi 
+    dump 1
+    addl %eax, %ecx      #%ecx should be 3
+    nop
+    addl %ecx, %edx      #%edx should be 6
+    nop
+    addl %edx, %ebx      #%ebx should be 10  (0xa) 
+    nop
+    addl %ebx, %esp      #%esp should be 15  (0xf)
+    nop
+    addl %esp, %ebp      #%ebp should be 21  (0x15)
+    nop
+    addl %ebp, %esi      #%esi should be 28  (0x1c)
+    nop
+    addl %esi, %edi      #%edi should be 36  (0x24)
+    dump 1                
+    subl %edi, %esi      #%esi - %edi = -8 (0xfffffff8)
+    nop
+    subl %esi, %ebp      #%ebp - %esi = 29 (0x1d) 
+    nop
+    subl %ebp, %esp      #%esp - %ebp = -14 (0xfffffff2)
+    nop
+    subl %esp, %ebx      #0x18
+    nop
+    subl %ebx, %edx      #0xffffffee
+    nop
+    subl %edx, %ecx      #0x15
+    nop
+    subl %ecx, %eax      #0xffffffec
+    dump 1
+    andl %eax, %ecx      #0xffffffec
+    nop
+    andl %ecx, %edx      #0x4
+    nop
+    andl %edx, %ebx      #0x4
+    nop
+    andl %ebx, %esp      #0x0
+    nop
+    andl %esp, %ebp      #0x0
+    nop
+    andl %ebp, %esi      #0x0
+    nop
+    andl %esi, %edi      #0x0
+    dump 1
+    xorl %eax, %ecx      #0xffffffec  
+    nop
+    xorl %ecx, %edx      #0xffffffe8
+    nop
+    xorl %edx, %ebx      #0xffffffec
+    nop
+    xorl %ebx, %esp      #0xffffffec
+    nop
+    xorl %esp, %ebp      #0xffffffec
+    nop
+    xorl %ebp, %esi      #0xffffffec
+    nop
+    xorl %esi, %edi      #0xffffffec
+    dump 1
+#Value forwarded is produced by an OPL instruction and needed by
+#an OPL instruction.  Forwarding is through the register file.
+    irmovl 1, %eax
+    irmovl 2, %ecx
+    irmovl 3, %edx
+    irmovl 4, %ebx
+    irmovl 5, %esp
+    irmovl 6, %ebp
+    irmovl 7, %esi
+    irmovl 8, %edi 
+    dump 1
+    addl %eax, %ecx      #%ecx should be 3
+    nop
+    nop
+    addl %ecx, %edx      #%edx should be 6
+    nop
+    nop
+    addl %edx, %ebx      #%ebx should be 10  (0xa) 
+    nop
+    nop
+    addl %ebx, %esp      #%esp should be 15  (0xf)
+    nop
+    nop
+    addl %esp, %ebp      #%ebp should be 21  (0x15)
+    nop
+    nop
+    addl %ebp, %esi      #%esi should be 28  (0x1c)
+    nop
+    nop
+    addl %esi, %edi      #%edi should be 36  (0x24)
+    dump 1                
+    subl %edi, %esi      #%esi - %edi = -8 (0xfffffff8)
+    nop
+    nop
+    subl %esi, %ebp      #%ebp - %esi = 29 (0x1d) 
+    nop
+    nop
+    subl %ebp, %esp      #%esp - %ebp = -14 (0xfffffff2)
+    nop
+    nop
+    subl %esp, %ebx      #0x18
+    nop
+    nop
+    subl %ebx, %edx      #0xffffffee
+    nop
+    nop
+    subl %edx, %ecx      #0x15
+    nop
+    nop
+    subl %ecx, %eax      #0xffffffec
+    nop
+    dump 1
+    andl %eax, %ecx      #0xffffffec
+    nop
+    nop
+    andl %ecx, %edx      #0x4
+    nop
+    nop
+    andl %edx, %ebx      #0x4
+    nop
+    nop
+    andl %ebx, %esp      #0x0
+    nop
+    nop
+    andl %esp, %ebp      #0x0
+    nop
+    nop
+    andl %ebp, %esi      #0x0
+    nop
+    nop
+    andl %esi, %edi      #0x0
+    nop
+    dump 1
+    xorl %eax, %ecx      #0xffffffec  
+    nop
+    nop
+    xorl %ecx, %edx      #0xffffffe8
+    nop
+    nop
+    xorl %edx, %ebx      #0xffffffec
+    nop
+    nop
+    xorl %ebx, %esp      #0xffffffec
+    nop
+    nop
+    xorl %esp, %ebp      #0xffffffec
+    nop
+    nop
+    xorl %ebp, %esi      #0xffffffec
+    nop
+    nop
+    xorl %esi, %edi      #0xffffffec
+    nop
+    dump 1
+#Value being forwarded is produced by a OPL instruction and needed by 
+#an rrmovl instruction
+    irmovl 1, %eax
+    irmovl 2, %ecx
+    irmovl 0, %edx
+    irmovl 0, %ebx
+    irmovl 0, %esp
+    irmovl 0, %ebp
+    irmovl 0, %esi
+    irmovl 0, %edi 
+    addl %eax, %ecx
+    rrmovl %ecx, %edx
+    dump 1                # %edx should be 3
+    addl %eax, %ecx 
+    nop
+    rrmovl %ecx, %edx     # %edx should be 4
+    dump 1
+#Value being forwarded is produced by an OPL instruction and needed
+#by a pushl instruction
+    irmovl 5, %eax
+    irmovl 9, %ecx
+    irmovl 0, %edx
+    irmovl 0, %ebx
+    irmovl Stack, %esp
+    irmovl 0, %ebp
+    irmovl 0, %esi
+    irmovl 0, %edi 
+    subl %eax, %ecx
+    pushl %ecx
+    nop
+    nop
+    popl %edx
+    dump 1             #%edx should contain 4
+    irmovl 5, %eax
+    irmovl 9, %ecx
+    irmovl 0, %edx
+    irmovl 0, %ebx
+    irmovl Stack, %esp
+    irmovl 0, %ebp
+    irmovl 0, %esi
+    irmovl 0, %edi 
+    xorl %eax, %ecx
+    nop
+    pushl %ecx
+    nop
+    nop
+    popl %edx       #%edx should contain 12 (0xc)
+    dump 1
+#
+#   value being forwarded is needed by a RMMOVL
+    irmovl 0, %edx
+    irmovl 0, %ebx
+    irmovl 0, %esi
+    irmovl 0, %edi
+    irmovl 0, %esp
+    irmovl 0, %ebp
+    irmovl Data, %eax
+    nop
+    irmovl 3, %ecx
+    rmmovl %ecx, 0(%eax)
+    dump 5                     #m[Data] = 3, %ecx = 3, %eax = Data
+#
+#   value being forwarded is needed by a RMMOVL
+    irmovl 0, %edx
+    irmovl 0, %ebx
+    irmovl 0, %esi
+    irmovl 0, %edi
+    irmovl 0, %esp
+    irmovl 0, %ebp
+    irmovl Data, %eax
+    nop
+    irmovl 0x13, %ecx
+    nop
+    rmmovl %ecx, 0(%eax)
+    dump 5                     #m[Data] = 13, %ecx = 13, %eax = Data
+    halt
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    .align 4
+Data: .long 0
+    .pos 0x400
+Stack: .long   0

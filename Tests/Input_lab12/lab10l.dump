@@ -1,0 +1,18 @@
+Invalid memory address
+%eax: fffffffd %ecx: 00000026 %edx: 00000000 %ebx: 00000000
+%esp: 00000000 %ebp: 00000000 %esi: 00000000 %edi: 00000000
+
+CC - ZF: 0 SF: 0 OF: 0
+F - predPC: 0000001c
+D - stat: 1 icode: 6 ifun: 2 rA: 0 rB: 0 valC: 00000000  valP: 0000001c
+E - stat: 1 icode: 5  ifun: 0  valC: 00000000 valA: 00000000 valB: 00000000
+    dstE: f dstM: 2 srcA: f srcB: 1
+M - stat: 1 icode: 1 Cnd: 0 valE: 00000000 valA: 00000000 dstE: f dstM: f
+W - stat: 3 icode: 5 valE: 00000026 valM: 00000000 dstE: f dstM: 1
+
+000: fffdf030 f130ffff 00000026 00115010 10000000 00002150 00620000 000001c0 
+020: 10100000 00041010 00000000 00000000 00000000 00000000 00000000 00000000 
+040: 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000 *
+
+
+Total clock cycles = 8

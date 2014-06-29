@@ -1,0 +1,38 @@
+                      | 
+                      | /* This input file tests the ADDL instruction. */    
+  0x000: 30f0ffffffff |     irmovl  $-1, %eax
+  0x006: 30f103000000 |     irmovl  3,  %ecx
+  0x00c: c007000000   |     dump  7
+  0x011: 10           |     nop
+  0x012: 6001         |     addl  %eax, %ecx
+  0x014: c003000000   |     dump  3                    #SF = 0, ZF = 0, OF = 0, %ecx = 2
+  0x019: 30f0ffffffff |     irmovl  $-1, %eax
+  0x01f: 30f1fdffffff |     irmovl  -3,  %ecx
+  0x025: 10           |     nop
+  0x026: 10           |     nop
+  0x027: 6001         |     addl  %eax, %ecx
+  0x029: c003000000   |     dump 3                    #SF = 1, ZF = 0, OF = 0, %ecx = -4
+  0x02e: 30f0ffffffff |     irmovl  $-1, %eax
+  0x034: 30f101000000 |     irmovl  1,  %ecx
+  0x03a: 10           |     nop
+  0x03b: 10           |     nop
+  0x03c: 6001         |     addl  %eax, %ecx
+  0x03e: c003000000   |     dump 3                    #SF = 0, ZF = 1, OF = 0, %ecx = 0
+  0x043: 30f000000080 |     irmovl  0x80000000, %eax
+  0x049: 30f100000080 |     irmovl  0x80000000, %ecx
+  0x04f: 10           |     nop
+  0x050: 10           |     nop
+  0x051: 6001         |     addl  %eax, %ecx
+  0x053: c003000000   |     dump 3                    #SF = 0, ZF = 1, OF = 1, %ecx = 0
+  0x058: 30f0ffffff7f |     irmovl  0x7FFFFFFF, %eax
+  0x05e: 30f1ffffff7f |     irmovl  0x7FFFFFFF, %ecx
+  0x064: 10           |     nop
+  0x065: 10           |     nop
+  0x066: 6001         |     addl  %eax, %ecx
+  0x068: c003000000   |     dump 3                    #SF = 1, ZF = 0, OF = 1, %ecx = 0xfffffffe 
+  0x06d: 00           |     halt
+  0x06e: 10           |     nop
+  0x06f: 10           |     nop
+  0x070: 10           |     nop
+  0x071: 10           |     nop
+  0x072: 10           |     nop

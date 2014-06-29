@@ -1,0 +1,69 @@
+                      | 
+                      | # The program copies one array into another.(array values go into copy)
+                      | # This is accomplished by simply changing where the stack pointer is pointing.
+                      | # Pop elemnts out of the original array and push them into the copy.
+                      | # %eax = element 1
+                      | # %ecx = element 2
+                      | # %edx = element 3
+                      | # %ebx = element 4
+                      | # %esp = stack pointer
+                      | 
+  0x000:              |     .pos 0 
+                      | 
+                      |     # point stack pointer to array and copy each element into 
+                      |     # a different register.
+  0x000: 30f400010000 |     irmovl array, %esp
+  0x006: 10           |     nop
+  0x007: 10           |     nop
+  0x008: b00f         |     popl %eax 
+  0x00a: 10           |     nop
+  0x00b: 10           |     nop
+  0x00c: b01f         |     popl %ecx
+  0x00e: 10           |     nop
+  0x00f: 10           |     nop
+  0x010: b02f         |     popl %edx
+  0x012: 10           |     nop
+  0x013: 10           |     nop
+  0x014: b03f         |     popl %ebx
+  0x016: 10           |     nop
+  0x017: 10           |     nop
+                      |     # pointstack pointer to copy and put each element into
+                      |     # corresponding spot.
+  0x018: 30f470010000 |     irmovl copy, %esp
+  0x01e: 10           |     nop
+  0x01f: 10           |     nop
+  0x020: a03f         |     pushl %ebx
+  0x022: 10           |     nop
+  0x023: 10           |     nop
+  0x024: a02f         |     pushl %edx
+  0x026: 10           |     nop
+  0x027: 10           |     nop
+  0x028: a01f         |     pushl %ecx
+  0x02a: 10           |     nop
+  0x02b: 10           |     nop
+  0x02c: a00f         |     pushl %eax
+  0x02e: 10           |     nop
+  0x02f: 10           |     nop
+  0x030: c007000000   |     dump 7
+  0x035: 00           |     halt
+                      |     
+                      |     
+                      | #the following at position 0x100 is the array that will be copied.
+                      | #it is simply an array with four elements(value = index +1)
+  0x100:              |     .pos 0x100
+  0x100:              |     .align 4
+  0x100: 01000000     | array:  .long 0x1
+  0x104: 02000000     |         .long 0x2
+  0x108: 03000000     |         .long 0x3
+  0x10c: 04000000     |         .long 0x4
+                      |         
+                      | #the following at position 0x160 is the array that is having its
+                      | #positions filled with the values from the lable 'array'
+                      |         
+  0x160:              |     .pos 0x160
+  0x160:              |     .align 4
+  0x160: 00000000     |         .long 0x0
+  0x164: 00000000     |         .long 0x0
+  0x168: 00000000     |         .long 0x0
+  0x16c: 00000000     |         .long 0x0
+  0x170:              | copy:    

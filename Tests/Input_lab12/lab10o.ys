@@ -1,0 +1,11 @@
+#
+#   test exception handling
+#
+    irmovl $-4, %ecx
+    andl %ecx, %ecx          
+    halt                     
+    dump 7                   #anything after the halt won't modify memory,
+    irmovl $2, %eax          #condition codes, registers, or dump memory
+    andl %eax, %eax          #
+    irmovl $5, %ebx
+#

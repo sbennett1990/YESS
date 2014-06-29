@@ -1,0 +1,69 @@
+                      | 
+                      | # This program calls a findMax function that returns the
+                      | # maximum value in a NULL terminated list of positive numbers
+                      | 
+  0x000:              |          .pos 0
+                      | # set up the stack for parameter passing and jump to Main
+  0x000: 30f400010000 | init:    irmovl Stack, %esp
+  0x006: 30f500010000 |          irmovl Stack, %ebp
+  0x00c: 7038000000   |          jmp Main
+                      | 
+                      | # list of positive numbers
+  0x014:              | .align 4
+  0x014: a0000000     | list:    .long 0x0a0
+  0x018: b0000000     |          .long 0x0b0
+  0x01c: 000c0000     |          .long 0xc00
+  0x020: 120d0000     |          .long 0xd12
+  0x024: 010c0000     |          .long 0xc01
+  0x028: 200b0000     |          .long 0xb20
+  0x02c: 30000000     |          .long 0x030
+  0x030: 21000000     |          .long 0x021
+  0x034: 00000000     |          .long 0        # end of list
+                      | 
+                      | # Main function:
+                      | # push the starting address of list onto the stack in
+                      | # order to pass it as a parameter to findMax and
+                      | # call findMax
+  0x038: 30f214000000 | Main:    irmovl list, %edx 
+  0x03e: a02f         |          pushl %edx
+  0x040: 8046000000   |          call findMax
+  0x045: 00           |          halt
+                      | 
+                      | # findMax function:
+                      | # input:  parameter that is the starting address of a NULL
+                      | #         terminated list of numbers
+                      | #
+                      | # output: returns in register %eax the maximum value in the list
+                      | #
+  0x046: a05f         | findMax:  pushl %ebp
+  0x048: 2045         |           rrmovl %esp, %ebp
+                      | #
+                      |           # %ecx set to starting address of NULL terminated list
+  0x04a: 501508000000 |           mrmovl 8(%ebp), %ecx         
+                      |           
+                      |           # you code goes here
+  0x050: 30f604000000 |           irmovl $4, %esi       #set incrementer to 4 
+  0x056: 500100000000 |           mrmovl(%ecx), %eax    #copies value at address in %ecx to %eax
+  0x05c: 6200         |           andl %eax, %eax       
+  0x05e: 7382000000   |           je End                #if first value is zero(end of list) it is an emptylist, so end program
+  0x063: 6061         | Loop:     addl %esi, %ecx       #increment %ecx by 4(next element in list)
+  0x065: 30f700000000 |           irmovl $0, %edi       #put zero in %edi(for comparison purposes later)
+  0x06b: 503100000000 |           mrmovl (%ecx), %ebx   #copies value at incremented address in %ecx to %ebx
+  0x071: 6037         |           addl %ebx, %edi       #check if value at current address is zero(end of list)
+  0x073: 7382000000   |           je End                #if zero end findMax 
+  0x078: 2032         |           rrmovl %ebx, %edx     #if not zero copie value in %ebx into %edx(keeps track of value for later)
+  0x07a: 6102         |           subl %eax, %edx       #subtract value of %eax by %edx
+  0x07c: 715d000000   |           jle Loop              #if less than or equal to zero loop again
+  0x081: 2030         |           rrmovl %ebx, %eax     #if greater than zero copy new max value into %eax
+  0x083: 755d000000   |           jge Loop              #run loop again
+  0x088:              | End:                            
+                      | #         Be sure to return the result in
+                      | #         register %eax.
+                      | #
+                      |           
+  0x088: b05f         |           popl %ebp
+  0x08a: 90           |           ret
+                      | 
+                      | 
+  0x100:              |     .pos 0x100
+  0x100:              | Stack:

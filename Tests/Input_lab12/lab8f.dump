@@ -1,0 +1,14 @@
+%eax: fffffffe %ecx: fffffffe %edx: 00000000 %ebx: 7fffffff
+%esp: 00000000 %ebp: 00000000 %esi: 00000000 %edi: 00000000
+
+%eax: 80000000 %ecx: 00000000 %edx: 00000000 %ebx: 80000000
+%esp: 00000000 %ebp: 00000000 %esi: 00000000 %edi: 00000000
+
+%eax: 80000000 %ecx: 00000001 %edx: 00000000 %ebx: 80000000
+%esp: 00000000 %ebp: 00000000 %esi: 00000000 %edi: 00000000
+
+%eax: fffffffd %ecx: fffffffd %edx: 00000000 %ebx: 7fffffff
+%esp: 00000000 %ebp: 00000000 %esi: 00000000 %edi: 00000000
+
+
+Total clock cycles = 53

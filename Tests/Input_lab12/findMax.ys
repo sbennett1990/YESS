@@ -1,0 +1,68 @@
+# This program calls a findMax function that returns the
+# maximum value in a NULL terminated list of positive numbers
+
+         .pos 0
+# set up the stack for parameter passing and jump to Main
+init:    irmovl Stack, %esp
+         irmovl Stack, %ebp
+         jmp Main
+
+# list of positive numbers
+.align 4
+list:    .long 0x0a0
+         .long 0x0b0
+         .long 0xc00
+         .long 0xd12
+         .long 0xc01
+         .long 0xb20
+         .long 0x030
+         .long 0x021
+         .long 0        # end of list
+
+# Main function:
+# push the starting address of list onto the stack in
+# order to pass it as a parameter to findMax and
+# call findMax
+Main:    irmovl list, %edx 
+         pushl %edx
+         call findMax
+         halt
+
+# findMax function:
+# input:  parameter that is the starting address of a NULL
+#         terminated list of numbers
+#
+# output: returns in register %eax the maximum value in the list
+#
+findMax:  pushl %ebp
+          rrmovl %esp, %ebp
+#
+          # %ecx set to starting address of NULL terminated list
+          mrmovl 8(%ebp), %ecx         
+          
+          # you code goes here
+          irmovl $4, %esi       #set incrementer to 4 
+          mrmovl(%ecx), %eax    #copies value at address in %ecx to %eax
+          andl %eax, %eax       
+          je End                #if first value is zero(end of list) it is an emptylist, so end program
+Loop:     addl %esi, %ecx       #increment %ecx by 4(next element in list)
+          irmovl $0, %edi       #put zero in %edi(for comparison purposes later)
+          mrmovl (%ecx), %ebx   #copies value at incremented address in %ecx to %ebx
+          addl %ebx, %edi       #check if value at current address is zero(end of list)
+          je End                #if zero end findMax 
+          rrmovl %ebx, %edx     #if not zero copie value in %ebx into %edx(keeps track of value for later)
+          subl %eax, %edx       #subtract value of %eax by %edx
+          jle Loop              #if less than or equal to zero loop again
+          rrmovl %ebx, %eax     #if greater than zero copy new max value into %eax
+          jge Loop              #run loop again
+End:                            
+#         Be sure to return the result in
+#         register %eax.
+#
+          
+          popl %ebp
+          ret
+
+
+    .pos 0x100
+Stack:

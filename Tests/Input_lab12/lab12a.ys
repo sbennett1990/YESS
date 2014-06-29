@@ -1,0 +1,43 @@
+#
+#    This file tests the bubble and stall caused by halt and
+#    ret instructions
+#
+    .pos 0
+    irmovl Stack, %esp
+    irmovl Stack, %ebp
+    jmp Main
+#
+Main:   irmovl $11, %eax
+        pushl %eax
+        call AddOne
+        popl %eax
+        dump 7
+        irmovl $13, %eax
+        pushl %eax
+        call AddOne
+        popl %eax
+        dump 7
+        halt
+        irmovl 0x3456789a, %esi      #these will be fetched
+        irmovl 0x3456789a, %edi      #and turned to nops
+        irmovl 0x3456789a, %ebx      #when they reach W
+#
+AddOne: nop
+        nop
+        nop
+        dump 7 
+        pushl %ebp
+        rrmovl %esp, %ebp
+        mrmovl 8(%ebp), %ecx         #ecx should be 11 (0xb)
+        irmovl 1, %edx
+        addl %edx, %ecx
+        rmmovl %ecx, 8(%ebp)         #set 8(%ebp) to 12 (0xc)
+        rrmovl %ebp, %esp
+        popl %ebp
+        ret
+        irmovl 0xabcdef12, %esi      #the first instruction will
+        irmovl 0xabcdef12, %edi      #fetched and changed to nop
+        irmovl 0xabcdef12, %ebx      #three times
+        .pos 0x100
+Stack:
+
