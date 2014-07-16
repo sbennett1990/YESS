@@ -1,4 +1,4 @@
-/**
+/*
  * File:   bool.h
  * Author: Cindy Norris
  */
