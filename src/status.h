@@ -1,4 +1,4 @@
-/**
+/*
  * File:   status.h
  * Author: Alex Savarda
  */
