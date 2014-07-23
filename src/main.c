@@ -1,10 +1,11 @@
-/**
+/*
  * File:   main.c
  * Author: Scott Bennett
  */
 
 #include <stdio.h>
 #include <stdlib.h>
+
 #include "bool.h"
 #include "tools.h"
 #include "memory.h"
@@ -20,11 +21,8 @@
 #include "writebackStage.h"
 
 // Prototypes for "private" functions
-void initialize(void);
+static void initialize(void);
 
-/*
- * main
- */
 int main(int argc, char * argv[]) {
     (void)initialize();
     
@@ -70,5 +68,4 @@ void initialize() {
     (void)clearMregister();
     (void)clearWregister();
 }
-
 
