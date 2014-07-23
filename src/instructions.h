@@ -1,9 +1,9 @@
-﻿/**
+/*
  * File:   instructions.h
  * Author: Scott Bennett
  */
 
- // icodes
+// icodes
 #define HALT    0x0
 #define NOP     0x1
 #define RRMOVL  0x2
@@ -18,7 +18,7 @@
 #define POPL    0xB
 #define DUMP    0xC
 
- // ifuns
+// ifuns
 #define ADDL    0x0
 #define SUBL    0x1
 #define ANDL    0x2
@@ -40,8 +40,10 @@
 #define JGE     0x5
 #define JG      0x6
 
- // Status codes
-#define SAOK   1
-#define SHLT   2
-#define SADR   3
-#define SINS   4
+// Status codes
+#define SAOK  1
+#define SHLT  2
+#define SADR  3
+#define SINS  4
+
+
