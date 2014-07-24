@@ -11,3 +11,21 @@ less a subset of x86. Y86 embodies elements of RISC and CISC archetectures.
 
 unix> ./yess \<filename\>.yo
 
+###Assembly:
+
+y86 is a theoretical assembly language. However, the YESS program simulates
+y86 machine code. In the bin folder there is a tool that "assembles" y86
+source code into the required machine code, which has a .yo extension. This 
+is the y86 assembler: yas.
+
+###References:
+
+See the CS:APP2e website for more information on Y86 and running the simulator.
+It includes a lot of useful information on the design of a y86 processor.
+
+http://csapp.cs.cmu.edu/public/students.html
+
+The PDF simulator guide also has great information, although not all of it
+is relavent to YESS. YESS is more closely related to the PIPE machine.
+
+http://csapp.cs.cmu.edu/public/simguide.pdf
