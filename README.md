@@ -21,11 +21,13 @@ is the y86 assembler: yas.
 ###References:
 
 See the CS:APP2e website for more information on Y86 and running the simulator.
-It includes a lot of useful information on the design of a y86 processor.
+It includes a lot of useful information on the design of a y86 processor. There 
+are also reference tools and programs, including an assembler.
 
 http://csapp.cs.cmu.edu/public/students.html
 
 The PDF simulator guide also has great information, although not all of it
-is relavent to YESS. YESS is more closely related to the PIPE machine.
+is relavent to YESS. YESS is more closely related to the PIPE machine that 
+is mentioned.
 
 http://csapp.cs.cmu.edu/public/simguide.pdf
