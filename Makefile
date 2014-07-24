@@ -1,19 +1,19 @@
 #
-# Makefile for Y86 Simulator
+# Makefile for Y86 Simulator (YESS)
 #
 
 CC = gcc
-CFLAGS = -g -std=c99 -Wall \
-         -Wno-unused-parameter -Wformat \
-         -fstack-protector -Wformat-security -Wformat-nonliteral \
-		 -Wno-deprecated -Winit-self -Wpointer-arith -fno-exceptions -m64
+#CFLAGS = -g -std=c99 -Wall -m64 \
+CFLAGS = -Wno-unused-parameter -Wformat \
+ -fstack-protector -Wformat-security -Wformat-nonliteral \
+ -Wno-deprecated -Winit-self -Wpointer-arith -fno-exceptions
 LDFLAGS = -Wl,-z,relro -Wl,-z,now \
           -Wl,-O1 -Wl,--no-undefined
 SRC = ./src
 
 yess: tools.o registers.o memory.o fetchStage.o decodeStage.o executeStage.o \
       memoryStage.o writebackStage.o loader.o dump.o main.o
-	$(CC) tools.o registers.o memory.o decodeStage.o executeStage.o \
+	$(CC) $(LDFLAGS) tools.o registers.o memory.o decodeStage.o executeStage.o \
     fetchStage.o memoryStage.o writebackStage.o loader.o dump.o main.o -o yess
 
 registers.o: $(SRC)/bool.h $(SRC)/registers.h $(SRC)/tools.h
