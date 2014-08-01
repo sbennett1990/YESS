@@ -1,9 +1,10 @@
-/** 
+/*
  * File:   dump.c
  * Author: Cindy Norris
  */
 
 #include <stdio.h>
+
 #include "bool.h"
 #include "dump.h"
 #include "forwarding.h"
@@ -18,20 +19,21 @@
 #define WORDSPERLINE 8
 #define LINELENGTH
 
-/* prototypes of Functions only called within this file */
+/* Prototypes for private Functions */
 static void dumpLine(int line[WORDSPERLINE], int address);
 static void buildLine(int line[WORDSPERLINE], int address);
 static int isEqual(int prevLine[WORDSPERLINE], int currLine[WORDSPERLINE]);
 static void copy(int *, int *);
 
-// Function: dumpMemory
-// Description: Outputs the contents of the YESS little-endian memory 
-//              WORDSPERLINE four-byte words per line.  A * is displayed 
-//              at the end of a line if each line in memory after that 
-//              up to the next ine displayed is identical to the * line.
-// Params: none
-// Returns: none
-// Modifies: none
+/*
+ * Outputs the contents of the YESS little-endian memory WORDSPERLINE 
+ * four-byte words per line.  A * is displayed at the end of a line if 
+ * each line in memory after that up to the next line displayed is 
+ * identical to the * line.
+ * 
+ * Parameters:
+ *      none
+ */
 void dumpMemory() {
     int address = 0;
     int prevLine[WORDSPERLINE];
@@ -52,8 +54,10 @@ void dumpMemory() {
           dumpLine(currLine, address);
           star = 0;
        }
+       
        copy(prevLine, currLine);
     }
+    
     printf("\n");
 }
 
@@ -63,6 +67,14 @@ void dumpMemory() {
 // Params:  cline - array of ints (current line)
 // Returns: pline - initialized to values in cline (previous line)
 // Modifies: none
+/*
+ * This Function copies the contents of the cLine array into the pLine array.
+ * 
+ * Parameters:
+ *      cLine   array of ints (current line)
+ * 
+ * Return pLine - initialized to values in cLine (previous line)
+ */
 void copy(int pLine[WORDSPERLINE], int cLine[WORDSPERLINE]) {
     int i;
     for (i = 0; i < WORDSPERLINE; i++) 
