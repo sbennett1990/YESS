@@ -1,4 +1,4 @@
-/**
+/*
  * File:   registers.h
  * Author: Scott Bennett
  */
@@ -11,19 +11,19 @@
 #define EBP    0x5
 #define ESI    0x6
 #define EDI    0x7
-#define REGSIZE 8         //number of registers
-#define ZF     0x2        //zero flag is bit 2 of CC
-#define SF     0x1        //sign flag is bit 1 of CC
-#define OF     0x0        //overflow flag is bit 0 of CC
-#define RNONE  0xf        //no register needed
+#define REGSIZE  8        // number of registers
+#define ZF     0x2        // zero flag - bit 2 of the condition code (CC)
+#define SF     0x1        // sign flag - bit 1 of the condition code (CC)
+#define OF     0x0        // overflow flag - bit 0 of the condition code (CC)
+#define RNONE  0xf        // i.e. - no register needed
 
 #ifndef REGISTERS_H
 #define	REGISTERS_H
-unsigned int getRegister(int regNum);
-void setRegister(int regNum, unsigned int regValue);
-void clearRegisters(void);
 void clearCC(void);
-void setCC(unsigned int bitNumber, unsigned int value);
+void clearRegisters(void);
 unsigned int getCC(unsigned int bitNumber);
+unsigned int getRegister(int regNum);
+void setCC(unsigned int bitNumber, unsigned int value);
+void setRegister(int regNum, unsigned int regValue);
 #endif	/* REGISTERS_H */
 
