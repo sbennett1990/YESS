@@ -1,4 +1,4 @@
-/** 
+/*
  * File:   tools.c
  * Author: Scott Bennett
  */
@@ -6,7 +6,7 @@
 #include "bool.h"
 #include "tools.h"
 
-/**
+/*
  * Returns the bits in the range low to high from source.
  *
  * Parameters: 
@@ -31,7 +31,7 @@ unsigned int getBits(int low, int high, unsigned int source) {
     return answer;
 } 
 
-/**
+/*
  * Change the bits in the range [low..high] in source to 1's.
  *
  * Parameters:
@@ -39,7 +39,7 @@ unsigned int getBits(int low, int high, unsigned int source) {
  *      high    leftmost bit
  *      source  integer to set the bits in
  *
- * Retern source unchanged for error, else the unsigned integer
+ * Return source unchanged for error, else the unsigned integer
  * with the appropriate range of bits set to 1's.
  */
 unsigned int setBits(int low, int high, unsigned int source) {
@@ -64,7 +64,7 @@ unsigned int setBits(int low, int high, unsigned int source) {
     return source;
 }
 
-/**
+/*
  * Change the bits in the range [low..high] in source to 0's.
  *
  * Parameters:
@@ -91,20 +91,22 @@ unsigned int clearBits(int low, int high, unsigned int source) {
     clear = clear >> rightAmount;
     clear = clear << low;
     clear = ~clear;
-
-
+    
     source = source & clear;  // AND source and clear so bit range is 0's
 
     return source;
 }
 
-/**
+/*
  * Set the value of one bit in source to either 0 or 1.
  *
  * Parameters:
- *      bitNumber   which bit to set, [0..31]
+ *      bitNumber   the bit to set, [0..31]
  *      bitValue    either 0 or 1
- *      source      integer to set the bit
+ *      source      integer being changed
+ * 
+ * Return source unchanged for error, else the unsigned integer
+ * with the appropriate bit set.
  */
 unsigned int assignOneBit(int bitNumber, int bitValue, unsigned int source) {
     if (bitNumber < 0 || bitNumber > INTHIGHBIT || 
@@ -125,8 +127,8 @@ unsigned int assignOneBit(int bitNumber, int bitValue, unsigned int source) {
     return source;
 }
 
-/**
- * Returns the data in a specified byte number of a source int (0-3).
+/*
+ * Return the data in a specified byte number (o-3) of a source int.
  *
  * Parameters:
  *      byteNo  the byte of data to grab
@@ -150,8 +152,8 @@ unsigned char getByteNumber(int byteNo, unsigned int source) {
     return character;
 }
 
-/**
- * Replaces a byte of data in the source number with a specified byte
+/*
+ * Replace a byte of data in the source number with a specified byte
  * of new data.
  *
  * Parameters:
@@ -181,8 +183,8 @@ unsigned int putByteNumber(int byteNo, unsigned char byteValue,
     return source;
 }
 
-/**
- * Takes four bytes of data and builds one unsigned int from these
+/*
+ * Take four bytes of data and build one unsigned int from these
  * bytes.
  *
  * Parameters:
@@ -196,18 +198,21 @@ unsigned int putByteNumber(int byteNo, unsigned char byteValue,
 unsigned int buildWord(unsigned char byte0, unsigned char byte1, 
                        unsigned char byte2, unsigned char byte3) {
    unsigned int num = byte3;
+   
    // shift the num over one byte and add the next byte; repeat
    num = num << BYTESIZE;
    num += byte2;
+   
    num = num << BYTESIZE;
    num += byte1;
+   
    num = num << BYTESIZE;
    num += byte0;
 
    return num;
 }
 
-/**
+/*
  * Test to see if an integer is negative.
  *
  * Parameters:
@@ -220,9 +225,9 @@ bool isNegative(unsigned int source) {
     return source;
 }
 
-/**
- * Puts the character binary representation of the integer
- * source into the array bits.
+/*
+ * Put the character binary representation of the integer
+ * source into the array bits[].
  *
  * Parameters:
  *      source  an unsigned integer
@@ -247,8 +252,8 @@ void expandBits(unsigned int source, char bits[36]) {
     }
 }
 
-/**
- * Set each value in buffer buff to zero, effectively 
+/*
+ * Set each value in buff to zero, effectively 
  * "clearing" it. Can clear a buffer of any size.
  */
 void clearBuffer(char * buff, int size) {
