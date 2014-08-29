@@ -61,12 +61,6 @@ void dumpMemory() {
     printf("\n");
 }
 
-// Function: copy
-// Description: This Function copies the contents of the cLine array into the
-//              pLine array.
-// Params:  cline - array of ints (current line)
-// Returns: pline - initialized to values in cline (previous line)
-// Modifies: none
 /*
  * This Function copies the contents of the cLine array into the pLine array.
  * 
@@ -81,13 +75,16 @@ void copy(int pLine[WORDSPERLINE], int cLine[WORDSPERLINE]) {
         pLine[i] = cLine[i];
 }
 
-// Function: dumpLine
-// Description: This Function outputs the starting address in the variable
-//              address and the contents of the line array.
-// Params: line - array of ints to output
-//        address - row header
-// Returns: none
-// Modifies: none
+/*
+ * This Function outputs the starting address in the variable 
+ * address and the contents of the line array.
+ * 
+ * Parameters:
+ *      line    array of ints to output
+ *      address row header
+ * 
+ * Return none
+ */
 void dumpLine(int line[WORDSPERLINE], int address) {
     int i;
     printf("%03x: ", address*4);
@@ -95,13 +92,19 @@ void dumpLine(int line[WORDSPERLINE], int address) {
         printf("%08x ", line[i]);
 }
 
-// Function: buildLine
-// Descripton: This Function accesses memory for WORDSPERLINE words and 
-//             sets the line array to the WORDSPERLINE
-//             words from memory.
-// Params: address - starting index to access memory
-// Returns: none
-// Modifies: line - array initialized to values in memory
+/*
+ * This function accesses memory for WORDSPERLINE words and sets
+ * the line array to the WORDSPERLINE words from memory.
+ * 
+ * Parameters:
+ *      line    array of ints
+ *      address starting index to access memory
+ * 
+ * Return none
+ * 
+ * Modifies: 
+ *      line - array initialized to values in memory
+ */
 void buildLine(int line[WORDSPERLINE], int address) {
     int i;
     char byte0, byte1, byte2, byte3;
@@ -111,13 +114,16 @@ void buildLine(int line[WORDSPERLINE], int address) {
         line[i] = getWord((address * 4), &memError);
 }
 
-// Function: isEqual
-// Description: This Function compares the contents of prevLine and currLine
-//              and returns TRUE if they are equal.
-// Params: prevLine - array of ints
-//        currLine - array of ints
-// Returns: returns TRUE if prevLine and currLine are identical
-// Modifies: none
+/*
+ * This function compares the contents of prevLine and currLine
+ * and returns TRUE if the are equal.
+ * 
+ * Parameters:
+ *      prevLine    array of ints
+ *      currLine    array of ints
+ * 
+ * Return TRUE if prevLine and currLine are identical
+ */
 int isEqual(int prevLine[WORDSPERLINE], int currLine[WORDSPERLINE]) {
     int i;
     for (i = 0; i < WORDSPERLINE; i++)
@@ -125,12 +131,15 @@ int isEqual(int prevLine[WORDSPERLINE], int currLine[WORDSPERLINE]) {
     return TRUE;
 }
 
-// Function: dumpProgramRegisters
-// Description: This Function outputs the contents of the YESS program registers
-//              to standard out.
-// Params: none
-// Returns: none
-// Modifies: none
+/*
+ * This function outputs the contents of the YESS program registers
+ * to standard out.
+ * 
+ * Parameters:
+ *      none
+ * 
+ * Return none
+ */
 void dumpProgramRegisters() {
     printf("%%eax: %08x %%ecx: %08x %%edx: %08x %%ebx: %08x\n",
            getRegister(EAX), getRegister(ECX), getRegister(EDX), 
@@ -140,12 +149,15 @@ void dumpProgramRegisters() {
            getRegister(EDI));
 }
 
-// Function: dumpProcessorRegisters
-// Description: This Function outputs the contents of the YESS 
-//              processor registers to standard out.
-// Params: none
-// Returns: none
-// Modifies: none
+/*
+ * This function outputs the contents of the YESS processor
+ * registers to standard out.
+ * 
+ * Parameters:
+ *      none
+ * 
+ * Return none
+ */
 void dumpProcessorRegisters() {
     fregister F = getFregister();
     dregister D = getDregister();
