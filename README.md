@@ -3,20 +3,25 @@ YESS
 
 A y86 (Assembly Code) Simulator
 
-Simulates a "Y86" processor. It will run y86 assembly code, which is more or
-less a subset of x86. Y86 embodies elements of RISC and CISC archetectures.
+Simulates a "Y86" processor. The program simulates the execution of y86 machine code, 
+which is more or less a subset of x86. Being a teaching language, y86 embodies elements 
+of RISC and CISC archetectures.
 
-
-###Use:
-
-unix> ./yess \<filename\>.yo
 
 ###Assembly:
 
 y86 is a theoretical assembly language. However, the YESS program simulates
 y86 machine code. In the bin folder there is a tool that "assembles" y86
-source code into the required machine code, which has a .yo extension. This 
-is the y86 assembler: yas.
+source code into the required machine code (just ASCII text), which has a .yo 
+extension. This is the y86 assembler: yas.
+
+###Use:
+
+To assemble y86 source:
+unix> ./yas \<filename\>.ys
+
+To simulate y86 machine code:
+unix> ./yess \<filename\>.yo
 
 ###References:
 
