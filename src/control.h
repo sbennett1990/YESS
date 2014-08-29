@@ -1,4 +1,4 @@
-/**
+/*
  * File:   control.h
  * Author: Alex Savarda
  */
