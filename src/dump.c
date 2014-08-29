@@ -39,6 +39,7 @@ void dumpMemory() {
     int prevLine[WORDSPERLINE];
     int currLine[WORDSPERLINE];
     int star = 0;
+    
     buildLine(prevLine, address);
     dumpLine(prevLine, address);
     
@@ -107,8 +108,8 @@ void dumpLine(int line[WORDSPERLINE], int address) {
  */
 void buildLine(int line[WORDSPERLINE], int address) {
     int i;
-    char byte0, byte1, byte2, byte3;
     bool memError;
+    char byte0, byte1, byte2, byte3;
     
     for (i = 0; i < WORDSPERLINE; i++, address++)
         line[i] = getWord((address * 4), &memError);
@@ -126,8 +127,12 @@ void buildLine(int line[WORDSPERLINE], int address) {
  */
 int isEqual(int prevLine[WORDSPERLINE], int currLine[WORDSPERLINE]) {
     int i;
-    for (i = 0; i < WORDSPERLINE; i++)
-        if (prevLine[i] != currLine[i]) return FALSE;
+    for (i = 0; i < WORDSPERLINE; i++) {
+        if (prevLine[i] != currLine[i]) {
+            return FALSE;
+        }
+    }
+    
     return TRUE;
 }
 
