@@ -1,6 +1,7 @@
 /*
  * File:   dump.c
  * Author: Cindy Norris
+ * Modified: Scott Bennett
  */
 
 #include <stdio.h>
