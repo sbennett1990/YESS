@@ -132,8 +132,10 @@ void fetchStage(forwardType forward, controlType control) {
 /* 
  * Select the source of the PC.
  * 
- * @param forward Holds values forwarded from previous stages
- * @return Source value for the PC
+ * Parameters:
+ * 	forward		holds values forwarded from previous stages
+ * 
+ * Return source value for the PC
  */
 unsigned int selectPC(forwardType forward) {
     // Uses forwarded M_valA, W_valM
@@ -151,14 +153,17 @@ unsigned int selectPC(forwardType forward) {
     return F.predPC;
 }
 
-/**
+/* 
  * Predict the value of the next instruction to be
  * executed.
  * 
- * @param icode Instruction code
- * @param valC Constant word, part of instruction
- * @param valP Address of next sequential instruction in memory
- * @return The predicted PC
+ * Parameters:
+ * 	icode 	the instruction code
+ * 	valC	a constant word, part of the instruction
+ * 	valP	the address of next sequential instruction
+ * 			in memory
+ * 
+ * Return the predicted PC
  */
 unsigned int predictPC(unsigned int icode, unsigned int valC, unsigned int valP) {
     if (icode == JXX || icode == CALL) {
@@ -168,13 +173,15 @@ unsigned int predictPC(unsigned int icode, unsigned int valC, unsigned int valP)
     }
 }
 
-/**
+/* 
  * Determine the address of the next sequential instruction in
  * memory. 
- *
- * @param f_pc  Current value of the PC
- * @param icode Instruction code
- * @return Address of next sequential instruction
+ * 
+ * Parameters:
+ * 	f_pc	current value of the PC
+ * 	icode 	the instruction code
+ * 
+ * Return the address of the next sequential instruction
  */
 unsigned int pcIncrement(unsigned int f_pc, unsigned int icode) {
     unsigned int valP;
@@ -212,12 +219,14 @@ unsigned int pcIncrement(unsigned int f_pc, unsigned int icode) {
     return valP;
 }
 
-/**
+/* 
  * Determine the icode of the fetched instruction.
  * 
- * @param memByte  A byte that should contain the instruction code
- * @param memError Specifies if a memory error occurred
- * @return NOP for a memory error, otherwise the instruction code
+ * Parameters:
+ * 	memByte		a byte that should contain the instruction code
+ * 	memError	specifies whether a memory error occured
+ * 
+ * Return the instruction code, or a NOP for a memory error
  */
 unsigned int getIcode(unsigned int memByte, bool memError) {
 	if (memError) 
@@ -226,12 +235,14 @@ unsigned int getIcode(unsigned int memByte, bool memError) {
 		return getBits(4, 7, memByte);
 }
 
-/**
+/* 
  * Determine the ifun of the fetched instruction.
  * 
- * @param memByte  A byte that should contain the instruction function
- * @param memError Specifies if a memory error occurred
- * @return FNONE for a memory error, otherwise the instruction function
+ * Parameters:
+ * 	memByte 	a byte that should contain the instruction function
+ * 	memError	specifies whether a memory error occured
+ * 
+ * Return the instruction function, or FNONE for a memory error
  */
 unsigned int getIfun(unsigned int memByte, bool memError) {
 	if (memError)
@@ -240,7 +251,7 @@ unsigned int getIfun(unsigned int memByte, bool memError) {
 		return getBits(0, 3, memByte);
 }
 
-/**
+/* 
  * Test if the fetched instruction is valid.
  * 
  * @param icode Instruction code
