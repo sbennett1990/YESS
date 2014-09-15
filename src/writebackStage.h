@@ -1,4 +1,4 @@
-/**
+/* 
  * File:   writebackStage.h
  * Author: Scott Bennett
  */
@@ -25,7 +25,7 @@ struct W {
     unsigned int dstM;
 };
 
-//prototypes for functions called from files other than fetchStage
+// prototypes for functions called from files other than fetchStage
 wregister getWregister(void);
 void clearWregister(void);
 bool writebackStage();
