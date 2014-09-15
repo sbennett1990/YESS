@@ -1,4 +1,4 @@
-/** 
+/* 
  * File:   fetchStage.c
  * Author: Scott Bennett
  */
@@ -14,8 +14,10 @@
 #include "fetchStage.h"
 #include "decodeStage.h"
 
-// F register holds the input for the fetch stage. 
-// It is only accessible from this file.
+/*
+ * F register holds the input for the fetch stage. 
+ * It is only accessible from this file.
+ */
 static fregister F;
 
 // Prototypes for "private" functions
@@ -34,26 +36,29 @@ static bool stallF(controlType control);
 static bool bubbleD(controlType control);
 static bool stallD(controlType control);
 
-/**
- * Return a copy of the F register
+/*
+ * Return a copy of the F register.
+ * 
+ * Return an fregister
  */
 fregister getFregister() {
     return F;
 }
 
-/**
+/* 
  * Clear the F register
  */
 void clearFregister() {
     clearBuffer((char *) &F, sizeof(F));
 }
 
-/**
+/* 
  * Fetch an instruction from memory and update the D register
  * accordingly.
  * 
- * @param forward Holds values forwarded from previous stages
- * @param control Holds values forwarded from later stages
+ * Parameters:
+ * 	forward		holds values forwarded from previous stages
+ * 	control		holds values forwarded from later stages
  */
 void fetchStage(forwardType forward, controlType control) {
     bool memError = FALSE;
@@ -124,7 +129,7 @@ void fetchStage(forwardType forward, controlType control) {
     } // else do nothing because D should be stalled
 }
 
-/**
+/* 
  * Select the source of the PC.
  * 
  * @param forward Holds values forwarded from previous stages
