@@ -252,13 +252,15 @@ unsigned int getIfun(unsigned int memByte, bool memError) {
 }
 
 /* 
- * Test if the fetched instruction is valid.
+ * Test whether the fetched instruction is valid.
  * 
- * @param icode Instruction code
- * @return True if icode is valid, false otherwise
+ * Parameters:
+ * 	icode 	the instruction code
+ * 
+ * Return true if icode is valid; false otherwise
  */
 bool instructionValid(unsigned int icode) {
-    bool valid;
+    bool valid = FALSE;
     
     switch (icode) {
         case HALT:
@@ -276,6 +278,7 @@ bool instructionValid(unsigned int icode) {
         case CALL:
             valid = TRUE;
             break;
+            
         default:
             valid = FALSE;
     }
@@ -283,11 +286,13 @@ bool instructionValid(unsigned int icode) {
     return valid;
 }
 
-/**
+/* 
  * Does fetched instruction require a regid byte?
  * 
- * @param icode Instruction code
- * @return True if icode requires a regid, false otherwise
+ * Parameters:
+ * 	icode 	the instruction code
+ * 
+ * Return true if icode requires a regid; false otherwise
  */
 bool needRegids(unsigned int icode) {
     bool need = FALSE;
@@ -310,11 +315,13 @@ bool needRegids(unsigned int icode) {
     return need;
 }
 
-/**
+/* 
  * Does fetched instruction require a constant word (valC)?
  * 
- * @param icode Instruction code
- * @return True if instruction needs a valC
+ * Parameters:
+ * 	icode 	the instruction code
+ * 
+ * Return true if instruction needs a valC; false otherwise
  */
 bool needValC(unsigned int icode) {
     bool need = FALSE;
@@ -336,12 +343,14 @@ bool needValC(unsigned int icode) {
     return need;
 }
 
-/**
+/* 
  * Get and build the constant word, valC, from memory.
- *
- * @param f_pc      Current value of the PC
- * @param *memError Pointer to memory error status
- * @return Constant word (valC)
+ * 
+ * Parameters:
+ * 	f_pc 		the current value of the PC
+ * 	*memError	pointer to memory error status
+ * 
+ * Return the constant word, valC
  */
 unsigned int getValC(unsigned int f_pc, bool * memError) {
     unsigned char byte0, byte1, byte2, byte3;
