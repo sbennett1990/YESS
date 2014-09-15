@@ -354,64 +354,78 @@ unsigned int getValC(unsigned int f_pc, bool * memError) {
     return buildWord(byte0, byte1, byte2, byte3);
 }
 
-/**
- * Determine if F should be bubbled. According to HCL,
- * F will never be bubbled, therefore it returns false.
+/* 
+ * Determine whether F should be bubbled. 
+ * According to HCL, F will never be bubbled, 
+ * therefore it returns false.
  */
 bool bubbleF() {
     return FALSE;
 }
 
-/**
+/* 
  * Determine if F should be stalled based on input forwarded
  * by later stages.
  * 
- * @param control Holds values from later stages
- * @return True if F needs to be stalled, false otherwise
+ * Parameters:
+ * 	control		holds values from later stages
+ * 
+ * Return true if F need to be stalled; false otherwise
  */
 bool stallF(controlType control) {
     bool stall = FALSE;
 
-    if (((control.E_icode == MRMOVL || control.E_icode == POPL) && (control.E_dstM == control.d_srcA || control.E_dstM == control.d_srcB)) ||
-         (control.D_icode == RET || control.E_icode == RET || control.M_icode == RET)) {
+    if (((control.E_icode == MRMOVL || control.E_icode == POPL) 
+    		&& (control.E_dstM == control.d_srcA || control.E_dstM == control.d_srcB)) 
+    	 || (control.D_icode == RET || control.E_icode == RET || control.M_icode == RET)) 
+    {
           stall = TRUE;
     }
     
     return stall;
 }
 
-/**
+/* 
  * Determine if D needs to be bubbled based on input forwarded
  * by later stages.
  * 
- * @param control Holds values from later stages
- * @return True if D should be bubbled, false otherwise
+ * Parameters:
+ * 	control		holds values from later stages
+ * 
+ * Return true if D should be bubbled; false otherwise
  */
 bool bubbleD(controlType control) {
     bool bubble = FALSE;
     
-    //conditions for mispredicted branch
-    if ((control.E_icode == JXX && !control.e_Cnd) || 
-        (!(stallD(control)) && (RET == control.D_icode || RET == control.E_icode || RET == control.M_icode))) {
+    // conditions for mispredicted branch
+    if ((control.E_icode == JXX && !control.e_Cnd) 
+    	|| 
+        (!(stallD(control)) 
+        	&& (RET == control.D_icode || RET == control.E_icode || RET == control.M_icode))) 
+    {
          bubble = TRUE;
     }
     
     return bubble;
 }
 
-/**
+/* 
  * Determine if D needs to be stalled based on input forwarded
  * by later stages.
  * 
- * @param control Holds values from later stages
- * @return True if D should be stalled, false otherwise
+ * Parameters:
+ * 	control		holds values from later stages
+ * 
+ * Return true if D should be stalled; false otherwise
  */
 bool stallD(controlType control) {
     bool stall = FALSE;
 
     // conditions for load/use hazard
-    if ((control.E_icode == MRMOVL || control.E_icode == POPL) && 
-        (control.E_dstM == control.d_srcA || control.E_dstM == control.d_srcB)) {
+    if ((control.E_icode == MRMOVL || control.E_icode == POPL) 
+    	&& 
+        (control.E_dstM == control.d_srcA || control.E_dstM == control.d_srcB)) 
+    {
          stall = TRUE;
     }
     
