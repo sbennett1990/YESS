@@ -46,11 +46,11 @@ void clearWregister() {
  * Check the current 'stat' for SINS, SADR, and SHLT to HALT or continue
  * program. When an exception is encountered, writeback will return TRUE.
  * 
- * Parameters
+ * Parameters:
  * 	*forward	Holds values forwarded to previous stages
  * 	*status		Holds values of statuses
  * 
- * Returns true if an exception is encountered, and false to
+ * Return true if an exception is encountered, and false to
  * continue program execution.
  */
 bool writebackStage(forwardType * forward, statusType * status) {
@@ -102,7 +102,7 @@ bool writebackStage(forwardType * forward, statusType * status) {
 /* 
  * Update the values in the W register
  * 
- * Parameters
+ * Parameters:
  * 	stat	
  * 	icode	
  * 	valE	
