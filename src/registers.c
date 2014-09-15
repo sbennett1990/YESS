@@ -1,4 +1,4 @@
-/** 
+/* 
  * File:   registers.c
  * Author: Scott Bennett
  */
@@ -10,25 +10,31 @@
 static unsigned int registers[REGSIZE];
 static unsigned int CC;   // Condition code
 
-/**
+/* 
  * Returns the value in the specified register.
  * 
- * @param regNum  Register number
- * @return The register at regNum
+ * Parameters:
+ *  regNum  register number
+ * 
+ * Return the value in the register. In case of error,
+ *  return 0
  */
 unsigned int getRegister(int regNum) {
-    if (regNum >= 0 && regNum < REGSIZE)
+    if (regNum >= 0 && regNum < REGSIZE) {
         return registers[regNum];
+    } else {
+        return 0;
+    }
 }
 
-/**
+/* 
  * Set register regNum to the value regValue.
  *
  * @param regNum   Register number
  * @param regValue Value to put in the register
  */
 void setRegister(int regNum, unsigned int regValue) {
-    if(regNum >= 0 || regNum < REGSIZE)
+    if (regNum >= 0 || regNum < REGSIZE)
         registers[regNum] = regValue;
 }
 
