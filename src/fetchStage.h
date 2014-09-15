@@ -1,7 +1,6 @@
-/**
+/* 
  * File:   fetchStage.h
  * Author: Cindy Norris
- * 
  */
 
 #ifndef FETCHSTAGE_H
@@ -16,7 +15,7 @@ struct F {
 };
 
 
-//prototypes for functions called from files other than fetchStage
+// prototypes for functions called from files other than fetchStage
 fregister getFregister(void);
 void clearFregister(void);
 void fetchStage();
