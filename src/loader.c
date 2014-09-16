@@ -15,6 +15,8 @@
 #include "memory.h"
 #include "tools.h"
 
+#define WHICH_BYTE(n)	(((n) * 2) + 7)	// Calculate the column of the data byte
+
 // Prototypes for "private" functions
 static bool validFileName(char * fileName);
 static bool checkLine(char * record, int prevAddr);
