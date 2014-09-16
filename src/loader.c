@@ -336,11 +336,12 @@ bool checkHex(char * record, int start, int end) {
     return TRUE; // every digit is a hex digit
 }
 
-/**
+/* 
  * If fgets didn't read a newline, then the whole line wasn't read.
- * Read and discard characters until newline is read.
- *
- * @param *filePtr Pointer to the file
+ * Read and discard characters until a newline is read.
+ * 
+ * Parameters:
+ * 	*filePtr	pointer to the file
  */
 void discardRest(FILE * filePtr) {
     // remove chars in file
@@ -350,21 +351,28 @@ void discardRest(FILE * filePtr) {
 }
 
 
-/**
+/* 
  * Get the address out of the data record. This
  * function performs no error checking and assumes
  * the record is in fact a data record.
- *
- * @param *record A record with an address
- * @return The address in base 10
+ * 
+ * Parameters:
+ * 	*record		a record with an address
+ * 
+ * Return the address in base 10
  */
 int grabAddress(char * record) {
-    return (int)strtol(record, NULL, HEX);
+    return (int) strtol(record, NULL, HEX);
 }
 
-/**
- * Returns one byte of data at the index in record.
- *
+/* 
+ * Returns one byte of data at the index in the record.
+ * 
+ * Parameters:
+ * 	*record		the data record to search
+ * 	start		the starting index
+ * 
+ * Return one byte of data from the record
  * @param *record Data to be searched
  * @param start   Start index
  * @return One byte of data from record
@@ -379,12 +387,14 @@ unsigned char grabDataByte(char * record, int start) {
     return (unsigned char) strtol(byte, NULL, HEX);
 }
 
-/**
- * Calculate the number of bytes of data are in
+/* 
+ * Calculate the number of bytes of data that are in
  * the record [0..6].
  * 
- * @param *record A record with data
- * @return The number of bytes of data
+ * Parameters:
+ * 	*record		a record with data
+ * 
+ * Return the number of bytes of data
  */
 int numBytes(char * record) {
     int start = 9;
