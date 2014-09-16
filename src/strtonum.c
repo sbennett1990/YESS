@@ -22,12 +22,12 @@
  * strtonum — reliably convert string value to an integer
  * 
  * SYNOPSIS
- * #include <strtonum.h>
- * long long
- * strtonum(const char *nptr, long long minval, long long maxval, const char **errstr);
+ * #include "strtonum.h"
+ * long
+ * strtonum(const char *numstr, long minval, long maxval, const char **errstr, int base);
  * 
  * DESCRIPTION
- * The strtonum() function converts the string in nptr to a long long value. The strtonum() 
+ * The strtonum() function converts the string in numstr to a long value. The strtonum() 
  * function was designed to facilitate safe, robust programming and overcome the shortcomings 
  * of the atoi(3) and strtol(3) family of interfaces.
  * The string may begin with an arbitrary amount of whitespace (as determined by isspace(3)) 
@@ -46,6 +46,7 @@
  * 
  * EXAMPLES
  * Using strtonum() correctly is meant to be simpler than the alternative functions.
+ * 
  * int iterations; 
  * const char *errstr; 
  *  
@@ -86,11 +87,11 @@
 #define	TOOSMALL	2
 #define	TOOLARGE	3
 
-long long
-strtonum(const char *numstr, long long minval, long long maxval,
+long
+strtonum(const char *numstr, long minval, long maxval,
     const char **errstrp, int base)
 {
-	long long ll = 0;
+	long l = 0;
 	int error = 0;
 	char *ep;
 	struct errval {
@@ -105,23 +106,26 @@ strtonum(const char *numstr, long long minval, long long maxval,
 
 	ev[0].err = errno;
 	errno = 0;
+	
 	if (minval > maxval) {
 		error = INVALID;
 	} else {
-		ll = strtoll(numstr, &ep, base);
+		l = strtol(numstr, &ep, base);
+		
 		if (numstr == ep || *ep != '\0')
 			error = INVALID;
-		else if ((ll == LLONG_MIN && errno == ERANGE) || ll < minval)
+		else if ((l == LONG_MIN && errno == ERANGE) || l < minval)
 			error = TOOSMALL;
-		else if ((ll == LLONG_MAX && errno == ERANGE) || ll > maxval)
+		else if ((l == LONG_MAX && errno == ERANGE) || l > maxval)
 			error = TOOLARGE;
 	}
+	
 	if (errstrp != NULL)
 		*errstrp = ev[error].errstr;
 	errno = ev[error].err;
 	if (error)
-		ll = 0;
+		l = 0;
 
-	return (ll);
+	return (l);
 }
 
