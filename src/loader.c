@@ -1,4 +1,4 @@
-/**
+/* 
  * File:   loader.c
  * Author: Alex Savarda & Scott Bennett
  * 
@@ -29,29 +29,31 @@ static int grabAddress(char * record);
 static unsigned char grabDataByte(char * record, int start);
 static int numBytes(char * record);
 
-/**
+/* 
  * Driver function for the entire YESS program. Takes in
  * a machine code source file and loads the instructions
  * and data into memory.
  * 
- * @param argv    Number of arguments
- * @param *args[] List of command line arguments
- * @return True if load was successful, false if error occured
+ * Parameters:
+ * 	args	number of arguments
+ * 	*argv[]	list of command line arguments
+ * 
+ * Return true if load was successful; false if error occured
  */
-bool load(int argv, char * args[]) {
-    char * fileName = args[1];
+bool load(int args, char * argv[]) {
+    char * fileName = argv[1];
     FILE * file;  // pointer to the actual file
     char record[80];  
     bool memError;
 
     // Check for valid file name
-    if(argv != 2 || !validFileName(fileName)) {
+    if (args != 2 || !validFileName(fileName)) {
         printf("\nFile opening failed");
         printf("\nUsage: yess <filename>.yo\n");
         return FALSE; /*** exit function ***/
     }
 
-    // Open file for reading
+    // Open file as read-only
     file = fopen(fileName, "r");
     
     // Check if file was not opened
@@ -62,9 +64,9 @@ bool load(int argv, char * args[]) {
         return FALSE; /*** exit function ***/
     }
 
-    int prevAddr = -1;  // initial value since no address has been modified yet
+    int prevAddr = -1;	// initial value since no address has been modified yet
     int lineNo = 1;
-    int byteAddress;  // one byte address in memory [0..4095]
+    int byteAddress;	// one byte address in memory [0..4095]
     int numberOfBytes;
     unsigned char dataByte; // one byte from record to store in memory
     
@@ -126,30 +128,35 @@ bool load(int argv, char * args[]) {
     return TRUE;
 }
 
-/**
+/* 
  * Checks if the file name ends in ".yo".
- *
- * @param *fileName Pointer to a string to be checked
- * @return Returns true if file ends in ".yo"
+ * 
+ * Parameters:
+ * 	*fileName	pointer to the string to check
+ * 
+ * Return true if file ends in ".yo"; false otherwise
  */
 bool validFileName(char * fileName) {
     int len = strlen(fileName);
 
-    if(fileName[len-1] == 'o' &&
-       fileName[len-2] == 'y' &&
-       fileName[len-3] == '.') {
+    if (fileName[len-1] == 'o' 
+    	&& fileName[len-2] == 'y' 
+    	&& fileName[len-3] == '.') 
+    {
         return TRUE;
     } else {
         return FALSE;
     }
 }
 
-/**
+/* 
  * Checks if the record is in the correct format.
- *
- * @param *record  One record to be checked
- * @param prevAddr The previously written-to memory address
- * @return True if the line is correct
+ * 
+ * Parameters:
+ * 	*record		one record to check
+ * 	prevAddr	the previously written-to memory address
+ * 
+ * Return true if the line is correctly formatted; false otherwise
  */
 bool checkLine(char * record, int prevAddr) {
     bool b = FALSE;
@@ -161,8 +168,10 @@ bool checkLine(char * record, int prevAddr) {
     // Data record
     if (isAddress(record)) {
         // Check all space character placements
-        if (isSpaces(record, 0, 1) && isSpaces(record, 8, 8) &&
-              isSpaces(record, 21, 21)) {
+        if (isSpaces(record, 0, 1) 
+        	&& isSpaces(record, 8, 8) 
+        	&& isSpaces(record, 21, 21)) 
+        {
             // Check for address correctness
             if (checkAddress(record, prevAddr)) {
                 b = TRUE;
@@ -172,7 +181,7 @@ bool checkLine(char * record, int prevAddr) {
             }
         }
     }
-    // Comment record
+    // This is a comment record
     else {
         if (isSpaces(record, 0, 21))
             b = TRUE;
@@ -181,30 +190,35 @@ bool checkLine(char * record, int prevAddr) {
     return b;
 }
 
-/**
+/* 
  * Checks to see if the record contains an address. No
  * error checking is done on the address, but the syntax
  * of the address is checked.
- *
- * @param record A record
- * @return True if record has an address
+ * 
+ * Parameters:
+ * 	*record		one record to check
+ * 
+ * Return true if the record has an address; false otherwise
  */
 bool isAddress(char * record) {
     if (record[2] == '0' &&
         record[3] == 'x' &&
-        record[7] == ':') {
+        record[7] == ':') 
+    {
         return TRUE;
     } else
         return FALSE;
 }
 
-/**
- * Checks to see if the record contains data. No error
+/* 
+ * Check to see if the record contains data. No error
  * checking is performed. Data should be stored in
  * columns 9 through 20 as hex, with 0 to 6 bytes.
- *
- * @param *record Record to be checked
- * @return True if record contains data
+ * 
+ * Parameters:
+ * 	*record		one record to check
+ * 
+ * Return true if the record contains data; false otherwise
  */
 bool isData(char * record) {
     // since no error checking is performed, only examine
@@ -215,14 +229,17 @@ bool isData(char * record) {
         return FALSE;
 }
 
-/**
- * Checks to see if there are spaces at start index
+/* 
+ * Check to see if there are spaces at start index
  * through end index.
- *
- * @param *record A record to be checked
- * @param start   Start index
- * @param end     End index
- * @return True if record contains spaces at indices
+ * 
+ * Parameters:
+ * 	*record		one record to check
+ * 	start		starting index
+ * 	end			ending index
+ * 
+ * Return true if record contains spaces at indices; 
+ * false otherwise
  */
 bool isSpaces(char * record, int start, int end) {
     int i;
@@ -234,17 +251,19 @@ bool isSpaces(char * record, int start, int end) {
     return TRUE;
 }
 
-/**
- * Checks if the address in the data record is formatted
- * correctly. Also checks if the address in the data
+/* 
+ * Check if the address in the data record is formatted
+ * correctly. Also check if the address in the data
  * record is greater than the previous address of memory
  * where data was stored. If prevAddr is -1, then there
  * was no previous address. This function assumes that
  * the record being checked does contain an address.
- *
- * @param *record  A record with an address
- * @param prevAddr The previously written-to memory address
- * @return True if the address is correct
+ * 
+ * Parameters:
+ * 	*record		a record with an address
+ * 	prevAddr	the previously written-to memory address
+ * 
+ * Return true if the address is correct; false otherwise
  */
 bool checkAddress(char * record, int prevAddr) {
     if (checkHex(record, 4, 6)) {
@@ -264,16 +283,19 @@ bool checkAddress(char * record, int prevAddr) {
         return FALSE;
 }
 
-/**
- * Checks if the data in the record is in the correct
- * format. Does not check for a hex digit in column
+/* 
+ * Check if the data in the record is in the correct
+ * format. Do not check for a hex digit in column
  * 21 since there is supposed to be a space character.
  * If there is a hex digit in column 21 the error
  * will be caught elsewhere. This function assumes
  * the record is supposed to contain data.
- *
- * @param *record A record to be checked
- * @return True if the data is correctly formatted
+ * 
+ * Parameters:
+ * 	*record		one record to check
+ * 
+ * Return true if the data is correctly formatted;
+ * false otherwise
  */
 bool checkData(char * record) {
     // data must be in at least columns 9 & 10
@@ -287,18 +309,22 @@ bool checkData(char * record) {
             } else // no further data
                 return TRUE;
         }
-    } else // no data present, or incorrect placement
+    } 
+    // no data present, or incorrect placement
+    else
         return FALSE;
 }
 
-/**
- * Checks to see if record contains hex from start index
+/* 
+ * Check to see if the record contains hex from start index
  * through end index.
- *
- * @param *record One record to be checked
- * @param start   Start index
- * @param end     End index
- * @return True if every digit is a hex digit
+ * 
+ * Parameters:
+ * 	*record		one record to check
+ * 	start		the starting index
+ * 	end			the ending index
+ * 
+ * Return true if every digit is a hex digit; false otherwise
  */
 bool checkHex(char * record, int start, int end) {
     int i;
