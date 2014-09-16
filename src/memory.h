@@ -1,4 +1,4 @@
-/**
+/* 
  * File:   memory.h
  * Author: Scott Bennett
  */
@@ -10,10 +10,12 @@
 
 #ifndef MEMORY_H
 #define	MEMORY_H
+
 unsigned char getByte(int address, bool * memError);
 void putByte(int address, unsigned char value, bool * memError);
 void clearMemory(void);
 unsigned int getWord(int address, bool * memError);
 void putWord(int address, unsigned int value, bool * memError);
+
 #endif	/* MEMORY_H */
 
