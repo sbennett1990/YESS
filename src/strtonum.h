@@ -1,5 +1,6 @@
-/*
- * author: Scott Bennett
+/* 
+ * File:   strtonum.h
+ * Author: Scott Bennett
  */
 
 #ifndef STRTONUM_H
