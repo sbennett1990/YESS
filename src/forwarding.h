@@ -1,4 +1,4 @@
-/**
+/* 
  * File:   forwarding.h
  * Author: Scott Bennett
  */
