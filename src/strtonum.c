@@ -33,7 +33,7 @@
  * The string may begin with an arbitrary amount of whitespace (as determined by isspace(3)) 
  * followed by a single optional ‘+’ or ‘-’ sign.
  * 
- * The remainder of the string is converted to a long long value according to the provided base.
+ * The remainder of the string is converted to a long value according to the provided base.
  * 
  * The value obtained is then checked against the provided minval and maxval bounds. If errstr 
  * is non-null, strtonum() stores an error string in *errstr indicating the failure.
@@ -82,6 +82,7 @@
 #include <errno.h>
 #include <limits.h>
 #include <stdlib.h>
+#include "strtonum.h"
 
 #define	INVALID		1
 #define	TOOSMALL	2

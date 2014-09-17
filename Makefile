@@ -50,7 +50,8 @@ dump.o: $(SRC)/bool.h $(SRC)/dump.h $(SRC)/forwarding.h $(SRC)/fetchStage.h \
         $(SRC)/writebackStage.h $(SRC)/registers.h $(SRC)/memory.h
 	$(CC) -c $(SRC)/dump.c -o dump.o
 
-loader.o: $(SRC)/bool.h $(SRC)/loader.h $(SRC)/memory.h $(SRC)/tools.h
+loader.o: $(SRC)/bool.h $(SRC)/loader.h $(SRC)/memory.h $(SRC)/tools.h \
+          $(SRC)/strtonum.h
 	$(CC) -c $(SRC)/loader.c -o loader.o
 
 main.o: $(SRC)/bool.h $(SRC)/tools.h $(SRC)/memory.h $(SRC)/dump.h \
@@ -61,6 +62,9 @@ main.o: $(SRC)/bool.h $(SRC)/tools.h $(SRC)/memory.h $(SRC)/dump.h \
 
 tools.o: $(SRC)/bool.h $(SRC)/tools.h
 	$(CC) -c $(SRC)/tools.c -o tools.o
+
+strtonum.o: $(SRC)/strtonum.h
+	$(CC) -c $(SRC)/strtonum.c -o strtonum.o
 
 clean:
 	rm -f *.o
