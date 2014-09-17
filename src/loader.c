@@ -73,7 +73,7 @@ bool load(int args, char * argv[]) {
     int numberOfBytes;
     unsigned char dataByte; // one byte from record to store in memory
     
-	// Attempt to load each line in file into memory
+    // Attempt to load each line in the file into memory
     while (fgets(record, 80, file) != NULL) {
         // Check if line is <= 80 characters
         int len = strlen(record);
@@ -172,8 +172,8 @@ bool checkLine(char * record, int prevAddr) {
     if (isAddress(record)) {
         // Check all space character placements
         if (isSpaces(record, 0, 1) 
-        	&& isSpaces(record, 8, 8) 
-        	&& isSpaces(record, 21, 21)) 
+            && isSpaces(record, 8, 8) 
+            && isSpaces(record, 21, 21)) 
         {
             // Check for address correctness
             if (checkAddress(record, prevAddr)) {
@@ -239,12 +239,16 @@ bool isData(char * record) {
  * Parameters:
  * 	*record		one record to check
  * 	start		starting index
- * 	end			ending index
+ * 	end		ending index
  * 
  * Return true if record contains spaces at indices; 
  * false otherwise
  */
 bool isSpaces(char * record, int start, int end) {
+    if (start > end) {
+        return FALSE;
+    }
+    
     int i;
     for (i = start; i <= end; i++) {
         if (record[i] != ' ')
@@ -282,8 +286,11 @@ bool checkAddress(char * record, int prevAddr) {
             else
                 return FALSE;
         }
-    } else // address not formatted correctly
+    }
+    // address not formatted correctly
+    else {
         return FALSE;
+    }
 }
 
 /* 
@@ -314,8 +321,9 @@ bool checkData(char * record) {
         }
     } 
     // no data present, or incorrect placement
-    else
+    else {
         return FALSE;
+    }
 }
 
 /* 
@@ -325,11 +333,15 @@ bool checkData(char * record) {
  * Parameters:
  * 	*record		one record to check
  * 	start		the starting index
- * 	end			the ending index
+ * 	end		the ending index
  * 
  * Return true if every digit is a hex digit; false otherwise
  */
 bool checkHex(char * record, int start, int end) {
+    if (start > end) {
+        return FALSE;
+    }
+    
     int i;
     for (i = start; i <= end; i++) { // traverse record
         if (!(isxdigit(record[i])))
@@ -385,7 +397,7 @@ unsigned char grabDataByte(char * record, int start) {
     byte[1] = record[start + 1];
     byte[2] = '\0';
     
-    //return (unsigned char) strtonum(byte, 0, 0xFF, NULL, HEX);
+    //return (unsigned char) strtonum(byte, 0, 256, NULL, HEX);
     return (unsigned char) strtol(byte, NULL, HEX);
 }
 
