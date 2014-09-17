@@ -8,29 +8,30 @@
  */
 
 #include <stdio.h>
+//#include <stdlib.h>
 #include <ctype.h>
 #include <string.h>
 #include "bool.h"
 #include "loader.h"
 #include "memory.h"
 #include "tools.h"
-#include "strtonum.h"
+//#include "strtonum.h"
 
 #define WHICH_BYTE(n)	(((n) * 2) + 7)	// Calculate the column of the data byte
 
 // Prototypes for "private" functions
-static bool validFileName(char * fileName);
-static bool checkLine(char * record, int prevAddr);
-static bool isAddress(char * record);
-static bool isData(char * record);
-static bool isSpaces(char * record, int start, int end);
 static bool checkAddress(char * record, int prevAddr);
 static bool checkData(char * record);
 static bool checkHex(char * record, int start, int end);
+static bool checkLine(char * record, int prevAddr);
 static void discardRest(FILE * filePtr);
 static int grabAddress(char * record);
 static unsigned char grabDataByte(char * record, int start);
+static bool isAddress(char * record);
+static bool isData(char * record);
+static bool isSpaces(char * record, int start, int end);
 static int numBytes(char * record);
+static bool validFileName(char * fileName);
 
 /* 
  * Driver function for the entire YESS program. Takes in
@@ -377,7 +378,7 @@ void discardRest(FILE * filePtr) {
  * Return the address in base 10
  */
 int grabAddress(char * record) {
-    //return (int) strtonum(record, 0, HIGHBYTE, NULL, HEX);
+    //return (int) strtonum(record, 0, HIGHBYTE, NULL);
     return (int) strtol(record, NULL, HEX);
 }
 

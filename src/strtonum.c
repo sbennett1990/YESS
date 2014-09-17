@@ -47,11 +47,11 @@
  * EXAMPLES
  * Using strtonum() correctly is meant to be simpler than the alternative functions.
  * 
- * int iterations; 
- * const char *errstr; 
- *  
- * iterations = strtonum(optarg, 1, 64, &errstr); 
- * if (errstr) 
+ * int iterations;
+ * const char *errstr;
+ * 
+ * iterations = strtonum(optarg, 1, 64, &errstr);
+ * if (errstr)
  * 	errx(1, "number of iterations is %s: %s", errstr, optarg);
  * The above example will guarantee that the value of iterations is between 1 and 64 (inclusive).
  * 
