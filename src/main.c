@@ -26,8 +26,10 @@ static void initialize(void);
 int main(int argc, char * argv[]) {
     (void)initialize();
     
-    // Load the file
-    // Terminate the program if there is a problem loading
+    /*
+     * Load the file
+     * Terminate the program if there is a problem loading
+     */
     if (!(load(argc, argv))) {
         dumpMemory();
         (void)exit(EXIT_FAILURE);
