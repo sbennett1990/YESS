@@ -6,7 +6,7 @@
 #define INSTR_COUNT     16   // Possible size of the instruction set
 
 #ifndef EXECUTESTAGE_H
-#define	EXECUTESTAGE_H
+#define EXECUTESTAGE_H
 
 typedef struct {
     unsigned int stat;
