@@ -64,5 +64,6 @@ tools.o: $(SRC)/bool.h $(SRC)/tools.h
 
 clean:
 	rm -f *.o
+	rm yess
 
 
