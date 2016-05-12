@@ -1,9 +1,9 @@
-/**
+/*
  * File:   executeStage.h
  * Author: Alex Savarda
  */
 
-#define INSTR_COUNT  16   // Possible size of the instruction set
+#define INSTR_COUNT     16   // Possible size of the instruction set
 
 #ifndef EXECUTESTAGE_H
 #define	EXECUTESTAGE_H

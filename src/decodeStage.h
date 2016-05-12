@@ -1,4 +1,4 @@
-/**
+/*
  * File:   decodeStage.h
  * Author: Scott Bennett
  */
@@ -27,13 +27,12 @@ struct D {
 };
 
 
-//prototypes for functions called from files other than fetchStage
 dregister getDregister(void);
 void clearDregister(void);
 void decodeStage();
 void updateDregister(unsigned int stat, unsigned int icode, unsigned int ifun,
-                        unsigned int rA, unsigned int rB, unsigned int valC,
-                        unsigned int valP);
+                     unsigned int rA, unsigned int rB, unsigned int valC,
+                     unsigned int valP);
 
 #endif	/* DECODESTAGE_H */
 

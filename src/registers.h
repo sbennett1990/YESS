@@ -19,11 +19,13 @@
 
 #ifndef REGISTERS_H
 #define	REGISTERS_H
+
 void clearCC(void);
 void clearRegisters(void);
 unsigned int getCC(unsigned int bitNumber);
 unsigned int getRegister(int regNum);
 void setCC(unsigned int bitNumber, unsigned int value);
 void setRegister(int regNum, unsigned int regValue);
+
 #endif	/* REGISTERS_H */
 

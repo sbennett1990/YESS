@@ -15,9 +15,9 @@ struct F {
 };
 
 
-// prototypes for functions called from files other than fetchStage
 fregister getFregister(void);
 void clearFregister(void);
 void fetchStage();
+
 #endif	/* FETCHSTAGE_H */
 

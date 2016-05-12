@@ -1,4 +1,4 @@
-/**
+/*
  * File:   memoryStage.h
  * Author: Alex Savarda
  */
@@ -26,12 +26,12 @@ struct M {
     unsigned int dstM;
 };
 
-//prototypes for functions called from files other than memoryStage
 mregister getMregister(void);
 void memoryStage();
 void clearMregister(void);
 void updateMRegister(unsigned int stat, unsigned int icode, unsigned int Cnd,
                      unsigned int valE, unsigned int valA, unsigned int dstE, 
                      unsigned int dstM);
+
 #endif	/* MEMORYSTAGE_H */
 
