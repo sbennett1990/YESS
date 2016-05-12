@@ -5,6 +5,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <unistd.h>
 
 #include "bool.h"
 #include "tools.h"
@@ -20,10 +21,15 @@
 #include "memoryStage.h"
 #include "writebackStage.h"
 
-// Prototypes for "private" functions
 static void initialize(void);
 
 int main(int argc, char * argv[]) {
+
+#ifdef __OpenBSD__
+    if (pledge("stdio rpath", NULL) == -1)
+        err(1, "pledge");
+#endif
+
     (void)initialize();
     
     /*
