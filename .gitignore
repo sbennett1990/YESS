@@ -1,4 +1,7 @@
-﻿# Object files
+# YESS executable
+/yess
+
+# Object files
 *.o
 *.ko
 *.obj
