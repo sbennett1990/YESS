@@ -82,7 +82,6 @@
 #include <errno.h>
 #include <limits.h>
 #include <stdlib.h>
-#include "strtonum.h"
 
 #define	INVALID		1
 #define	TOOSMALL	2

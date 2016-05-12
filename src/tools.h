@@ -3,7 +3,7 @@
  * Author: Scott Bennett
  */
 
-#define BYTESIZE 8    // Size of one byte in bits
+#define BYTESIZE   8  // Size of one byte in bits
 #define INTHIGHBIT 31 // Highest bit for type int
 
 #ifndef TOOLS_H
@@ -23,3 +23,4 @@ void expandBits(unsigned int source, char bits[36]);
 void clearBuffer(char * buff, int size);
 
 #endif /* TOOLS_H */
+
