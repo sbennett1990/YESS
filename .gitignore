@@ -1,5 +1,6 @@
 # YESS executable
 /yess
+/yess.exe
 
 # Object files
 *.o
