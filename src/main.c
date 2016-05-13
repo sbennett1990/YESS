@@ -3,6 +3,12 @@
  * Author: Scott Bennett
  */
 
+// pledge(2) the program on OpenBSD
+#ifdef __OpenBSD__
+#include <sys/utsname.h>
+#include <string.h>
+#endif
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
@@ -24,12 +30,6 @@
 static void initialize(void);
 
 int main(int argc, char * argv[]) {
-
-#ifdef __OpenBSD__
-    if (pledge("stdio rpath", NULL) == -1)
-        err(1, "pledge");
-#endif
-
     (void)initialize();
     
     /*
@@ -58,6 +58,8 @@ int main(int argc, char * argv[]) {
     }
     
     printf("\nTotal clock cycles = %d\n", clockCount);
+
+    return 0;
 }
 
 /*
@@ -66,6 +68,15 @@ int main(int argc, char * argv[]) {
  * pointer array used in executeStage.c
  */
 void initialize() {
+#ifdef __OpenBSD__
+    // pledge(2) only works on 5.9 or higher
+    struct utsname name;
+    if (uname(&name) != -1 && strncmp(name.release, "5.8", 3) > 0) {
+        if (pledge("stdio rpath", NULL) == -1) {
+            err(1, "pledge");
+        }
+    }
+#endif
     // Initialize function pointer array here
     (void)initFuncPtrArray();
 
