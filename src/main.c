@@ -32,8 +32,8 @@
  * Print usage information and exit program
  */
 static void usage(void) {
-	printf("\nusage: yess <filename>.yo\n");
-	exit(EXIT_FAILURE);
+    fprintf(stderr, "usage: yess <filename>.yo");
+    exit(EXIT_FAILURE);
 }
 
 /*
