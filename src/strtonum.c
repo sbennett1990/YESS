@@ -33,7 +33,8 @@
  * The string may begin with an arbitrary amount of whitespace (as determined by isspace(3)) 
  * followed by a single optional '+' or '-' sign.
  * 
- * The remainder of the string is converted to a long value according to the provided base.
+ * The remainder of the string is converted to a long value according to the given base, which 
+ * must be a number between 2 and 36 inclusive or the special value 0 (see strtol(3)).
  * 
  * The value obtained is then checked against the provided minval and maxval bounds. If errstr 
  * is non-null, strtonum() stores an error string in *errstr indicating the failure.
@@ -50,9 +51,9 @@
  * int iterations;
  * const char *errstr;
  * 
- * iterations = strtonum(optarg, 1, 64, &errstr);
+ * iterations = strtonum(optarg, 1, 64, &errstr, 10);
  * if (errstr)
- * 	errx(1, "number of iterations is %s: %s", errstr, optarg);
+ *    errx(1, "number of iterations is %s: %s", errstr, optarg);
  * The above example will guarantee that the value of iterations is between 1 and 64 (inclusive).
  * 
  * ERRORS
@@ -128,4 +129,3 @@ strtonum(const char *numstr, long minval, long maxval,
 
 	return (l);
 }
-
