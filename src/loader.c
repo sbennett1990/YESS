@@ -7,10 +7,10 @@
  * error checking on the source file.
  */
 
-#include <stdio.h>
-//#include <stdlib.h>
 #include <ctype.h>
+#include <stdio.h>
 #include <string.h>
+
 #include "bool.h"
 #include "loader.h"
 #include "memory.h"
@@ -19,7 +19,6 @@
 
 #define WHICH_BYTE(n)	(((n) * 2) + 7)	// Calculate the column of the data byte
 
-// Prototypes for "private" functions
 static bool checkAddress(char * record, int prevAddr);
 static bool checkData(char * record);
 static bool checkHex(char * record, int start, int end);
@@ -46,7 +45,7 @@ static bool validFileName(char * fileName);
  */
 bool load(int args, char * argv[]) {
     char * fileName = argv[1];
-    FILE * file;  // pointer to the actual file
+    FILE * file;
     char record[80];  
     bool memError;
 
