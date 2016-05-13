@@ -7,12 +7,12 @@
 #ifdef __OpenBSD__
 #include <sys/utsname.h>
 
-#include <string.h>
 #include <unistd.h>
 #endif
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 #include "bool.h"
 #include "tools.h"
@@ -27,6 +27,14 @@
 #include "executeStage.h"
 #include "memoryStage.h"
 #include "writebackStage.h"
+
+/*
+ * Print usage information and exit program
+ */
+static void usage(void) {
+	printf("\nusage: yess <filename>.yo\n");
+	exit(EXIT_FAILURE);
+}
 
 /*
  * Initialize the program. This includes setting up the "memory" and pipelined
@@ -55,11 +63,51 @@ static void initialize(void) {
 }
 
 /*
+ * Check if the file ends in ".yo"
+ *
+ * Parameters:
+ * 	*fileName	the string to check
+ *
+ * Return true if file ends in ".yo"; false otherwise
+ */
+static bool valid_file_name(char * fileName) {
+    int len = strlen(fileName);
+
+    if (fileName[len-1] == 'o'
+        && fileName[len-2] == 'y'
+        && fileName[len-3] == '.') {
+        return TRUE;
+    } else {
+        return FALSE;
+    }
+}
+
+/*
+ * Validate that the correct number of arguments are provided and that the
+ * second argument is a valid file name. If the arguments are invalid,
+ * usage info will be printed and the program will exit.
+ */
+static void validate_args(int argc, char * argv[]) {
+    if (argc != 2) {
+        usage();
+    }
+
+    char * fileName = argv[1];
+
+    // make sure file name is valid
+    if (!valid_file_name(fileName)) {
+        printf("\ninvalid file name");
+        usage();
+    }
+}
+
+/*
  * Main
  */
 int main(int argc, char * argv[]) {
     (void)initialize();
-    
+    validate_args(argc, argv);
+
     /*
      * Load the file
      * Terminate the program if there is a problem loading
