@@ -6,12 +6,13 @@
 // pledge(2) the program on OpenBSD
 #ifdef __OpenBSD__
 #include <sys/utsname.h>
+
 #include <string.h>
+#include <unistd.h>
 #endif
 
 #include <stdio.h>
 #include <stdlib.h>
-#include <unistd.h>
 
 #include "bool.h"
 #include "tools.h"
