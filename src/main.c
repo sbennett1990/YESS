@@ -32,7 +32,7 @@
  * Print usage information and exit program
  */
 static void usage(void) {
-    fprintf(stderr, "usage: yess <filename>.yo");
+    fprintf(stderr, "usage: yess <filename>.yo\n");
     exit(EXIT_FAILURE);
 }
 
