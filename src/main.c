@@ -27,8 +27,35 @@
 #include "memoryStage.h"
 #include "writebackStage.h"
 
-static void initialize(void);
+/*
+ * Initialize the program. This includes setting up the "memory" and pipelined
+ * registers for the Y86 processor, and the function pointer array used in
+ * executeStage.c
+ */
+static void initialize(void) {
+#ifdef __OpenBSD__
+    // pledge(2) only works on 5.9 or higher
+    struct utsname name;
+    if (uname(&name) != -1 && strncmp(name.release, "5.8", 3) > 0) {
+        if (pledge("stdio rpath", NULL) == -1) {
+            err(1, "pledge");
+        }
+    }
+#endif
+    // Initialize function pointer array
+    (void)initFuncPtrArray();
 
+    (void)clearMemory();
+    (void)clearFregister();
+    (void)clearDregister();
+    (void)clearEregister();
+    (void)clearMregister();
+    (void)clearWregister();
+}
+
+/*
+ * Main
+ */
 int main(int argc, char * argv[]) {
     (void)initialize();
     
@@ -61,30 +88,3 @@ int main(int argc, char * argv[]) {
 
     return 0;
 }
-
-/*
- * Initialize the "memory" and pipelined registers in
- * the Y86 processor. Also initialize the function
- * pointer array used in executeStage.c
- */
-void initialize() {
-#ifdef __OpenBSD__
-    // pledge(2) only works on 5.9 or higher
-    struct utsname name;
-    if (uname(&name) != -1 && strncmp(name.release, "5.8", 3) > 0) {
-        if (pledge("stdio rpath", NULL) == -1) {
-            err(1, "pledge");
-        }
-    }
-#endif
-    // Initialize function pointer array here
-    (void)initFuncPtrArray();
-
-    (void)clearMemory();
-    (void)clearFregister();
-    (void)clearDregister();
-    (void)clearEregister();
-    (void)clearMregister();
-    (void)clearWregister();
-}
-
