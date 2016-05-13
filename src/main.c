@@ -66,7 +66,7 @@ static void initialize(void) {
  * Check if the file ends in ".yo"
  *
  * Parameters:
- * 	*fileName	the string to check
+ *     *fileName    the string to check
  *
  * Return true if file ends in ".yo"; false otherwise
  */
@@ -89,7 +89,7 @@ static bool valid_file_name(char * fileName) {
  */
 static void validate_args(int argc, char * argv[]) {
     if (argc != 2) {
-        usage();
+        usage(); /* EXIT */
     }
 
     char * fileName = argv[1];
@@ -97,7 +97,7 @@ static void validate_args(int argc, char * argv[]) {
     // make sure file name is valid
     if (!valid_file_name(fileName)) {
         printf("\ninvalid file name");
-        usage();
+        usage(); /* EXIT */
     }
 }
 
@@ -106,13 +106,13 @@ static void validate_args(int argc, char * argv[]) {
  */
 int main(int argc, char * argv[]) {
     (void)initialize();
-    validate_args(argc, argv);
+    (void)validate_args(argc, argv);
 
     /*
      * Load the file
      * Terminate the program if there is a problem loading
      */
-    if (!(load(argc, argv))) {
+    if (!(load(argv[1]))) {
         dumpMemory();
         (void)exit(EXIT_FAILURE);
     }

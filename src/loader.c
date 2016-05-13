@@ -38,22 +38,19 @@ static bool validFileName(char * fileName);
  * and data into memory.
  * 
  * Parameters:
- * 	args	number of arguments
- * 	*argv[]	list of command line arguments
+ * 	*fileName    name of the file to load
  * 
  * Return true if load was successful; false if error occured
  */
-bool load(int args, char * argv[]) {
-    char * fileName = argv[1];
+bool load(char * fileName) {
     FILE * file;
     char record[80];  
     bool memError;
 
-    // Check for valid file name
-    if (args != 2 || !validFileName(fileName)) {
-        printf("\nFile opening failed");
-        printf("\nUsage: yess <filename>.yo\n");
-        return FALSE; /*** exit function ***/
+    // make sure file name is valid
+    if (!validFileName(fileName)) {
+        printf("\ninvalid file name");
+        return FALSE;
     }
 
     // Open file as read-only
