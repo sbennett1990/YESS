@@ -114,7 +114,7 @@ int main(int argc, char * argv[]) {
      */
     if (!(load(argv[1]))) {
         dumpMemory();
-        (void)exit(EXIT_FAILURE);
+        return 1; /* EXIT */
     }
     
     int clockCount = 0;
