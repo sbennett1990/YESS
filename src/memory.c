@@ -1,4 +1,4 @@
-/* 
+/*
  * File:   memory.c
  * Author: Scott Bennett
  */
@@ -13,16 +13,16 @@ static unsigned int memory[MEMSIZE];
 static unsigned int fetch(int address, bool * memError);
 static void store(int address, unsigned int value, bool * memError);
 
-/* 
+/*
  * Read and return a word of memory. If there is an error,
  * *memError is set to true, otherwise it's false.
- * 
+ *
  * Parameters:
  *  address     the memory address [0..1023]
  *  *memError   pointer to the memory error indicator
- * 
+ *
  * Return the contents of the memory address, or 0 on error.
- * 
+ *
  * NOTE: This function can not be accessed outside
  * of memory.c
  */
@@ -31,21 +31,21 @@ unsigned int fetch(int address, bool * memError) {
         *memError = TRUE;
         return 0;
     }
-    
+
     *memError = FALSE;
     return memory[address];
 }
 
-/* 
+/*
  * Store a value (1 word) in memory. If there is an error,
  * *memError is set to true, otherwise it's false. If address
  * isn't a valid memory address, then memory isn't modified.
- * 
+ *
  * Parameters:
  *  address     the memory address [0..1023]
  *  value       the value to store in memory at the address
  *  *memError   pointer to the memory error indicator
- * 
+ *
  * NOTE: This function can not be accessed outside
  * of memory.c
  */
@@ -58,14 +58,14 @@ void store(int address, unsigned int value, bool * memError) {
     }
 }
 
-/* 
- * Read a byte of memory using it's byte address. If there is 
+/*
+ * Read a byte of memory using it's byte address. If there is
  * an error, *memError is set to true, otherwise it's false.
- * 
+ *
  * Parameters:
  *  byteAddress     a byte address of memory [0..4095]
  *  *memError       pointer to the memory error indicator
- * 
+ *
  * Return the contents of memory at the byte address, or 0 for error
  */
 unsigned char getByte(int byteAddress, bool * memError) {
@@ -73,23 +73,23 @@ unsigned char getByte(int byteAddress, bool * memError) {
         *memError = TRUE;
         return 0;
     }
-    
+
     *memError = FALSE;
-    
+
     /*
-     * Retrieve the word containing the specified byte address 
+     * Retrieve the word containing the specified byte address
      * using integer division
      */
     unsigned int word = fetch((byteAddress / WORDSIZE), memError);
-    
+
     return getByteNumber((byteAddress % WORDSIZE), word);
 }
 
-/* 
+/*
  * Store a value (1 byte) in memory. If there is an error,
  * *memError is set to true, otherwise it's false. If address
  * isn't a valid memory address, then memory isn't modified.
- * 
+ *
  * Parameters:
  *  byteAddress     a byte address of memory [0..4095]
  *  value           the value to store in memory at the address
@@ -100,27 +100,27 @@ void putByte(int byteAddress, unsigned char value, bool * memError) {
         *memError = TRUE;
     } else {
         *memError = FALSE;
-        
-        // Retrieve the word containing the specified byte address 
+
+        // Retrieve the word containing the specified byte address
         // using integer division
         unsigned int word = fetch((byteAddress / WORDSIZE), memError);
-        
+
         // Modify the byte address of the word, store in newWord
         unsigned int newWord = putByteNumber((byteAddress % WORDSIZE), value, word);
-        
+
         store((byteAddress / WORDSIZE), newWord, memError);
     }
 }
 
-/* 
- * Read a word of memory using it's byte address. If there is 
+/*
+ * Read a word of memory using it's byte address. If there is
  * an error, *memError is set to true, otherwise it's false.
- * 
+ *
  * Parameters:
  *  byteAddress     a byte address of memory [0..4095] that is
  *                     a multiple of 4
  *  *memError       pointer to the memory error indicator
- * 
+ *
  * Return the contents of memory at the byte address, or 0 on error
  */
 unsigned int getWord(int byteAddress, bool * memError) {
@@ -128,16 +128,17 @@ unsigned int getWord(int byteAddress, bool * memError) {
         *memError = TRUE;
         return 0;
     }
+
     // byteAddress is an acceptable word address
     *memError = FALSE;
     return fetch((byteAddress / WORDSIZE), memError);
 }
 
-/* 
+/*
  * Store a value (1 word) in memory. If there is an error,
  * *memError is set to true, otherwise it's false. If address
  * isn't a valid memory address, then memory isn't modified.
- * 
+ *
  * Parameters:
  *  byteAddress     a byte address of memory [0..4095] that is
  *                     a multiple of 4
@@ -153,7 +154,7 @@ void putWord(int byteAddress, unsigned int value, bool * memError) {
     }
 }
 
-/* 
+/*
  * Set all memory locations to 0 (effectively
  * "clearing" the memory).
  */

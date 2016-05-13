@@ -1,0 +1,33 @@
+# Curly brace style
+--style=java
+
+# Indention rules
+--indent=spaces=4
+--indent-labels
+--indent-switches
+--indent-preproc-block
+--min-conditional-indent=0
+--max-instatement-indent=80
+
+# Padding rules
+--pad-header
+--pad-oper
+--break-blocks
+--align-pointer=middle
+--align-reference=name
+
+--add-brackets         # add curly braces to 'if', 'for', 'while', etc.
+--convert-tabs         # we use spaces for indentation, not tabs
+--max-code-length=80
+--mode=c
+
+# Options that only affect the standalone AStyle app
+--suffix=none          # do not retain a backup of the original file
+--recursive
+
+--exclude="obj"
+--exclude="bin"
+--ignore-exclude-errors # keep going even if an exclusion from above is not found
+--errors-to-stdout
+--lineend=linux
+--formatted             # display a summary of only the files that have been formatted

@@ -1,4 +1,4 @@
-/** 
+/**
  * File:   decodeStage.c
  * Author: Scott Bennett
  */
@@ -13,7 +13,7 @@
 #include "decodeStage.h"
 #include "executeStage.h"
 
-//D register holds the input for the fetch stage. 
+//D register holds the input for the fetch stage.
 //It is only accessible from this file. (static)
 static dregister D;
 
@@ -49,7 +49,7 @@ void clearDregister() {
  * to valA and/or valB.
  *
  * @param forward  Holds values forwarded from previous stages
- * @param *control Pointer to struct that holds values forwarded from 
+ * @param *control Pointer to struct that holds values forwarded from
  *                   later stages
  */
 void decodeStage(forwardType forward, controlType * control) {
@@ -59,19 +59,23 @@ void decodeStage(forwardType forward, controlType * control) {
     unsigned int dstM = getDstM();
     unsigned int valA = selectFwdA(srcA, forward);
     unsigned int valB = forwardB(srcB, forward);
-    
+
     // Update values that need to be forwarded
     control->d_srcA = srcA;
     control->d_srcB = srcB;
     control->D_icode = D.icode;
-    
+
     // Bubble E?
     if (bubbleE(*control))
         // Insert a NOP
+    {
         updateEregister(SAOK, NOP, 0, 0, 0, 0, RNONE, RNONE, RNONE, RNONE);
-    else
+    } else
         // Update E as normal
-        updateEregister(D.stat, D.icode, D.ifun, D.valC, valA, valB, dstE, dstM, srcA, srcB);
+    {
+        updateEregister(D.stat, D.icode, D.ifun, D.valC, valA, valB, dstE, dstM, srcA,
+                        srcB);
+    }
 }
 
 /**
@@ -90,14 +94,14 @@ void updateDregister(unsigned int stat, unsigned int icode, unsigned int ifun,
 }
 
 /**
- * Retrieve the first register id (register number) 
+ * Retrieve the first register id (register number)
  * based on current icode.
  *
  * @return register id needed
  */
 unsigned int getSrcA() {
     unsigned int srcA = RNONE;
-    
+
     switch (D.icode) {
         case RRMOVL:
         case RMMOVL:
@@ -105,46 +109,46 @@ unsigned int getSrcA() {
         case PUSHL:
             srcA = D.rA;
             break;
-        
+
         case POPL:
         case RET:
             srcA = ESP;
             break;
-        
+
         default:
             srcA = RNONE;
     }
-    
+
     return srcA;
 }
 
 /**
- * Retrieve the second register id (register number) 
+ * Retrieve the second register id (register number)
  * based on the current icode.
  *
  * @return register id needed
  */
 unsigned int getSrcB() {
     unsigned int srcB = RNONE;
-    
+
     switch (D.icode) {
         case OPL:
         case RMMOVL:
         case MRMOVL:
             srcB = D.rB;
             break;
-        
+
         case POPL:
         case RET:
         case CALL:
         case PUSHL:
             srcB = ESP;
             break;
-        
+
         default:
             srcB = RNONE;
     }
-    
+
     return srcB;
 }
 
@@ -155,25 +159,25 @@ unsigned int getSrcB() {
  */
 unsigned int getDstE() {
     unsigned int dstE = RNONE;
-    
+
     switch (D.icode) {
         case OPL:
         case RRMOVL:
         case IRMOVL:
             dstE = D.rB;
             break;
-        
+
         case POPL:
         case RET:
         case CALL:
         case PUSHL:
             dstE = ESP;
             break;
-        
+
         default:
             dstE = RNONE;
     }
-    
+
     return dstE;
 }
 
@@ -183,16 +187,17 @@ unsigned int getDstE() {
  * @return Destination register id
  */
 unsigned int getDstM() {
-    if (D.icode == MRMOVL || D.icode == POPL)
+    if (D.icode == MRMOVL || D.icode == POPL) {
         return D.rA;
-    else
+    } else {
         return RNONE;
+    }
 }
 
 /**
  * Merge valP signal into valA and implement forwarding logic
  * for source operand valA.
- * 
+ *
  * @param srcA    Register id used
  * @param forward Holds values forwarded from previous stages
  * @return Value (valA) to send to E register
@@ -212,13 +217,14 @@ unsigned int selectFwdA(unsigned int srcA, forwardType forward) {
         return forward.W_valM;
     } else if (srcA == forward.W_dstE) {
         return forward.W_valE;
-    } else
+    } else {
         return getRegister(srcA);
+    }
 }
 
 /**
  *  Selects which forwarded value to use for valB
- * 
+ *
  * @param srcB    Register id used
  * @param forward Holds values forwarded from previous stages
  * @return Value (valB) to send to E register
@@ -236,8 +242,9 @@ unsigned int forwardB(unsigned int srcB, forwardType forward) {
         return forward.W_valM;
     } else if (srcB == forward.W_dstE) {
         return forward.W_valE;
-    } else
+    } else {
         return getRegister(srcB);
+    }
 }
 
 /**
@@ -251,19 +258,19 @@ bool stallE() {
 /**
  * Determine if E needs to be bubbled based on input forwarded
  * by later stages.
- * 
+ *
  * @param control Holds values from later stages
  * @return True if E should be bubbled, false otherwise
  */
 bool bubbleE(controlType control) {
     bool bubble = FALSE;
-    
-    if ((control.E_icode == JXX && !control.e_Cnd) || 
+
+    if ((control.E_icode == JXX && !control.e_Cnd) ||
         (control.E_icode == MRMOVL || control.E_icode == POPL) &&
         (control.E_dstM == control.d_srcA || control.E_dstM == control.d_srcB)) {
-            bubble = TRUE;
+        bubble = TRUE;
     }
-    
+
     return bubble;
 }
- 
+

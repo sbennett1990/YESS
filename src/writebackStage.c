@@ -1,4 +1,4 @@
-/* 
+/*
  * File:   writebackStage.c
  * Author: Alex Savarda
  */
@@ -16,7 +16,7 @@
 #include "decodeStage.h"
 
 
-/* 
+/*
  * W register holds the input for the writeback stage.
  * It is only accessible from this file (static)
  */
@@ -24,7 +24,7 @@ static wregister W;
 
 /*
  * Return a copy of the W register.
- * 
+ *
  * Return a wregister
  */
 wregister getWregister() {
@@ -45,11 +45,11 @@ void clearWregister() {
  * Writes up to two results to the register file.
  * Check the current 'stat' for SINS, SADR, and SHLT to HALT or continue
  * program. When an exception is encountered, writeback will return TRUE.
- * 
+ *
  * Parameters:
- * 	*forward	Holds values forwarded to previous stages
- * 	*status		Holds values of statuses
- * 
+ *  *forward    Holds values forwarded to previous stages
+ *  *status     Holds values of statuses
+ *
  * Return true if an exception is encountered, and false to
  * continue program execution.
  */
@@ -61,29 +61,30 @@ bool writebackStage(forwardType * forward, statusType * status) {
         dumpProcessorRegisters();
         dumpMemory();
         return TRUE;
-    }
-    else if (W.stat == SADR) {
+    } else if (W.stat == SADR) {
         printf("Invalid memory address\n");
         dumpProgramRegisters();
         dumpProcessorRegisters();
         dumpMemory();
         return TRUE;
-    }
-    else if (W.stat == SHLT) {
+    } else if (W.stat == SHLT) {
         return TRUE;
     }
 
     // if icode = DUMP, dump appropriate information
-    if (W.icode == DUMP && getBits(0, 0, W.valE))
+    if (W.icode == DUMP && getBits(0, 0, W.valE)) {
         dumpProgramRegisters();
+    }
 
-    if (W.icode == DUMP && getBits(1, 1, W.valE))
+    if (W.icode == DUMP && getBits(1, 1, W.valE)) {
         dumpProcessorRegisters();
+    }
 
-    if (W.icode == DUMP && getBits(2, 2, W.valE))
+    if (W.icode == DUMP && getBits(2, 2, W.valE)) {
         dumpMemory();
+    }
 
-    
+
     // set fields of forward and status struct to current values
     forward->W_dstE = W.dstE;
     forward->W_valE = W.valE;
@@ -91,7 +92,7 @@ bool writebackStage(forwardType * forward, statusType * status) {
     forward->W_valM = W.valM;
     forward->W_icode = W.icode;
     status->W_stat = W.stat;
-    
+
     // write result to appropriate register
     setRegister(W.dstE, W.valE);
     setRegister(W.dstM, W.valM);
@@ -99,21 +100,20 @@ bool writebackStage(forwardType * forward, statusType * status) {
     return FALSE;
 }
 
-/* 
+/*
  * Update the values in the W register
- * 
+ *
  * Parameters:
- * 	stat	
- * 	icode	
- * 	valE	
- * 	valM	
- * 	dstE	
- * 	dstM	
- * 
+ *  stat
+ *  icode
+ *  valE
+ *  valM
+ *  dstE
+ *  dstM
+ *
  */
 void updateWRegister(unsigned int stat, unsigned int icode, unsigned int valE,
-                     unsigned int valM, unsigned int dstE, unsigned int dstM) 
-{
+                     unsigned int valM, unsigned int dstE, unsigned int dstM) {
     W.stat = stat;
     W.icode = icode;
     W.valE = valE;
