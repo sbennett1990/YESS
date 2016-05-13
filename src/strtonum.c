@@ -19,7 +19,7 @@
 
 /*
  * NAME
- * strtonum — reliably convert string value to an integer
+ * strtonum - reliably convert string value to an integer
  * 
  * SYNOPSIS
  * #include "strtonum.h"
@@ -31,7 +31,7 @@
  * function was designed to facilitate safe, robust programming and overcome the shortcomings 
  * of the atoi(3) and strtol(3) family of interfaces.
  * The string may begin with an arbitrary amount of whitespace (as determined by isspace(3)) 
- * followed by a single optional ‘+’ or ‘-’ sign.
+ * followed by a single optional '+' or '-' sign.
  * 
  * The remainder of the string is converted to a long value according to the provided base.
  * 
@@ -64,11 +64,11 @@
  * minval was larger than maxval.
  * If an error occurs, errstr will be set to one of the following strings:
  * 
- * “too large”
+ * "too large"
  * The result was larger than the provided maximum value.
- * “too small”
+ * "too small"
  * The result was smaller than the provided minimum value.
- * “invalid”
+ * "invalid"
  * The string did not consist solely of digit characters.
  * 
  * SEE ALSO
