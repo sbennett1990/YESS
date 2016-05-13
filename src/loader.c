@@ -15,7 +15,6 @@
 #include "loader.h"
 #include "memory.h"
 #include "tools.h"
-#include "strtonum.h"
 
 #define WHICH_BYTE(n)	(((n) * 2) + 7)	// Calculate the column of the data byte
 
@@ -374,7 +373,7 @@ void discardRest(FILE * filePtr) {
  * Return the address in base 10
  */
 int grabAddress(char * record) {
-    //return (int) strtonum(record, 0, HIGHBYTE, NULL, HEX);
+    //return strtoint(record, HEX);
     return (int) strtol(record, NULL, HEX);
 }
 
@@ -394,7 +393,7 @@ unsigned char grabDataByte(char * record, int start) {
     byte[1] = record[start + 1];
     byte[2] = '\0';
     
-    //return (unsigned char) strtonum(byte, 0, 256, NULL, HEX);
+    //return (unsigned char) strtoint(byte, HEX);
     return (unsigned char) strtol(byte, NULL, HEX);
 }
 

@@ -7,13 +7,14 @@ CC = gcc
 CFLAGS = -Wno-unused-parameter -Wformat \
  -fstack-protector -Wformat-security -Wformat-nonliteral \
  -Wno-deprecated -Winit-self -Wpointer-arith -fno-exceptions
-LDFLAGS = -Wl,-z,relro -Wl,-z,now \
-          -Wl,-O1 -Wl,--no-undefined
+LDFLAGS = -Wl,-O1 -Wl,--no-undefined
+#LDFLAGS += -Wl,-z,relro -Wl,-z,now 
+
 SRC = ./src
 
-yess: tools.o registers.o memory.o fetchStage.o decodeStage.o executeStage.o \
-      memoryStage.o writebackStage.o loader.o dump.o main.o
-	$(CC) $(LDFLAGS) tools.o registers.o memory.o decodeStage.o executeStage.o \
+yess: strtonum.o tools.o registers.o memory.o fetchStage.o decodeStage.o \
+      executeStage.o memoryStage.o writebackStage.o loader.o dump.o main.o
+	$(CC) $(LDFLAGS) strtonum.o tools.o registers.o memory.o decodeStage.o executeStage.o \
     fetchStage.o memoryStage.o writebackStage.o loader.o dump.o main.o -o yess
 
 registers.o: $(SRC)/bool.h $(SRC)/registers.h $(SRC)/tools.h
@@ -59,8 +60,11 @@ main.o: $(SRC)/bool.h $(SRC)/tools.h $(SRC)/memory.h $(SRC)/dump.h \
         $(SRC)/writebackStage.h
 	$(CC) -c $(SRC)/main.c -o main.o
 
-tools.o: $(SRC)/bool.h $(SRC)/tools.h
+tools.o: $(SRC)/bool.h $(SRC)/strtonum.h $(SRC)/tools.h
 	$(CC) -c $(SRC)/tools.c -o tools.o
+
+strtonum.o: $(SRC)/strtonum.h
+	$(CC) -c $(SRC)/strtonum.c -o strtonum.o
 
 clean:
 	rm -f *.o

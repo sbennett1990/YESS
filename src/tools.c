@@ -3,7 +3,10 @@
  * Author: Scott Bennett
  */
 
+#include <limits.h>
+
 #include "bool.h"
+#include "strtonum.h"
 #include "tools.h"
 
 /*
@@ -263,5 +266,22 @@ void clearBuffer(char * buff, int size) {
         *buff = 0;
         buff++;
     }
+}
+
+/*
+ * Reliably convert string value to an integer, between INT_MIN and INT_MAX.
+ * Base must be a number between 2 and 36 inclusive or the special value 0.
+ *
+ * Parameters:
+ *     *nptr   string representation of an int
+ *     base    a base between 2 and 36 inclusive, or 0
+ *
+ * Returns the result of the conversion, or 0 on error
+ */
+int strtoint(const char * nptr, int base) {
+    int num;
+    num = (int) strtonum(nptr, INT_MIN, INT_MAX, NULL, base);
+
+    return num;
 }
 

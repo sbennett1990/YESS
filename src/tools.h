@@ -21,6 +21,7 @@ unsigned int buildWord(unsigned char byte0, unsigned char byte1,
 bool isNegative(unsigned int source);
 void expandBits(unsigned int source, char bits[36]);
 void clearBuffer(char * buff, int size);
+int strtoint(const char * nptr, int base);
 
 #endif /* TOOLS_H */
 
