@@ -324,30 +324,28 @@ bool isData(char * record) {
  * the record is supposed to contain data.
  *
  * Parameters:
- *  *record     one record to check
+ *     *record    one record to check
  *
  * Return true if the data is correctly formatted;
  * false otherwise
  */
 bool checkData(char * record) {
     // data must be in at least columns 9 & 10
-    if (checkHex(record, 9, 10)) {
-        int i;
+    if (!checkHex(record, 9, 10)) {
+        return FALSE;
+    }
 
-        for (i = 11; i <= 20; i += 2) {
-            if (isxdigit(record[i])) {
-                if (!isxdigit(record[i + 1])) { // next digit should be hex
-                    return FALSE;
-                }
-            } else { // no further data
-                return TRUE;
+    int i;
+
+    for (i = 11; i <= 20; i += 2) {
+        if (isxdigit(record[i])) {
+            if (!isxdigit(record[i + 1])) { // next digit should be hex
+                return FALSE;
             }
         }
     }
-    // no data present, or incorrect placement
-    else {
-        return FALSE;
-    }
+
+    return TRUE;
 }
 
 /*
