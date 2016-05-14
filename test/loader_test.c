@@ -13,7 +13,6 @@
 #include <string.h>
 
 #include "../src/bool.h"
-#include "../src/tools.h"
 #include "../src/loader.h"
 
 /*

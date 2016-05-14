@@ -84,10 +84,10 @@ memory_mock.o: $(SRC)/bool.h $(SRC)/tools.h $(MOCKS)/memory_mock.h
 # Test Files
 #
 
-loader_test.o: $(SRC)/bool.h $(SRC)/tools.h $(SRC)/loader.h
+loader_test.o: $(SRC)/bool.h $(SRC)/loader.h
 	$(CC) $(CFLAGS) -c loader_test.c -o loader_test.o
 
 clean:
 	rm -f *.o
-	rm *_test
+	rm *_test.exe
 	rm yess
