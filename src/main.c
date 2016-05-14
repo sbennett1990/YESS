@@ -5,9 +5,8 @@
 
 // pledge(2) the program on OpenBSD
 #ifdef __OpenBSD__
-    #include <sys/utsname.h>
-
-    #include <unistd.h>
+#include <sys/utsname.h>
+#include <unistd.h>
 #endif
 
 #include <stdio.h>
