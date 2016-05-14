@@ -5,9 +5,9 @@
 
 // pledge(2) the program on OpenBSD
 #ifdef __OpenBSD__
-#include <sys/utsname.h>
+    #include <sys/utsname.h>
 
-#include <unistd.h>
+    #include <unistd.h>
 #endif
 
 #include <stdio.h>
@@ -45,11 +45,13 @@ static void initialize(void) {
 #ifdef __OpenBSD__
     // pledge(2) only works on 5.9 or higher
     struct utsname name;
+
     if (uname(&name) != -1 && strncmp(name.release, "5.8", 3) > 0) {
         if (pledge("stdio rpath", NULL) == -1) {
             err(1, "pledge");
         }
     }
+
 #endif
     // Initialize function pointer array
     (void)initFuncPtrArray();
@@ -73,9 +75,9 @@ static void initialize(void) {
 static bool valid_file_name(char * fileName) {
     int len = strlen(fileName);
 
-    if (fileName[len-1] == 'o'
-        && fileName[len-2] == 'y'
-        && fileName[len-3] == '.') {
+    if (fileName[len - 1] == 'o'
+        && fileName[len - 2] == 'y'
+        && fileName[len - 3] == '.') {
         return TRUE;
     } else {
         return FALSE;
@@ -116,7 +118,7 @@ int main(int argc, char * argv[]) {
         dumpMemory();
         return 1; /* EXIT */
     }
-    
+
     int clockCount = 0;
     bool stop = FALSE;
     forwardType forward;
@@ -132,7 +134,7 @@ int main(int argc, char * argv[]) {
         (void)fetchStage(forward, control);
         clockCount++;
     }
-    
+
     printf("\nTotal clock cycles = %d\n", clockCount);
 
     return 0;
