@@ -13,8 +13,13 @@
 
 #include "bool.h"
 #include "loader.h"
-#include "memory.h"
 #include "tools.h"
+
+#ifdef TEST
+#include "mocks/memory_mock.h"
+#else
+#include "memory.h"
+#endif
 
 /* Calculate the column of the data byte */
 #define WHICH_BYTE(n)   (((n) * 2) + 7)
