@@ -16,6 +16,9 @@ CFLAGS = -g -std=c99 -DTEST
 SRC = ../src
 MOCKS = $(SRC)/mocks
 
+tools_test: strtonum.o tools.o tools_test.o
+	$(CC) strtonum.o tools.o tools_test.o -o tools_test
+
 loader_test: strtonum.o tools.o memory_mock.o loader.o loader_test.o
 	$(CC) strtonum.o tools.o memory_mock.o loader.o loader_test.o -o loader_test
 
@@ -86,6 +89,9 @@ memory_mock.o: $(SRC)/bool.h $(SRC)/tools.h $(MOCKS)/memory_mock.h
 
 loader_test.o: $(SRC)/bool.h $(SRC)/loader.h
 	$(CC) $(CFLAGS) -c loader_test.c -o loader_test.o
+
+tools_test.o: $(SRC)/bool.h $(SRC)/tools.h
+	$(CC) $(CFLAGS) -c tools_test.c -o tools_test.o
 
 clean:
 	rm -f *.o
