@@ -11,7 +11,7 @@ CFLAGS = -g -std=c99 -Wall
 # -Wno-deprecated -Winit-self -Wpointer-arith -fno-exceptions
 
 LDFLAGS = -Wl,-O1 -Wl,--no-undefined
-#LDFLAGS += -Wl,-z,relro -Wl,-z,now 
+LDFLAGS += -Wl,-z,relro -Wl,-z,now 
 
 SRC = ./src
 
