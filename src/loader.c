@@ -24,7 +24,6 @@
 /* Calculate the column of the data byte */
 #define WHICH_BYTE(n)   (((n) * 2) + 7)
 
-/*
 static bool checkAddress(char * record, int prevAddr);
 static bool checkData(char * record);
 static bool checkHex(char * record, int start, int end);
@@ -37,7 +36,107 @@ static bool isData(char * record);
 static bool isSpaces(char * record, int start, int end);
 static int numBytes(char * record);
 static bool validFileName(char * fileName);
-*/
+
+/*
+ * Driver function for the entire YESS program. Takes in
+ * a machine code source file and loads the instructions
+ * and data into memory.
+ *
+ * Parameters:
+ *     *fileName    name of the file to load
+ *
+ * Return true if load was successful; false if error occured
+ */
+bool load(char * fileName) {
+    FILE * file;
+    char record[80];
+    bool memError;
+
+    // make sure file name is valid
+    if (!validFileName(fileName)) {
+        printf("\ninvalid file name");
+        return FALSE;
+    }
+
+    // Open file as read-only
+    file = fopen(fileName, "r");
+
+    // Check if file was not opened
+    if (file == NULL) {
+        printf("\nFile opening failed");
+        printf("\nUsage: yess <filename>.yo\n");
+        fclose(file);
+        return FALSE; /*** exit function ***/
+    }
+
+    int prevAddr = -1;  // initial value since no address has been modified yet
+    int lineNo = 1;
+    int byteAddress;    // one byte address in memory [0..4095]
+    int numberOfBytes;
+    unsigned char dataByte; // one byte from record to store in memory
+
+    // Attempt to load each line in the file into memory
+    while (fgets(record, 80, file) != NULL) {
+        // Check if line is <= 80 characters
+        int len = strlen(record);
+
+        if (record[len - 1] != '\n') {
+            discardRest(file);
+        }
+
+        // Error checking...
+        if (checkLine(record, prevAddr)) {
+
+            if (isAddress(record)) {
+                byteAddress = grabAddress(record);
+
+                if (isData(record)) {
+                    // int byteNumber; // = numberOfBytes;
+                    numberOfBytes = numBytes(record);
+
+                    int byteNumber;
+
+                    for (byteNumber = 1; byteNumber <= numberOfBytes; byteNumber++) {
+                        dataByte = grabDataByte(record, WHICH_BYTE(byteNumber));
+
+                        putByte(byteAddress, dataByte, &memError);
+
+                        // Check for a memory error
+                        if (memError) {
+                            fclose(file);
+                            return FALSE; /*** exit function ***/
+                        }
+
+                        byteAddress++;
+                    }
+
+                    prevAddr = byteAddress - 1;
+                }
+            }
+
+            lineNo++;
+        }
+        // there was an error in the record
+        else {
+            printf("Error on line %d\n", lineNo);
+
+            int i;
+
+            for (i = 0; i < strlen(record); i++) {
+                printf("%c", record[i]);
+            }
+
+            printf("\n");
+
+            fclose(file);
+            return FALSE; /*** exit function ***/
+        }
+    }
+
+    // close file
+    fclose(file);
+    return TRUE;
+}
 
 /*
  * Checks if the file name ends in ".yo".
@@ -348,105 +447,4 @@ void discardRest(FILE * filePtr) {
     while (fgetc(filePtr) != '\n' && !feof(filePtr)) {
         // rest is discarded with no additional statements
     }
-}
-
-/*
- * Driver function for the entire YESS program. Takes in
- * a machine code source file and loads the instructions
- * and data into memory.
- *
- * Parameters:
- *     *fileName    name of the file to load
- *
- * Return true if load was successful; false if error occured
- */
-bool load(char * fileName) {
-    FILE * file;
-    char record[80];
-    bool memError;
-
-    // make sure file name is valid
-    if (!validFileName(fileName)) {
-        printf("\ninvalid file name");
-        return FALSE;
-    }
-
-    // Open file as read-only
-    file = fopen(fileName, "r");
-
-    // Check if file was not opened
-    if (file == NULL) {
-        printf("\nFile opening failed");
-        printf("\nUsage: yess <filename>.yo\n");
-        fclose(file);
-        return FALSE; /*** exit function ***/
-    }
-
-    int prevAddr = -1;  // initial value since no address has been modified yet
-    int lineNo = 1;
-    int byteAddress;    // one byte address in memory [0..4095]
-    int numberOfBytes;
-    unsigned char dataByte; // one byte from record to store in memory
-
-    // Attempt to load each line in the file into memory
-    while (fgets(record, 80, file) != NULL) {
-        // Check if line is <= 80 characters
-        int len = strlen(record);
-
-        if (record[len - 1] != '\n') {
-            discardRest(file);
-        }
-
-        // Error checking...
-        if (checkLine(record, prevAddr)) {
-
-            if (isAddress(record)) {
-                byteAddress = grabAddress(record);
-
-                if (isData(record)) {
-                    // int byteNumber; // = numberOfBytes;
-                    numberOfBytes = numBytes(record);
-
-                    int byteNumber;
-
-                    for (byteNumber = 1; byteNumber <= numberOfBytes; byteNumber++) {
-                        dataByte = grabDataByte(record, WHICH_BYTE(byteNumber));
-
-                        putByte(byteAddress, dataByte, &memError);
-
-                        // Check for a memory error
-                        if (memError) {
-                            fclose(file);
-                            return FALSE; /*** exit function ***/
-                        }
-
-                        byteAddress++;
-                    }
-
-                    prevAddr = byteAddress - 1;
-                }
-            }
-
-            lineNo++;
-        }
-        // there was an error in the record
-        else {
-            printf("Error on line %d\n", lineNo);
-
-            int i;
-
-            for (i = 0; i < strlen(record); i++) {
-                printf("%c", record[i]);
-            }
-
-            printf("\n");
-
-            fclose(file);
-            return FALSE; /*** exit function ***/
-        }
-    }
-
-    // close file
-    fclose(file);
-    return TRUE;
 }
