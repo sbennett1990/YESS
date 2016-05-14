@@ -89,7 +89,7 @@
 #define	TOOLARGE	3
 
 long
-strtonum(const char *numstr, long minval, long maxval,
+strtonum_OBSD(const char *numstr, long minval, long maxval,
     const char **errstrp, int base)
 {
 	long l = 0;

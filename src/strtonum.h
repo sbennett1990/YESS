@@ -1,10 +1,10 @@
 
-#ifndef STRTONUM_H
-#define STRTONUM_H
+#ifndef STRTONUM_OBSD_H
+#define STRTONUM_OBSD_H
 
 long
-strtonum(const char *numstr, long minval, long maxval, 
+strtonum_OBSD(const char *numstr, long minval, long maxval,
          const char **errstr, int base);
 
-#endif /* STRTONUM_H */
+#endif /* STRTONUM_OBSD_H */
 

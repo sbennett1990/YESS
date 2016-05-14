@@ -4,6 +4,7 @@
  */
 
 #include <limits.h>
+#include <stdlib.h>
 
 #include "bool.h"
 #include "strtonum.h"
@@ -280,7 +281,7 @@ void clearBuffer(char * buff, int size) {
  */
 int strtoint(const char * nptr, int base) {
     int num;
-    num = (int) strtonum(nptr, INT_MIN, INT_MAX, NULL, base);
+    num = (int) strtonum_OBSD(nptr, INT_MIN, INT_MAX, NULL, base);
 
     return num;
 }
