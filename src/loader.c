@@ -160,7 +160,7 @@ bool validFileName(char * fileName) {
 bool checkLine(char * record, int prevAddr) {
     bool b = FALSE;
 
-    // Check for the pipe character, since it's in every line
+    // Check for the pipe character, since it's on every line
     if (record[22] != '|')
         return b;  // No pipe character present
 
@@ -306,16 +306,16 @@ bool checkAddress(char * record, int prevAddr) {
 bool checkData(char * record) {
     // data must be in at least columns 9 & 10
     if (checkHex(record, 9, 10)) {
-	int i;
+        int i;
         for (i = 11; i <= 20; i += 2) {
             if (isxdigit(record[i])) {
-                if (!isxdigit(record[i+1])) { // next digit should be hex
+                if (!isxdigit(record[i + 1])) { // next digit should be hex
                     return FALSE;
                 }
             } else // no further data
                 return TRUE;
         }
-    } 
+    }
     // no data present, or incorrect placement
     else {
         return FALSE;
@@ -373,8 +373,19 @@ void discardRest(FILE * filePtr) {
  * Return the address in base 10
  */
 int grabAddress(char * record) {
-    //return strtoint(record, HEX);
-    return (int) strtol(record, NULL, HEX);
+    char hex_addr[8] = {
+        record[0],
+        record[1],
+        record[2],
+        record[3],
+        record[4],
+        record[5],
+        record[6],
+        '\0'
+    };
+
+    long addr = strtoint(hex_addr, HEX);
+    return (int) addr;
 }
 
 /* 
@@ -393,8 +404,7 @@ unsigned char grabDataByte(char * record, int start) {
     byte[1] = record[start + 1];
     byte[2] = '\0';
     
-    //return (unsigned char) strtoint(byte, HEX);
-    return (unsigned char) strtol(byte, NULL, HEX);
+    return (unsigned char) strtoint(byte, HEX);
 }
 
 /* 
