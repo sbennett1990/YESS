@@ -5,7 +5,6 @@
 --indent=spaces=4
 --indent-labels
 --indent-switches
---indent-preproc-block
 --min-conditional-indent=0
 --max-instatement-indent=80
 
