@@ -1,9 +1,8 @@
 /*
- * File:   main.c
- * Author: Scott Bennett
+ * loader_test.c
  */
 
-// pledge(2) the program on OpenBSD
+/* pledge(2) the program on OpenBSD */
 #ifdef __OpenBSD__
 #include <sys/utsname.h>
 #include <unistd.h>
@@ -13,36 +12,24 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "bool.h"
-#include "tools.h"
-#include "memory.h"
-#include "dump.h"
-#include "loader.h"
-#include "status.h"
-#include "control.h"
-#include "forwarding.h"
-#include "fetchStage.h"
-#include "decodeStage.h"
-#include "executeStage.h"
-#include "memoryStage.h"
-#include "writebackStage.h"
+#include "../src/bool.h"
+#include "../src/loader.h"
 
 /*
  * Print usage information and exit program
  */
 static void usage(void) {
-    fprintf(stderr, "usage: yess <filename>.yo\n");
+    fprintf(stderr, "usage: loader_test <test_file>.yo\n");
+    printf("\nLoader Test Failed\n");
     exit(EXIT_FAILURE);
 }
 
 /*
- * Initialize the program. This includes setting up the "memory" and pipelined
- * registers for the Y86 processor, and the function pointer array used in
- * executeStage.c
+ *
  */
 static void initialize(void) {
 #ifdef __OpenBSD__
-    // pledge(2) only works on 5.9 or higher
+    /* pledge(2) only works on 5.9 or higher */
     struct utsname name;
 
     if (uname(&name) != -1 && strncmp(name.release, "5.8", 3) > 0) {
@@ -52,15 +39,6 @@ static void initialize(void) {
     }
 
 #endif
-    // Initialize function pointer array
-    (void)initFuncPtrArray();
-
-    (void)clearMemory();
-    (void)clearFregister();
-    (void)clearDregister();
-    (void)clearEregister();
-    (void)clearMregister();
-    (void)clearWregister();
 }
 
 /*
@@ -113,32 +91,11 @@ int main(int argc, char * argv[]) {
     (void)initialize();
     (void)validate_args(argc, argv);
 
-    /*
-     * Load the file
-     * Terminate the program if there is a problem loading
-     */
     if (!(load(argv[1]))) {
-        dumpMemory();
+        printf("\nLoader Test Failed\n");
         return 1; /* EXIT */
+    } else {
+        printf("\nLoader Test Passed\n");
+        return 0;
     }
-
-    int clockCount = 0;
-    bool stop = FALSE;
-    forwardType forward;
-    statusType status;
-    controlType control;
-
-    // Each loop iteration is 1 clock cycle
-    while (!stop) {
-        stop = writebackStage(&forward, &status);
-        (void)memoryStage(&forward, &status, &control);
-        (void)executeStage(&forward, status, &control);
-        (void)decodeStage(forward, &control);
-        (void)fetchStage(forward, control);
-        clockCount++;
-    }
-
-    printf("\nTotal clock cycles = %d\n", clockCount);
-
-    return 0;
 }

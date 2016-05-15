@@ -1,32 +1,48 @@
 #
-# Makefile for Y86 Simulator (YESS)
+# Makefile for Y86 Simulator (YESS) Tests
 #
 
 CC = gcc
 
-CFLAGS = -std=c99 -Wall
+CFLAGS = -std=c99 -DTEST
+CFLAGS += -O2
+#CFLAGS += -g
 
 #CFLAGS = -Wno-unused-parameter -Wformat \
 # -fstack-protector -Wformat-security -Wformat-nonliteral \
 # -Wno-deprecated -Winit-self -Wpointer-arith -fno-exceptions
 
-CFLAGS += -g
+#LDFLAGS = -Wl,-O1 -Wl,--no-undefined
+#LDFLAGS += -Wl,-z,relro -Wl,-z,now 
 
-LDFLAGS = -Wl,-O1 -Wl,--no-undefined
-LDFLAGS += -Wl,-z,relro -Wl,-z,now
+SRC = ../src
+MOCKS = $(SRC)/mocks
 
-SRC = ./src
+tools-test: strtonum.o tools.o tools-test.o
+	$(CC) strtonum.o tools.o tools-test.o -o tools-test
+
+loader-test: strtonum.o tools.o memory_mock.o loader.o loader-test.o
+	$(CC) strtonum.o tools.o memory_mock.o loader.o loader-test.o -o loader-test
 
 yess: strtonum.o tools.o registers.o memory.o fetchStage.o decodeStage.o \
       executeStage.o memoryStage.o writebackStage.o loader.o dump.o main.o
 	$(CC) $(LDFLAGS) strtonum.o tools.o registers.o memory.o decodeStage.o executeStage.o \
     fetchStage.o memoryStage.o writebackStage.o loader.o dump.o main.o -o yess
 
-registers.o: $(SRC)/bool.h $(SRC)/registers.h $(SRC)/tools.h
-	$(CC) $(CFLAGS) -c $(SRC)/registers.c -o registers.o
+strtonum.o: $(SRC)/strtonum.h
+	$(CC) $(CFLAGS) -c $(SRC)/strtonum.c -o strtonum.o
+
+tools.o: $(SRC)/bool.h $(SRC)/strtonum.h $(SRC)/tools.h
+	$(CC) $(CFLAGS) -c $(SRC)/tools.c -o tools.o
+
+loader.o: $(SRC)/bool.h $(SRC)/loader.h $(MOCKS)/memory_mock.h $(SRC)/tools.h
+	$(CC) $(CFLAGS) -c $(SRC)/loader.c -o loader.o
 
 memory.o: $(SRC)/bool.h $(SRC)/memory.h $(SRC)/tools.h
 	$(CC) $(CFLAGS) -c $(SRC)/memory.c -o memory.o
+
+registers.o: $(SRC)/bool.h $(SRC)/registers.h $(SRC)/tools.h
+	$(CC) $(CFLAGS) -c $(SRC)/registers.c -o registers.o
 
 fetchStage.o: $(SRC)/bool.h $(SRC)/tools.h $(SRC)/fetchStage.h \
               $(SRC)/instructions.h $(SRC)/memory.h $(SRC)/registers.h \
@@ -56,23 +72,29 @@ dump.o: $(SRC)/bool.h $(SRC)/dump.h $(SRC)/forwarding.h $(SRC)/fetchStage.h \
         $(SRC)/writebackStage.h $(SRC)/registers.h $(SRC)/memory.h
 	$(CC) $(CFLAGS) -c $(SRC)/dump.c -o dump.o
 
-loader.o: $(SRC)/bool.h $(SRC)/loader.h $(SRC)/memory.h $(SRC)/tools.h
-	$(CC) $(CFLAGS) -c $(SRC)/loader.c -o loader.o
-
 main.o: $(SRC)/bool.h $(SRC)/tools.h $(SRC)/memory.h $(SRC)/dump.h \
         $(SRC)/loader.h $(SRC)/forwarding.h $(SRC)/fetchStage.h \
         $(SRC)/decodeStage.h $(SRC)/executeStage.h $(SRC)/memoryStage.h \
         $(SRC)/writebackStage.h
 	$(CC) $(CFLAGS) -c $(SRC)/main.c -o main.o
 
-tools.o: $(SRC)/bool.h $(SRC)/strtonum.h $(SRC)/tools.h
-	$(CC) $(CFLAGS) -c $(SRC)/tools.c -o tools.o
+#
+# Mock Files
+#
 
-strtonum.o: $(SRC)/strtonum.h
-	$(CC) $(CFLAGS) -c $(SRC)/strtonum.c -o strtonum.o
+memory_mock.o: $(SRC)/bool.h $(SRC)/tools.h $(MOCKS)/memory_mock.h
+	$(CC) $(CFLAGS) -c $(MOCKS)/memory_mock.c -o memory_mock.o
+
+#
+# Test Files
+#
+
+loader-test.o: $(SRC)/bool.h $(SRC)/loader.h
+	$(CC) $(CFLAGS) -c loader-test.c -o loader-test.o
+
+tools-test.o: $(SRC)/bool.h $(SRC)/tools.h
+	$(CC) $(CFLAGS) -c tools-test.c -o tools-test.o
 
 clean:
 	rm -f *.o
-	rm yess
-
-
+	rm *-test.exe

@@ -1,4 +1,4 @@
-/** 
+/**
  * File:   executeStage.c
  * Author: Alex Savarda
  */
@@ -62,18 +62,19 @@ void clearEregister() {
  *
  * @param *forward  Pointer to a forwardType
  * @param status    Holds status values from later stages
- * @param *control  Pointer to struct that holds values forwarded from 
+ * @param *control  Pointer to struct that holds values forwarded from
  *                    later stages
  */
-void executeStage(forwardType * forward, statusType status, controlType * control) {
+void executeStage(forwardType * forward, statusType status,
+                  controlType * control) {
     bool m_bubble = M_bubble(status);
     changeCC = TRUE;
 
     // If either m_stat or W_stat are SINS, SADR, or SHLT, then do not modify CC's
     if (status.m_stat == SINS || status.m_stat == SADR || status.m_stat == SHLT ||
         status.W_stat == SINS || status.W_stat == SADR || status.W_stat == SHLT) {
-           changeCC = FALSE;
-           m_bubble = TRUE;
+        changeCC = FALSE;
+        m_bubble = TRUE;
     }
 
     // Execute the instruction and compute Cnd
@@ -83,29 +84,32 @@ void executeStage(forwardType * forward, statusType status, controlType * contro
     if ((E.icode == RRMOVL) && !e_Cnd) {
         E.dstE = RNONE;
     }
-    
+
     forward->e_dstE = E.dstE;
     forward->e_valE = valE;
 
     control->E_icode = E.icode;
     control->e_Cnd = e_Cnd;
     control->E_dstM = E.dstM;
-    
+
     // Bubble M?
     if (m_bubble)
         // Insert a NOP
+    {
         updateMRegister(SAOK, NOP, 0, 0, 0, RNONE, RNONE);
-    else
+    } else
         // Update M register as normal
+    {
         updateMRegister(E.stat, E.icode, e_Cnd, valE, E.valA, E.dstE, E.dstM);
+    }
 }
 
 /**
  * Update the values in the E register
  */
 void updateEregister(unsigned int stat, unsigned int icode, unsigned int ifun,
-                     unsigned int valC, unsigned int valA, unsigned int valB, 
-                     unsigned int dstE, unsigned int dstM, unsigned int srcA, 
+                     unsigned int valC, unsigned int valA, unsigned int valB,
+                     unsigned int dstE, unsigned int dstM, unsigned int srcA,
                      unsigned int srcB) {
     E.stat = stat;
     E.icode = icode;
@@ -126,6 +130,7 @@ void updateEregister(unsigned int stat, unsigned int icode, unsigned int ifun,
 void initFuncPtrArray() {
     // First initialize array to 0's
     int i;
+
     for (i = 0; i < INSTR_COUNT; i++) {
         funcPtr[i] = performZero;
     }
@@ -146,10 +151,10 @@ void initFuncPtrArray() {
 }
 
 /**
- * Calculate the e_Cnd based on CC and ifun. 
+ * Calculate the e_Cnd based on CC and ifun.
  * e_Cnd is 0 for every opcode except RRMOVL
  * and JXX.
- * 
+ *
  * @return Computed value of e_Cnd
  */
 int computeCnd() {
@@ -157,37 +162,56 @@ int computeCnd() {
     int sf = getCC(SF);
     int zf = getCC(ZF);
     int of = getCC(OF);
-    
+
     if (E.icode == RRMOVL || E.icode == JXX) {
         switch (E.ifun) {
             case RRMOVLF:
                 e_Cnd = 1;
                 break;
+
             case CMOVLE:
-                if ((sf ^ of) | zf)
+                if ((sf ^ of) | zf) {
                     e_Cnd = 1;
+                }
+
                 break;
+
             case CMOVL:
-                if (sf^of)
+                if (sf ^ of) {
                     e_Cnd = 1;
+                }
+
                 break;
+
             case CMOVE:
-                if (zf)
+                if (zf) {
                     e_Cnd = 1;
+                }
+
                 break;
+
             case CMOVNE:
-                if (!zf)
+                if (!zf) {
                     e_Cnd = 1;
+                }
+
                 break;
+
             case CMOVGE:
-                if (!(sf^of))
+                if (!(sf ^ of)) {
                     e_Cnd = 1;
+                }
+
                 break;
+
             case CMOVG:
-                if (!(sf^of) & !zf)
+                if (!(sf ^ of) & !zf) {
                     e_Cnd = 1;
+                }
+
                 break;
-            default: 
+
+            default:
                 e_Cnd = 0;
         }
     }
@@ -198,7 +222,7 @@ int computeCnd() {
 
 /**
  * Just returns 0 for HALT and NOP instructions.
- * 
+ *
  * @return 0
  */
 unsigned int performZero() {
@@ -206,7 +230,7 @@ unsigned int performZero() {
 }
 
 /**
- * Compute memory location and execute the register 
+ * Compute memory location and execute the register
  * to memory move instruction.
  *
  * @return The memory location
@@ -216,7 +240,7 @@ unsigned int performRmmovl() {
 }
 
 /**
- * Compute memory location and execute the memory 
+ * Compute memory location and execute the memory
  * to register move instruction.
  *
  * @return The memory location
@@ -236,7 +260,7 @@ unsigned int performRrmovl() {
 
 /**
  * Perform dump instruction.
- * 
+ *
  * @return Constant word, part of the instruction
  */
 unsigned int performDUMP() {
@@ -254,7 +278,7 @@ unsigned int performIrmovl() {
 }
 
 /**
- * Perform either an ADD, SUB, AND, or XOR operation 
+ * Perform either an ADD, SUB, AND, or XOR operation
  * and set the CC accordingly.
  *
  * @return Result of valB <OPL> valA
@@ -267,55 +291,65 @@ unsigned int performOpl() {
     if (changeCC) {
         // The CC register is cleared before every OPL
         clearCC();
-    
+
         // perform addl
         if (E.ifun == ADDL) {
             result = b + a;
-    
-            if (result == 0)
+
+            if (result == 0) {
                 setCC(ZF, 1);
-        
-            if (result < 0)
+            }
+
+            if (result < 0) {
                 setCC(SF, 1);
-       
-            if ((a < 0 == b < 0) && (result < 0 != a < 0))
+            }
+
+            if ((a < 0 == b < 0) && (result < 0 != a < 0)) {
                 setCC(OF, 1);
+            }
         }
 
         // perform subl
         if (E.ifun == SUBL) {
             result = b - a;
-        
-            if (result == 0)
+
+            if (result == 0) {
                 setCC(ZF, 1);
+            }
 
-            if (result < 0)
+            if (result < 0) {
                 setCC(SF, 1);
+            }
 
-            if ((a > 0 != b > 0) && (result > 0 == a > 0))
+            if ((a > 0 != b > 0) && (result > 0 == a > 0)) {
                 setCC(OF, 1);
+            }
         }
 
         // perform andl
-        if(E.ifun == ANDL){
+        if (E.ifun == ANDL) {
             result = b & a;
 
-            if (result == 0)
+            if (result == 0) {
                 setCC(ZF, 1);
+            }
 
-            if (result < 0)
+            if (result < 0) {
                 setCC(SF, 1);
+            }
         }
 
         // perform xorl
         if (E.ifun == XORL) {
             result = b ^ a;
 
-            if(result == 0)
+            if (result == 0) {
                 setCC(ZF, 1);
+            }
 
-            if(result < 0)
+            if (result < 0) {
                 setCC(SF, 1);
+            }
         }
     }
 
@@ -324,7 +358,7 @@ unsigned int performOpl() {
 
 /**
  * Perform popl instruction
- * 
+ *
  * @return Modified value for the stack pointer
  */
 unsigned int performPopl() {
@@ -333,7 +367,7 @@ unsigned int performPopl() {
 
 /**
  * Perform pushl instruction
- * 
+ *
  * @return Modified value for the stack pointer
  */
 unsigned int performPushl() {
@@ -354,7 +388,7 @@ unsigned int performJXX() {
  *
  * @return Modified value for the stack pointer
  */
-unsigned int performCall() {    
+unsigned int performCall() {
     return E.valB - 4;
 }
 
@@ -371,25 +405,24 @@ unsigned int performRet() {
  * Determine if the M register should be stalled. According to HCL,
  * M will never be stalled, therefore it returns false.
  */
-bool M_stall(){
+bool M_stall() {
     return FALSE;
 }
 
 /**
  * Determine if M needs to be bubbled based on status forwarded
  * from memory and writeback stages.
- * 
+ *
  * @param status Holds status values from later stages
  * @return True if M should be bubbled, false otherwise
  */
-bool M_bubble(statusType status){
+bool M_bubble(statusType status) {
     bool bubble = FALSE;
-    
+
     if ((status.m_stat == SADR || status.m_stat == SINS || status.m_stat == SHLT) ||
         (status.W_stat == SADR || status.W_stat == SINS || status.W_stat == SHLT)) {
-            bubble = TRUE;
+        bubble = TRUE;
     }
-    
+
     return bubble;
 }
- 

@@ -13,7 +13,7 @@
 /*
  * Returns the bits in the range low to high from source.
  *
- * Parameters: 
+ * Parameters:
  *      low     rightmost bit
  *      high    leftmost bit
  *      source  integer to extract bit range from
@@ -33,7 +33,7 @@ unsigned int getBits(int low, int high, unsigned int source) {
     answer = answer >> rightAmount;
 
     return answer;
-} 
+}
 
 /*
  * Change the bits in the range [low..high] in source to 1's.
@@ -95,7 +95,7 @@ unsigned int clearBits(int low, int high, unsigned int source) {
     clear = clear >> rightAmount;
     clear = clear << low;
     clear = ~clear;
-    
+
     source = source & clear;  // AND source and clear so bit range is 0's
 
     return source;
@@ -108,12 +108,12 @@ unsigned int clearBits(int low, int high, unsigned int source) {
  *      bitNumber   the bit to set, [0..31]
  *      bitValue    either 0 or 1
  *      source      integer being changed
- * 
+ *
  * Return source unchanged for error, else the unsigned integer
  * with the appropriate bit set.
  */
 unsigned int assignOneBit(int bitNumber, int bitValue, unsigned int source) {
-    if (bitNumber < 0 || bitNumber > INTHIGHBIT || 
+    if (bitNumber < 0 || bitNumber > INTHIGHBIT ||
         bitValue < 0 || bitValue > 1) {
         return source;
     }
@@ -149,7 +149,7 @@ unsigned char getByteNumber(int byteNo, unsigned int source) {
     // create the bit range for the specified byte
     int low = BYTESIZE * byteNo;
     int high = low + (BYTESIZE - 1);
-    
+
     // extract the bits from the specified byte and put them into a char
     char character = (char) getBits(low, high, source);
 
@@ -168,7 +168,7 @@ unsigned char getByteNumber(int byteNo, unsigned int source) {
  * Returns the source with the new byte of data, or if the byte
  * number is invalid returns source unchanged.
  */
-unsigned int putByteNumber(int byteNo, unsigned char byteValue, 
+unsigned int putByteNumber(int byteNo, unsigned char byteValue,
                            unsigned int source) {
     if (byteNo < 0 || byteNo > 3) {
         return source;
@@ -177,7 +177,7 @@ unsigned int putByteNumber(int byteNo, unsigned char byteValue,
     // create the bit range for the specified byte
     int low = BYTESIZE * byteNo;
     int high = low + (BYTESIZE - 1);
-    
+
     // zero out the byte to be changed
     source = clearBits(low, high, source);
     // set the byte in source to byteValue
@@ -199,21 +199,21 @@ unsigned int putByteNumber(int byteNo, unsigned char byteValue,
  *
  * Returns the word built from the four bytes of data.
  */
-unsigned int buildWord(unsigned char byte0, unsigned char byte1, 
+unsigned int buildWord(unsigned char byte0, unsigned char byte1,
                        unsigned char byte2, unsigned char byte3) {
-   unsigned int num = byte3;
-   
-   // shift the num over one byte and add the next byte; repeat
-   num = num << BYTESIZE;
-   num += byte2;
-   
-   num = num << BYTESIZE;
-   num += byte1;
-   
-   num = num << BYTESIZE;
-   num += byte0;
+    unsigned int num = byte3;
 
-   return num;
+    // shift the num over one byte and add the next byte; repeat
+    num = num << BYTESIZE;
+    num += byte2;
+
+    num = num << BYTESIZE;
+    num += byte1;
+
+    num = num << BYTESIZE;
+    num += byte0;
+
+    return num;
 }
 
 /*
@@ -239,17 +239,19 @@ bool isNegative(unsigned int source) {
  */
 void expandBits(unsigned int source, char bits[36]) {
     bits[35] = 0;
-    
+
     int i;
+
     for (i = 34; i >= 0; i--) {
         // put in the spaces to break up bytes
-        if (i == 26 || i == 17 || i == 8) { 
+        if (i == 26 || i == 17 || i == 8) {
             bits[i] = 32;      // ascii " "
         } else {
-            if (source % 2)    // rightmost 1
-                bits[i] = 49;  // ascii "1"
-            else               // rightmost 0
-                bits[i] = 48;  // ascii "0"
+            if (source % 2) {  // rightmost 1
+                bits[i] = 49;    // ascii "1"
+            } else {           // rightmost 0
+                bits[i] = 48;    // ascii "0"
+            }
 
             source = source >> 1;
         }
@@ -257,7 +259,7 @@ void expandBits(unsigned int source, char bits[36]) {
 }
 
 /*
- * Set each value in buff to zero, effectively 
+ * Set each value in buff to zero, effectively
  * "clearing" it. Can clear a buffer of any size.
  */
 void clearBuffer(char * buff, int size) {

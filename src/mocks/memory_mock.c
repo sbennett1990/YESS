@@ -1,11 +1,10 @@
 /*
- * File:   memory.c
- * Author: Scott Bennett
+ * memory_mock.c
  */
 
-#include "bool.h"
-#include "tools.h"
-#include "memory.h"
+#include "../bool.h"
+#include "../tools.h"
+#include "memory_mock.h"
 
 static unsigned int memory[MEMSIZE];
 
@@ -96,20 +95,7 @@ unsigned char getByte(int byteAddress, bool * memError) {
  *  *memError       pointer to the memory error indicator
  */
 void putByte(int byteAddress, unsigned char value, bool * memError) {
-    if (byteAddress < 0 || byteAddress > HIGHBYTE) {
-        *memError = TRUE;
-    } else {
-        *memError = FALSE;
-
-        // Retrieve the word containing the specified byte address
-        // using integer division
-        unsigned int word = fetch((byteAddress / WORDSIZE), memError);
-
-        // Modify the byte address of the word, store in newWord
-        unsigned int newWord = putByteNumber((byteAddress % WORDSIZE), value, word);
-
-        store((byteAddress / WORDSIZE), newWord, memError);
-    }
+    return;
 }
 
 /*

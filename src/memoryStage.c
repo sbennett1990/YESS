@@ -1,4 +1,4 @@
-/** 
+/**
  * File:   memoryStage.c
  * Author: Alex Savarda
  */
@@ -38,36 +38,39 @@ mregister getMregister() {
  */
 void clearMregister() {
     clearBuffer((char *) &M, sizeof(M));
-    M.icode=NOP;
-    M.stat=SAOK;
+    M.icode = NOP;
+    M.stat = SAOK;
 }
 
 /**
  * May write data to memory, or read data from memory
  * updates W register
- * 
+ *
  * @param *forward Holds values forwarded to previous stages
  * @param *status  Holds values forwarded to previous stages
- * @param *control Holds values forwarded to previous stages 
+ * @param *control Holds values forwarded to previous stages
  */
-void memoryStage(forwardType * forward, statusType * status, controlType * control) {
+void memoryStage(forwardType * forward, statusType * status,
+                 controlType * control) {
     unsigned int address = mem_addr();
     unsigned int stat = M.stat;
     unsigned int valM = NOADDRESS;
     bool memError = FALSE;
 
-	// read data from memory?
+    // read data from memory?
     if (mem_read()) {
         valM = getWord(address, &memError);
     }
 
-	// write data to memory?
+    // write data to memory?
     if (mem_write()) {
         putWord(address, M.valA, &memError);
     }
 
-    if (memError) stat = SADR;
-    
+    if (memError) {
+        stat = SADR;
+    }
+
     //set values of forwarding, status, and control structs
     forward->M_dstM = M.dstM;
     forward->M_dstE = M.dstE;
@@ -81,7 +84,7 @@ void memoryStage(forwardType * forward, statusType * status, controlType * contr
 
     // Stall W?
     if (!W_stall(*status)) {
-        // If stall is true, do nothing to keep current 
+        // If stall is true, do nothing to keep current
         // values in writeback Stage
         updateWRegister(stat, M.icode, M.valE, valM, M.dstE, M.dstM);
     }
@@ -91,7 +94,7 @@ void memoryStage(forwardType * forward, statusType * status, controlType * contr
  * Update values in the M register
  */
 void updateMRegister(unsigned int stat, unsigned int icode, unsigned int Cnd,
-                     unsigned int valE, unsigned int valA, unsigned int dstE, 
+                     unsigned int valE, unsigned int valA, unsigned int dstE,
                      unsigned int dstM) {
     M.stat = stat;
     M.icode = icode;
@@ -104,12 +107,12 @@ void updateMRegister(unsigned int stat, unsigned int icode, unsigned int Cnd,
 
 /**
  * Select memory address
- * 
+ *
  * @return The memory address. Default is NOADDRESS.
  */
 unsigned int mem_addr() {
     unsigned int address = NOADDRESS;
-    
+
     //set address to valE for these opcodes
     switch (M.icode) {
         case RMMOVL:
@@ -118,13 +121,13 @@ unsigned int mem_addr() {
         case MRMOVL:
             address = M.valE;
             break;
-            
+
         //set address to valA for these opcodes
         case POPL:
         case RET:
             address = M.valA;
             break;
-            
+
         default:
             address = NOADDRESS;
     }
@@ -137,7 +140,7 @@ unsigned int mem_addr() {
  */
 bool mem_write() {
     bool write = FALSE;
-    
+
     //if icode equals MRMOVL, PUSHL, CALL
     //set write to TRUE
     switch (M.icode) {
@@ -146,11 +149,11 @@ bool mem_write() {
         case CALL:
             write = TRUE;
             break;
-        
+
         default:
             write = FALSE;
     }
-    
+
     return write;
 }
 
@@ -159,7 +162,7 @@ bool mem_write() {
  */
 bool mem_read() {
     bool read = FALSE;
-    
+
     //if icode equals MRMOVL, POPL, RET
     //set read to TRUE
     switch (M.icode) {
@@ -168,27 +171,28 @@ bool mem_read() {
         case RET:
             read = TRUE;
             break;
-        
+
         default:
             read = FALSE;
     }
-    
+
     return read;
 }
 
 /**
  * Returns true if the W register should be stalled
- * 
+ *
  * @param status Holds values of statuses forwarded from later stages
  */
-bool W_stall(statusType status){
+bool W_stall(statusType status) {
     bool stall = FALSE;
 
-    if(status.W_stat == SADR ||
-       status.W_stat == SINS ||
-       status.W_stat == SHLT){
+    if (status.W_stat == SADR
+        || status.W_stat == SINS
+        || status.W_stat == SHLT) {
         stall = TRUE;
     }
+
     return stall;
 }
 
@@ -196,7 +200,7 @@ bool W_stall(statusType status){
  * Determine if the W register should be bubbled. According to HCL,
  * W will never be bubled, therefore it returns false.
  */
-bool W_bubble(){
+bool W_bubble() {
     return FALSE;
 }
- 
+
