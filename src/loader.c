@@ -21,21 +21,22 @@
 #include "memory.h"
 #endif
 
+#define MAXLEN 80
 /* Calculate the column of the data byte */
 #define WHICH_BYTE(n)   (((n) * 2) + 7)
 
-static bool checkAddress(char * record, int prevAddr);
-static bool checkData(char * record);
-static bool checkHex(char * record, int start, int end);
-static bool checkLine(char * record, int prevAddr);
-static void discardRest(FILE * filePtr);
+static bool validatefilename(char * fileName);
+static bool validateaddress(char * record, int prev_addr);
+static bool validatedata(char * record);
+static bool validateline(char * record, int prevAddr);
+static bool hashexdigits(char * record, int start, int end);
+static bool hasspaces(char * record, int start, int end);
 static int grabAddress(char * record);
 static unsigned char grabDataByte(char * record, int start);
 static bool isAddress(char * record);
 static bool isData(char * record);
-static bool isSpaces(char * record, int start, int end);
-static int numBytes(char * record);
-static bool validFileName(char * fileName);
+static short numbytes(char * record);
+static void discardRest(FILE * filePtr);
 
 /*
  * Driver function for the entire YESS program. Takes in
@@ -48,53 +49,52 @@ static bool validFileName(char * fileName);
  * Return true if load was successful; false if error occured
  */
 bool load(char * fileName) {
-    FILE * file;
-    char record[80];
+    FILE * fp;
+    char record[MAXLEN];
     bool memError;
 
     // make sure file name is valid
-    if (!validFileName(fileName)) {
+    if (!validatefilename(fileName)) {
         printf("\ninvalid file name");
         return FALSE;
     }
 
     // Open file as read-only
-    file = fopen(fileName, "r");
+    fp = fopen(fileName, "r");
 
     // Check if file was not opened
-    if (file == NULL) {
+    if (fp == NULL) {
         printf("\nFile opening failed");
         printf("\nUsage: yess <filename>.yo\n");
-        fclose(file);
+        fclose(fp);
         return FALSE; /*** exit function ***/
     }
 
     int prevAddr = -1;  // initial value since no address has been modified yet
     int lineNo = 1;
     int byteAddress;    // one byte address in memory [0..4095]
-    int numberOfBytes;
+    short numberOfBytes;
     unsigned char dataByte; // one byte from record to store in memory
 
     // Attempt to load each line in the file into memory
-    while (fgets(record, 80, file) != NULL) {
+    while (fgets(record, MAXLEN, fp) != NULL) {
         // Check if line is <= 80 characters
         int len = strlen(record);
 
         if (record[len - 1] != '\n') {
-            discardRest(file);
+            discardRest(fp);
         }
 
         // Error checking...
-        if (checkLine(record, prevAddr)) {
+        if (validateline(record, prevAddr)) {
 
             if (isAddress(record)) {
                 byteAddress = grabAddress(record);
 
                 if (isData(record)) {
-                    // int byteNumber; // = numberOfBytes;
-                    numberOfBytes = numBytes(record);
+                    numberOfBytes = numbytes(record);
 
-                    int byteNumber;
+                    short byteNumber;
 
                     for (byteNumber = 1; byteNumber <= numberOfBytes; byteNumber++) {
                         dataByte = grabDataByte(record, WHICH_BYTE(byteNumber));
@@ -103,7 +103,7 @@ bool load(char * fileName) {
 
                         // Check for a memory error
                         if (memError) {
-                            fclose(file);
+                            fclose(fp);
                             return FALSE; /*** exit function ***/
                         }
 
@@ -128,26 +128,30 @@ bool load(char * fileName) {
 
             printf("\n");
 
-            fclose(file);
+            fclose(fp);
             return FALSE; /*** exit function ***/
         }
     }
 
     // close file
-    fclose(file);
+    fclose(fp);
     return TRUE;
 }
 
 /*
- * Checks if the file name ends in ".yo".
+ * Validate that the file name ends in ".yo".
  *
  * Parameters:
- *  *fileName   pointer to the string to check
+ *     *fileName    pointer to the string to check
  *
  * Return true if file ends in ".yo"; false otherwise
  */
-bool validFileName(char * fileName) {
-    int len = strlen(fileName);
+bool validatefilename(char * fileName) {
+    int len = (int) strlen(fileName);
+
+    if (len < 3) {
+        return FALSE;
+    }
 
     if (fileName[len - 1] == 'o'
         && fileName[len - 2] == 'y'
@@ -169,29 +173,41 @@ bool validFileName(char * fileName) {
  * Return true if the record has an address; false otherwise
  */
 bool isAddress(char * record) {
-    if (record[2] == '0' &&
-        record[3] == 'x' &&
-        record[7] == ':') {
-        return TRUE;
-    } else {
+    int len = strnlen(record, MAXLEN);
+
+    if (len < 8) {
         return FALSE;
     }
+
+    if (record[2] == '0'
+        && record[3] == 'x'
+        && record[7] == ':') {
+        return TRUE;
+    }
+
+    return FALSE;
 }
 
 /*
- * Check to see if there are spaces at start index
+ * Check to see if there are spaces from start index
  * through end index.
  *
  * Parameters:
- *  *record     one record to check
- *  start       starting index
- *  end     ending index
+ *     *record     one record to check
+ *     start       starting index
+ *     end         ending index
  *
  * Return true if record contains spaces at indices;
  * false otherwise
  */
-bool isSpaces(char * record, int start, int end) {
+bool hasspaces(char * record, int start, int end) {
     if (start > end) {
+        return FALSE;
+    }
+
+    int len = strnlen(record, MAXLEN);
+
+    if (len <= end) {
         return FALSE;
     }
 
@@ -211,26 +227,32 @@ bool isSpaces(char * record, int start, int end) {
  * through end index.
  *
  * Parameters:
- *  *record     one record to check
- *  start       the starting index
- *  end     the ending index
+ *     *record    one record to check
+ *     start      the starting index
+ *     end        the ending index
  *
  * Return true if every digit is a hex digit; false otherwise
  */
-bool checkHex(char * record, int start, int end) {
+bool hashexdigits(char * record, int start, int end) {
     if (start > end) {
+        return FALSE;
+    }
+
+    int len = strnlen(record, MAXLEN);
+
+    if (len <= end) {
         return FALSE;
     }
 
     int i;
 
-    for (i = start; i <= end; i++) { // traverse record
+    for (i = start; i <= end; i++) {
         if (!(isxdigit(record[i]))) {
-            return FALSE;    // Break out of function if hex digit not found
+            return FALSE;
         }
     }
 
-    return TRUE; // every digit is a hex digit
+    return TRUE;
 }
 
 /*
@@ -239,7 +261,7 @@ bool checkHex(char * record, int start, int end) {
  * the record is in fact a data record.
  *
  * Parameters:
- *  *record     a record with an address
+ *     *record    a record with an address
  *
  * Return the address in base 10
  */
@@ -260,37 +282,35 @@ int grabAddress(char * record) {
 }
 
 /*
- * Check if the address in the data record is formatted
+ * Validate that the address in the data record is formatted
  * correctly. Also check if the address in the data
  * record is greater than the previous address of memory
- * where data was stored. If prevAddr is -1, then there
+ * where data was stored. If prev_addr is -1, then there
  * was no previous address. This function assumes that
  * the record being checked does contain an address.
  *
  * Parameters:
- *  *record     a record with an address
- *  prevAddr    the previously written-to memory address
+ *     *record     a record with an address
+ *     prev_addr   the previously written-to memory address
  *
  * Return true if the address is correct; false otherwise
  */
-bool checkAddress(char * record, int prevAddr) {
-    if (checkHex(record, 4, 6)) {
-
-        if (prevAddr == -1) {
-            return TRUE;
-        } else {
-            // current must be > prevAddr
-            int currentAddr = grabAddress(record);
-
-            if (currentAddr > prevAddr) {
-                return TRUE;
-            } else {
-                return FALSE;
-            }
-        }
+bool validateaddress(char * record, int prev_addr) {
+    if (!hashexdigits(record, 4, 6)) {
+        // address not formatted correctly
+        return FALSE;
     }
-    // address not formatted correctly
-    else {
+
+    if (prev_addr == -1) {
+        return TRUE;
+    }
+
+    // current must be > prev_addr
+    int current_addr = grabAddress(record);
+
+    if (current_addr > prev_addr) {
+        return TRUE;
+    } else {
         return FALSE;
     }
 }
@@ -301,13 +321,21 @@ bool checkAddress(char * record, int prevAddr) {
  * columns 9 through 20 as hex, with 0 to 6 bytes.
  *
  * Parameters:
- *  *record     one record to check
+ *     *record    one record to check
  *
  * Return true if the record contains data; false otherwise
  */
 bool isData(char * record) {
-    // since no error checking is performed, only examine
-    // the first index where data should be
+    int len = strnlen(record, MAXLEN);
+
+    if (len < 10) {
+        return FALSE;
+    }
+
+    /*
+     * since little error checking is performed, only examine
+     * the first index where data should be
+     */
     if (isxdigit(record[9])) {
         return TRUE;
     } else {
@@ -316,7 +344,7 @@ bool isData(char * record) {
 }
 
 /*
- * Check if the data in the record is in the correct
+ * Validate that the data in the record is in the correct
  * format. Do not check for a hex digit in column
  * 21 since there is supposed to be a space character.
  * If there is a hex digit in column 21 the error
@@ -329,9 +357,15 @@ bool isData(char * record) {
  * Return true if the data is correctly formatted;
  * false otherwise
  */
-bool checkData(char * record) {
+bool validatedata(char * record) {
+    int len = strnlen(record, MAXLEN);
+
+    if (len < 21) {
+        return FALSE;
+    }
+
     // data must be in at least columns 9 & 10
-    if (!checkHex(record, 9, 10)) {
+    if (!hashexdigits(record, 9, 10)) {
         return FALSE;
     }
 
@@ -339,7 +373,8 @@ bool checkData(char * record) {
 
     for (i = 11; i <= 20; i += 2) {
         if (isxdigit(record[i])) {
-            if (!isxdigit(record[i + 1])) { // next digit should be hex
+            // next column should be a hex digit
+            if (!isxdigit(record[i + 1])) {
                 return FALSE;
             }
         }
@@ -349,42 +384,48 @@ bool checkData(char * record) {
 }
 
 /*
- * Checks if the record is in the correct format.
+ * Validate that the record is in the correct format.
  *
  * Parameters:
- *  *record     one record to check
- *  prevAddr    the previously written-to memory address
+ *     *record     one record to check
+ *     prev_addr   the previously written-to memory address
  *
  * Return true if the line is correctly formatted; false otherwise
  */
-bool checkLine(char * record, int prevAddr) {
-    bool b = FALSE;
+bool validateline(char * record, int prev_addr) {
+    int len = strnlen(record, MAXLEN);
 
-    // Check for the pipe character, since it's in every line
-    if (record[22] != '|') {
-        return b;    // No pipe character present
+    if (len < 23) {
+        return FALSE; /* EXIT */
     }
 
-    // Data record
-    if (isAddress(record)) {
-        // Check all space character placements
-        if (isSpaces(record, 0, 1)
-            && isSpaces(record, 8, 8)
-            && isSpaces(record, 21, 21)) {
-            // Check for address correctness
-            if (checkAddress(record, prevAddr)) {
-                b = TRUE;
+    // the pipe character is supposed to be on every line
+    if (record[22] != '|') {
+        return FALSE; /* EXIT */
+    }
 
-                if (isData(record)) {
-                    b = checkData(record);
-                }
-            }
+    if (!isAddress(record)) {
+        // this should be a comment record
+        if (hasspaces(record, 0, 21)) {
+            return TRUE; /* EXIT */
         }
     }
-    // This is a comment record
-    else {
-        if (isSpaces(record, 0, 21)) {
+
+    bool b = FALSE;
+
+    /*
+     * this should be a data record - check all space character placements
+     */
+    if (hasspaces(record, 0, 1)
+        && hasspaces(record, 8, 8)
+        && hasspaces(record, 21, 21)) {
+        // check for address correctness
+        if (validateaddress(record, prev_addr)) {
             b = TRUE;
+
+            if (isData(record)) {
+                b = validatedata(record);
+            }
         }
     }
 
@@ -395,8 +436,8 @@ bool checkLine(char * record, int prevAddr) {
  * Returns one byte of data at the index in the record.
  *
  * Parameters:
- *  *record     the data record to search
- *  start       the starting index
+ *     *record    the data record to search
+ *     start      the starting index
  *
  * Return one byte of data from the record
  */
@@ -412,25 +453,32 @@ unsigned char grabDataByte(char * record, int start) {
 
 /*
  * Calculate the number of bytes of data that are in
- * the record [0..6].
+ * the record (anywhere from 0 to 6 bytes).
  *
  * Parameters:
- *  *record     a record with data
+ *     *record    a record with data
  *
- * Return the number of bytes of data
+ * Return the number of bytes of data in the record
  */
-int numBytes(char * record) {
-    int start = 9;
-    int end = 10;
-    int numBytes = 0;
+short numbytes(char * record) {
+    int len = strnlen(record, MAXLEN);
 
-    while (checkHex(record, start, end)) {
-        start += 2;
-        end += 2;
-        numBytes++;
+    // each line should only have 23 columns of valid information
+    if (len < 23) {
+        return 0; /* EXIT */
     }
 
-    return numBytes;
+    short start = 9;
+    short end = 10;
+    short num = 0;
+
+    while (hashexdigits(record, start, end)) {
+        start += 2;
+        end += 2;
+        num += 1;
+    }
+
+    return num;
 }
 
 /*
