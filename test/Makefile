@@ -4,7 +4,9 @@
 
 CC = gcc
 
-CFLAGS = -g -std=c99 -DTEST
+CFLAGS = -std=c99 -DTEST
+CFLAGS += -O2
+#CFLAGS += -g
 
 #CFLAGS = -Wno-unused-parameter -Wformat \
 # -fstack-protector -Wformat-security -Wformat-nonliteral \
