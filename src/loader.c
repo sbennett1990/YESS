@@ -5,7 +5,7 @@
  * error checking on the source file.
  */
 
-// pledge(2) the program on OpenBSD
+/* pledge(2) the program on OpenBSD */
 #ifdef __OpenBSD__
 #include <sys/utsname.h>
 #include <unistd.h>
@@ -17,6 +17,7 @@
 
 #include "bool.h"
 #include "loader.h"
+#include "logger.h"
 #include "tools.h"
 
 #ifdef TEST
@@ -154,9 +155,13 @@ void dropprivileges() {
     struct utsname name;
 
     if (uname(&name) != -1 && strncmp(name.release, "5.8", 3) > 0) {
-        if (pledge("stdio", NULL) == -1) {
+        const char * promises = "stdio";
+
+        if (pledge(promises, NULL) == -1) {
             err(1, "pledge");
         }
+
+        log_info("pledge(2)'d with %s", promises);
     }
 
 #endif
