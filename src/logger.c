@@ -20,39 +20,31 @@
 #include <stdlib.h>
 #include <stdarg.h>
 #include <string.h>
-#include <syslog.h>
 #include <errno.h>
-#include <time.h>
 
 int          debug;
 int          verbose;
 const char * log_procname;
 
+static void log_procinit(const char *);
+static void vlog(const char *, va_list);
+static void vfatal(const char * emsg, va_list ap);
+
 void log_init(int, int);
-void log_procinit(const char *);
 void log_verbose(int);
 void log_warn(const char *, ...);
 void log_warnx(const char *, ...);
 void log_info(const char *, ...);
 void log_debug(const char *, ...);
-void logit(int, const char *, ...);
-void vlog(int, const char *, va_list);
+void logit(const char *, ...);
 void fatal(const char *, ...);
 void fatalx(const char *, ...);
 
 void
 log_init(int n_debug, int facility) {
-    extern char * __progname;
-
     debug = n_debug;
     verbose = n_debug;
-    log_procinit(__progname);
-
-    if (!debug) {
-        openlog(__progname, LOG_PID | LOG_NDELAY, facility);
-    }
-
-    tzset();
+    log_procinit("yess");
 }
 
 void
@@ -68,16 +60,16 @@ log_verbose(int v) {
 }
 
 void
-logit(int pri, const char * fmt, ...) {
+logit(const char * fmt, ...) {
     va_list ap;
 
     va_start(ap, fmt);
-    vlog(pri, fmt, ap);
+    vlog(fmt, ap);
     va_end(ap);
 }
 
 void
-vlog(int pri, const char * fmt, va_list ap) {
+vlog(const char * fmt, va_list ap) {
     char  *  nfmt;
 
     if (debug) {
@@ -91,8 +83,6 @@ vlog(int pri, const char * fmt, va_list ap) {
         }
 
         fflush(stderr);
-    } else {
-        vsyslog(pri, fmt, ap);
     }
 }
 
@@ -104,16 +94,16 @@ log_warn(const char * emsg, ...) {
 
     /* best effort to even work in out of memory situations */
     if (emsg == NULL) {
-        logit(LOG_CRIT, "%s", strerror(errno));
+        logit("%s", strerror(errno));
     } else {
         va_start(ap, emsg);
 
         if (asprintf(&nfmt, "%s: %s", emsg, strerror(errno)) == -1) {
             /* we tried it... */
-            vlog(LOG_CRIT, emsg, ap);
-            logit(LOG_CRIT, "%s", strerror(errno));
+            vlog(emsg, ap);
+            logit("%s", strerror(errno));
         } else {
-            vlog(LOG_CRIT, nfmt, ap);
+            vlog(nfmt, ap);
             free(nfmt);
         }
 
@@ -126,7 +116,7 @@ log_warnx(const char * emsg, ...) {
     va_list  ap;
 
     va_start(ap, emsg);
-    vlog(LOG_CRIT, emsg, ap);
+    vlog(emsg, ap);
     va_end(ap);
 }
 
@@ -135,7 +125,7 @@ log_info(const char * emsg, ...) {
     va_list  ap;
 
     va_start(ap, emsg);
-    vlog(LOG_INFO, emsg, ap);
+    vlog(emsg, ap);
     va_end(ap);
 }
 
@@ -145,12 +135,12 @@ log_debug(const char * emsg, ...) {
 
     if (verbose > 1) {
         va_start(ap, emsg);
-        vlog(LOG_DEBUG, emsg, ap);
+        vlog(emsg, ap);
         va_end(ap);
     }
 }
 
-static void
+void
 vfatal(const char * emsg, va_list ap) {
     static char s[BUFSIZ];
     const char * sep;
@@ -164,13 +154,16 @@ vfatal(const char * emsg, va_list ap) {
     }
 
     if (errno)
-        logit(LOG_CRIT, "%s: %s%s%s",
+        logit("%s: %s%s%s",
               log_procname, s, sep, strerror(errno));
     else {
-        logit(LOG_CRIT, "%s%s%s", log_procname, sep, s);
+        logit("%s%s%s", log_procname, sep, s);
     }
 }
 
+/*
+ * Used under fatal conditions. Application will exit.
+ */
 void
 fatal(const char * emsg, ...) {
     va_list ap;
@@ -181,6 +174,9 @@ fatal(const char * emsg, ...) {
     exit(1);
 }
 
+/*
+ * Used under fatal conditions. Application will exit. errno will be set to 0.
+ */
 void
 fatalx(const char * emsg, ...) {
     va_list ap;
