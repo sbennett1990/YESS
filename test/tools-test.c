@@ -52,16 +52,17 @@ static void validate_args(int argc, char * argv[]) {
     }
 }
 
-static bool test_getBits(void) {
-    printf("\nTesting getBits(int low, int high, unsigned int source)\n");
-    unsigned int expected = 5;
-    unsigned int result = getBits(0, 2, 5);
-    printf("\nExpected: %5d\nResult: %7d\n", expected, result);
+static int test_getBits(int low, int high, unsigned int source, unsigned int expected) {
+    printf("\nTesting getBits(%d, %d, %d)", low, high, source);
+    unsigned int result = getBits(low, high, source);
+    printf("\nExpected: %5d\nResult: %7d", expected, result);
 
     if (expected != result) {
         printf("\ngetBits() Test Failed\n");
+        return 0;
     } else {
         printf("\ngetBits() Test Passed\n");
+        return 1;
     }
 }
 
@@ -72,7 +73,9 @@ int main(int argc, char * argv[]) {
     (void)initialize();
     //(void)validate_args(argc, argv);
 
-    test_getBits();
+    test_getBits(0, 2, 5, 5);
+    test_getBits(31, 31, 0, 0);
+    test_getBits(31, 31, -1, 1);
 
     return 0;
 }
