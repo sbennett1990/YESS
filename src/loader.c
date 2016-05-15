@@ -5,6 +5,12 @@
  * error checking on the source file.
  */
 
+// pledge(2) the program on OpenBSD
+#ifdef __OpenBSD__
+#include <sys/utsname.h>
+#include <unistd.h>
+#endif
+
 #include <ctype.h>
 #include <stdio.h>
 #include <string.h>
@@ -26,6 +32,7 @@
 /* Prototype of strnlen(3), to get rid of compiler warning */
 size_t strnlen(const char * s, size_t maxlen);
 
+static void dropprivileges(void);
 static bool validatefilename(char * fileName);
 static bool validateaddress(char * record, int prev_addr);
 static bool validatedata(char * record);
@@ -61,6 +68,7 @@ bool load(char * fileName) {
 
     // Open file as read-only
     fp = fopen(fileName, "r");
+    dropprivileges();
 
     // Check if file was not opened
     if (fp == NULL) {
@@ -134,6 +142,25 @@ bool load(char * fileName) {
 
     fclose(fp);
     return TRUE;
+}
+
+/*
+ * If running on OpenBSD 5.9 or higher, reduce privileges to "stdio" after
+ * opening the file. If any other OS, do nothing.
+ */
+void dropprivileges() {
+#ifdef __OpenBSD__
+    // pledge(2) only works on 5.9 or higher
+    struct utsname name;
+
+    if (uname(&name) != -1 && strncmp(name.release, "5.8", 3) > 0) {
+        if (pledge("stdio", NULL) == -1) {
+            err(1, "pledge");
+        }
+    }
+
+#endif
+    return;
 }
 
 /*
