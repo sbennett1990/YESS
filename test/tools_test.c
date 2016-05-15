@@ -25,7 +25,7 @@ static void usage(void) {
 }
 
 /*
- * 
+ *
  */
 static void initialize(void) {
 #ifdef __OpenBSD__
@@ -52,6 +52,19 @@ static void validate_args(int argc, char * argv[]) {
     }
 }
 
+static bool test_getBits(void) {
+    printf("\nTesting getBits(int low, int high, unsigned int source)\n");
+    unsigned int expected = 5;
+    unsigned int result = getBits(0, 2, 5);
+    printf("\nExpected: %5d\nResult: %7d\n", expected, result);
+
+    if (expected != result) {
+        printf("\ngetBits() Test Failed\n");
+    } else {
+        printf("\ngetBits() Test Passed\n");
+    }
+}
+
 /*
  * Main
  */
@@ -59,14 +72,7 @@ int main(int argc, char * argv[]) {
     (void)initialize();
     //(void)validate_args(argc, argv);
 
-    unsigned int expected = 5;
-    unsigned int result = getBits(0, 2, 5);
+    test_getBits();
 
-    if (expected != result) {
-        printf("\nTools Test Failed\n");
-        return 1;
-    } else {
-        printf("\nTools Test Passed\n");
-        return 0;
-    }
+    return 0;
 }
