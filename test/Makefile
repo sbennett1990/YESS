@@ -16,11 +16,11 @@ CFLAGS = -g -std=c99 -DTEST
 SRC = ../src
 MOCKS = $(SRC)/mocks
 
-tools_test: strtonum.o tools.o tools_test.o
-	$(CC) strtonum.o tools.o tools_test.o -o tools_test
+tools-test: strtonum.o tools.o tools-test.o
+	$(CC) strtonum.o tools.o tools-test.o -o tools-test
 
-loader_test: strtonum.o tools.o memory_mock.o loader.o loader_test.o
-	$(CC) strtonum.o tools.o memory_mock.o loader.o loader_test.o -o loader_test
+loader-test: strtonum.o tools.o memory_mock.o loader.o loader-test.o
+	$(CC) strtonum.o tools.o memory_mock.o loader.o loader-test.o -o loader-test
 
 yess: strtonum.o tools.o registers.o memory.o fetchStage.o decodeStage.o \
       executeStage.o memoryStage.o writebackStage.o loader.o dump.o main.o
@@ -87,13 +87,12 @@ memory_mock.o: $(SRC)/bool.h $(SRC)/tools.h $(MOCKS)/memory_mock.h
 # Test Files
 #
 
-loader_test.o: $(SRC)/bool.h $(SRC)/loader.h
-	$(CC) $(CFLAGS) -c loader_test.c -o loader_test.o
+loader-test.o: $(SRC)/bool.h $(SRC)/loader.h
+	$(CC) $(CFLAGS) -c loader-test.c -o loader-test.o
 
-tools_test.o: $(SRC)/bool.h $(SRC)/tools.h
-	$(CC) $(CFLAGS) -c tools_test.c -o tools_test.o
+tools-test.o: $(SRC)/bool.h $(SRC)/tools.h
+	$(CC) $(CFLAGS) -c tools-test.c -o tools-test.o
 
 clean:
 	rm -f *.o
-	rm *_test.exe
-	rm yess
+	rm *-test.exe

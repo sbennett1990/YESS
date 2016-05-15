@@ -25,7 +25,7 @@ static void usage(void) {
 }
 
 /*
- * 
+ *
  */
 static void initialize(void) {
 #ifdef __OpenBSD__
@@ -42,15 +42,19 @@ static void initialize(void) {
 }
 
 /*
- * Check if the file ends in ".yo"
+ * Validate that the file name ends in ".yo".
  *
  * Parameters:
- *     *fileName    the string to check
+ *     *fileName    pointer to the string to check
  *
  * Return true if file ends in ".yo"; false otherwise
  */
-static bool valid_file_name(char * fileName) {
-    int len = strlen(fileName);
+bool validatefilename(char * fileName) {
+    int len = (int) strlen(fileName);
+
+    if (len < 3) {
+        return FALSE;
+    }
 
     if (fileName[len - 1] == 'o'
         && fileName[len - 2] == 'y'
@@ -74,7 +78,7 @@ static void validate_args(int argc, char * argv[]) {
     char * fileName = argv[1];
 
     // make sure file name is valid
-    if (!valid_file_name(fileName)) {
+    if (!validatefilename(fileName)) {
         printf("\ninvalid file name");
         usage(); /* EXIT */
     }
