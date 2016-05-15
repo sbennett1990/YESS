@@ -23,6 +23,9 @@
 /* Calculate the column of the data byte */
 #define WHICH_BYTE(n)   (((n) * 2) + 7)
 
+/* Prototype of strnlen(3), to get rid of compiler warning */
+size_t strnlen(const char * s, size_t maxlen);
+
 static bool validatefilename(char * fileName);
 static bool validateaddress(char * record, int prev_addr);
 static bool validatedata(char * record);
@@ -77,7 +80,7 @@ bool load(char * fileName) {
     // Attempt to load each line in the file into memory
     while (fgets(record, MAXLEN, fp) != NULL) {
         // Check if line is <= 80 characters
-        int len = strlen(record);
+        int len = strnlen(record, MAXLEN);
 
         if (record[len - 1] != '\n') {
             discardRest(fp);
