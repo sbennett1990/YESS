@@ -15,6 +15,7 @@
 
 #include "bool.h"
 #include "tools.h"
+#include "logger.h"
 #include "memory.h"
 #include "dump.h"
 #include "loader.h"
@@ -41,14 +42,20 @@ static void usage(void) {
  * executeStage.c
  */
 static void initialize(void) {
+    log_init(2, 0);
+    log_debug("initializing YESS...");
 #ifdef __OpenBSD__
     // pledge(2) only works on 5.9 or higher
     struct utsname name;
 
     if (uname(&name) != -1 && strncmp(name.release, "5.8", 3) > 0) {
-        if (pledge("stdio rpath", NULL) == -1) {
+        const char * promises = "stdio rpath";
+
+        if (pledge(promises, NULL) == -1) {
             err(1, "pledge");
         }
+
+        log_info("pledge(2)'d with %s", promises);
     }
 
 #endif
@@ -75,14 +82,17 @@ bool validatefilename(char * fileName) {
     int len = (int) strlen(fileName);
 
     if (len < 3) {
+        log_warn("filename too short");
         return FALSE;
     }
 
     if (fileName[len - 1] == 'o'
         && fileName[len - 2] == 'y'
         && fileName[len - 3] == '.') {
+        log_debug("filename valid");
         return TRUE;
     } else {
+        log_warn("filename not valid");
         return FALSE;
     }
 }
@@ -101,9 +111,10 @@ static void validate_args(int argc, char * argv[]) {
 
     // make sure file name is valid
     if (!validatefilename(fileName)) {
-        printf("\ninvalid file name");
         usage(); /* EXIT */
     }
+
+    log_debug("arguments valid");
 }
 
 /*
@@ -113,12 +124,11 @@ int main(int argc, char * argv[]) {
     (void)initialize();
     (void)validate_args(argc, argv);
 
-    /*
-     * Load the file
-     * Terminate the program if there is a problem loading
-     */
+    /* Load the file; terminate if there is a problem */
     if (!(load(argv[1]))) {
         dumpMemory();
+        log_warn("error loading the file");
+        log_debug("exiting");
         return 1; /* EXIT */
     }
 
