@@ -22,7 +22,6 @@
 
 # Options that only affect the standalone AStyle app
 --suffix=none          # do not retain a backup of the original file
---recursive
 
 --exclude="obj"
 --exclude="bin"
