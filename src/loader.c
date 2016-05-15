@@ -1,9 +1,7 @@
 /*
- * File:   loader.c
- * Author: Alex Savarda & Scott Bennett
+ * loader.c
  *
- * Contains functions for loading machine source
- * code into the YESS memory. Also performs
+ * Loads machine source code (in ASCII form) into YESS memory. Also performs
  * error checking on the source file.
  */
 
@@ -28,20 +26,19 @@
 static bool validatefilename(char * fileName);
 static bool validateaddress(char * record, int prev_addr);
 static bool validatedata(char * record);
-static bool validateline(char * record, int prevAddr);
+static bool validline(char * record, int prevAddr);
 static bool hashexdigits(char * record, int start, int end);
 static bool hasspaces(char * record, int start, int end);
 static int grabAddress(char * record);
 static unsigned char grabDataByte(char * record, int start);
-static bool isAddress(char * record);
-static bool isData(char * record);
+static bool isaddress(char * record);
+static bool isdata(char * record);
 static short numbytes(char * record);
 static void discardRest(FILE * filePtr);
 
 /*
- * Driver function for the entire YESS program. Takes in
- * a machine code source file and loads the instructions
- * and data into memory.
+ * Driver function for the entire YESS program. Takes in a machine code (ASCII)
+ * source file and loads the instructions and data into memory.
  *
  * Parameters:
  *     *fileName    name of the file to load
@@ -70,11 +67,12 @@ bool load(char * fileName) {
         return FALSE; /*** exit function ***/
     }
 
-    int prevAddr = -1;  // initial value since no address has been modified yet
-    int lineNo = 1;
-    int byteAddress;    // one byte address in memory [0..4095]
+    /* initial value since no address has been modified yet */
+    int prevaddr = -1;
+    int lineno = 1;
+    int byteAddress;        // memory address of one byte [0..4095]
     short numberOfBytes;
-    unsigned char dataByte; // one byte from record to store in memory
+    unsigned char dataByte; // a byte to store in memory
 
     // Attempt to load each line in the file into memory
     while (fgets(record, MAXLEN, fp) != NULL) {
@@ -86,54 +84,51 @@ bool load(char * fileName) {
         }
 
         // Error checking...
-        if (validateline(record, prevAddr)) {
-
-            if (isAddress(record)) {
-                byteAddress = grabAddress(record);
-
-                if (isData(record)) {
-                    numberOfBytes = numbytes(record);
-
-                    short byteNumber;
-
-                    for (byteNumber = 1; byteNumber <= numberOfBytes; byteNumber++) {
-                        dataByte = grabDataByte(record, WHICH_BYTE(byteNumber));
-
-                        putByte(byteAddress, dataByte, &memError);
-
-                        // Check for a memory error
-                        if (memError) {
-                            fclose(fp);
-                            return FALSE; /*** exit function ***/
-                        }
-
-                        byteAddress++;
-                    }
-
-                    prevAddr = byteAddress - 1;
-                }
-            }
-
-            lineNo++;
-        }
-        // there was an error in the record
-        else {
-            printf("Error on line %d\n", lineNo);
+        if (!validline(record, prevaddr)) {
+            // there was an error in the record
+            printf("Error on line %d\n", lineno);
 
             int i;
 
-            for (i = 0; i < strlen(record); i++) {
+            for (i = 0; i < len; i++) {
                 printf("%c", record[i]);
             }
 
             printf("\n");
 
             fclose(fp);
-            return FALSE; /*** exit function ***/
+            return FALSE; /* EXIT */
         }
+
+        if (isaddress(record)) {
+            byteAddress = grabAddress(record);
+
+            if (isdata(record)) {
+                numberOfBytes = numbytes(record);
+
+                short byteNumber;
+
+                for (byteNumber = 1; byteNumber <= numberOfBytes; byteNumber++) {
+                    dataByte = grabDataByte(record, WHICH_BYTE(byteNumber));
+
+                    putByte(byteAddress, dataByte, &memError);
+
+                    // Check for a memory error
+                    if (memError) {
+                        fclose(fp);
+                        return FALSE; /* EXIT */
+                    }
+
+                    byteAddress++;
+                }
+
+                prevaddr = byteAddress - 1;
+            }
+        }
+
+        lineno++;
     }
 
-    // close file
     fclose(fp);
     return TRUE;
 }
@@ -163,16 +158,16 @@ bool validatefilename(char * fileName) {
 }
 
 /*
- * Checks to see if the record contains an address. No
+ * Determine if the record contains an address. No
  * error checking is done on the address, but the syntax
  * of the address is checked.
  *
  * Parameters:
- *  *record     one record to check
+ *     *record    one record to check
  *
  * Return true if the record has an address; false otherwise
  */
-bool isAddress(char * record) {
+bool isaddress(char * record) {
     int len = strnlen(record, MAXLEN);
 
     if (len < 8) {
@@ -316,7 +311,7 @@ bool validateaddress(char * record, int prev_addr) {
 }
 
 /*
- * Check to see if the record contains data. No error
+ * Determine if the record contains data. No error
  * checking is performed. Data should be stored in
  * columns 9 through 20 as hex, with 0 to 6 bytes.
  *
@@ -325,7 +320,7 @@ bool validateaddress(char * record, int prev_addr) {
  *
  * Return true if the record contains data; false otherwise
  */
-bool isData(char * record) {
+bool isdata(char * record) {
     int len = strnlen(record, MAXLEN);
 
     if (len < 10) {
@@ -384,7 +379,7 @@ bool validatedata(char * record) {
 }
 
 /*
- * Validate that the record is in the correct format.
+ * Determine if the record (one line from the file) is in the correct format.
  *
  * Parameters:
  *     *record     one record to check
@@ -392,7 +387,7 @@ bool validatedata(char * record) {
  *
  * Return true if the line is correctly formatted; false otherwise
  */
-bool validateline(char * record, int prev_addr) {
+bool validline(char * record, int prev_addr) {
     int len = strnlen(record, MAXLEN);
 
     if (len < 23) {
@@ -404,7 +399,7 @@ bool validateline(char * record, int prev_addr) {
         return FALSE; /* EXIT */
     }
 
-    if (!isAddress(record)) {
+    if (!isaddress(record)) {
         // this should be a comment record
         if (hasspaces(record, 0, 21)) {
             return TRUE; /* EXIT */
@@ -423,7 +418,7 @@ bool validateline(char * record, int prev_addr) {
         if (validateaddress(record, prev_addr)) {
             b = TRUE;
 
-            if (isData(record)) {
+            if (isdata(record)) {
                 b = validatedata(record);
             }
         }
