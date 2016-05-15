@@ -4,14 +4,16 @@
 
 CC = gcc
 
-CFLAGS = -g -std=c99 -Wall
+CFLAGS = -std=c99 -Wall
 
 #CFLAGS = -Wno-unused-parameter -Wformat \
 # -fstack-protector -Wformat-security -Wformat-nonliteral \
 # -Wno-deprecated -Winit-self -Wpointer-arith -fno-exceptions
 
+CFLAGS += -g
+
 LDFLAGS = -Wl,-O1 -Wl,--no-undefined
-LDFLAGS += -Wl,-z,relro -Wl,-z,now 
+LDFLAGS += -Wl,-z,relro -Wl,-z,now
 
 SRC = ./src
 
