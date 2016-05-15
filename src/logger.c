@@ -40,27 +40,23 @@ void logit(const char *, ...);
 void fatal(const char *, ...);
 void fatalx(const char *, ...);
 
-void
-log_init(int n_debug, int facility) {
+void log_init(int n_debug, int facility) {
     debug = n_debug;
     verbose = n_debug;
     log_procinit("yess");
 }
 
-void
-log_procinit(const char * procname) {
+void log_procinit(const char * procname) {
     if (procname != NULL) {
         log_procname = procname;
     }
 }
 
-void
-log_verbose(int v) {
+void log_verbose(int v) {
     verbose = v;
 }
 
-void
-logit(const char * fmt, ...) {
+void logit(const char * fmt, ...) {
     va_list ap;
 
     va_start(ap, fmt);
@@ -68,9 +64,8 @@ logit(const char * fmt, ...) {
     va_end(ap);
 }
 
-void
-vlog(const char * fmt, va_list ap) {
-    char  *  nfmt;
+void vlog(const char * fmt, va_list ap) {
+    char * nfmt;
 
     if (debug) {
         /* best effort in out of mem situations */
@@ -86,11 +81,9 @@ vlog(const char * fmt, va_list ap) {
     }
 }
 
-
-void
-log_warn(const char * emsg, ...) {
-    char  *  nfmt;
-    va_list  ap;
+void log_warn(const char * emsg, ...) {
+    char  * nfmt;
+    va_list ap;
 
     /* best effort to even work in out of memory situations */
     if (emsg == NULL) {
@@ -111,27 +104,24 @@ log_warn(const char * emsg, ...) {
     }
 }
 
-void
-log_warnx(const char * emsg, ...) {
-    va_list  ap;
+void log_warnx(const char * emsg, ...) {
+    va_list ap;
 
     va_start(ap, emsg);
     vlog(emsg, ap);
     va_end(ap);
 }
 
-void
-log_info(const char * emsg, ...) {
-    va_list  ap;
+void log_info(const char * emsg, ...) {
+    va_list ap;
 
     va_start(ap, emsg);
     vlog(emsg, ap);
     va_end(ap);
 }
 
-void
-log_debug(const char * emsg, ...) {
-    va_list  ap;
+void log_debug(const char * emsg, ...) {
+    va_list ap;
 
     if (verbose > 1) {
         va_start(ap, emsg);
@@ -140,8 +130,7 @@ log_debug(const char * emsg, ...) {
     }
 }
 
-void
-vfatal(const char * emsg, va_list ap) {
+void vfatal(const char * emsg, va_list ap) {
     static char s[BUFSIZ];
     const char * sep;
 
@@ -164,8 +153,7 @@ vfatal(const char * emsg, va_list ap) {
 /*
  * Used under fatal conditions. Application will exit.
  */
-void
-fatal(const char * emsg, ...) {
+void fatal(const char * emsg, ...) {
     va_list ap;
 
     va_start(ap, emsg);
@@ -177,8 +165,7 @@ fatal(const char * emsg, ...) {
 /*
  * Used under fatal conditions. Application will exit. errno will be set to 0.
  */
-void
-fatalx(const char * emsg, ...) {
+void fatalx(const char * emsg, ...) {
     va_list ap;
 
     errno = 0;
