@@ -12,22 +12,25 @@ CFLAGS += -O2
 # -fstack-protector -Wformat-security -Wformat-nonliteral \
 # -Wno-deprecated -Winit-self -Wpointer-arith -fno-exceptions
 
-#LDFLAGS = -Wl,-O1 -Wl,--no-undefined
-#LDFLAGS += -Wl,-z,relro -Wl,-z,now 
+LDFLAGS = -Wl,-O1 -Wl,--no-undefined
+LDFLAGS += -Wl,-z,relro -Wl,-z,now
 
 SRC = ../src
 MOCKS = $(SRC)/mocks
 
+#
+# Test Executables
+#
+
 tools-test: strtonum.o tools.o tools-test.o
-	$(CC) strtonum.o tools.o tools-test.o -o tools-test
+	$(CC) $(LDFLAGS) strtonum.o tools.o tools-test.o -o tools-test
 
 loader-test: strtonum.o tools.o memory_mock.o loader.o loader-test.o
-	$(CC) strtonum.o tools.o memory_mock.o loader.o loader-test.o -o loader-test
+	$(CC) $(LDFLAGS) strtonum.o tools.o memory_mock.o loader.o loader-test.o -o loader-test
 
-yess: strtonum.o tools.o registers.o memory.o fetchStage.o decodeStage.o \
-      executeStage.o memoryStage.o writebackStage.o loader.o dump.o main.o
-	$(CC) $(LDFLAGS) strtonum.o tools.o registers.o memory.o decodeStage.o executeStage.o \
-    fetchStage.o memoryStage.o writebackStage.o loader.o dump.o main.o -o yess
+#
+# Regular Source Files (with mocks)
+#
 
 strtonum.o: $(SRC)/strtonum.h
 	$(CC) $(CFLAGS) -c $(SRC)/strtonum.c -o strtonum.o
