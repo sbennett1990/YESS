@@ -58,7 +58,8 @@ dump.o: $(SRC)/bool.h $(SRC)/dump.h $(SRC)/forwarding.h $(SRC)/fetchStage.h \
         $(SRC)/writebackStage.h $(SRC)/registers.h $(SRC)/memory.h
 	$(CC) $(CFLAGS) -c $(SRC)/dump.c -o dump.o
 
-loader.o: $(SRC)/bool.h $(SRC)/loader.h $(SRC)/memory.h $(SRC)/tools.h
+loader.o: $(SRC)/bool.h $(SRC)/loader.h $(SRC)/logger.h $(SRC)/memory.h \
+          $(SRC)/tools.h
 	$(CC) $(CFLAGS) -c $(SRC)/loader.c -o loader.o
 
 main.o: $(SRC)/bool.h $(SRC)/tools.h $(SRC)/logger.h $(SRC)/memory.h $(SRC)/dump.h \
