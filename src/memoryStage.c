@@ -3,6 +3,8 @@
  * Author: Alex Savarda
  */
 
+#include <stddef.h>
+
 #include "bool.h"
 #include "tools.h"
 #include "memory.h"
