@@ -11,7 +11,6 @@
 # Padding rules
 --pad-header
 --pad-oper
---break-blocks
 --align-pointer=middle
 --align-reference=name
 
