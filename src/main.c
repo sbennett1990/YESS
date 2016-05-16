@@ -1,17 +1,16 @@
 /*
- * File:   main.c
- * Author: Scott Bennett
+ * main.c
  */
 
-// pledge(2) the program on OpenBSD
+/* pledge(2) the program on OpenBSD */
 #ifdef __OpenBSD__
 #include <sys/utsname.h>
-#include <unistd.h>
 #endif
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <unistd.h>
 
 #include "bool.h"
 #include "tools.h"
@@ -29,20 +28,24 @@
 #include "writebackStage.h"
 
 /*
- * Print usage information and exit program
+ * Print usage information and exit program.
  */
 static void usage(void) {
-    fprintf(stderr, "usage: yess <filename>.yo\n");
+    fprintf(stderr, "usage: yess [-dv] -f <filename>.yo\n");
     exit(EXIT_FAILURE);
 }
 
 /*
- * Initialize the program. This includes setting up the "memory" and pipelined
- * registers for the Y86 processor, and the function pointer array used in
+ * Initialize the program. This includes pledging the program on OpenBSD,
+ * setting up logging, and finally setting up the "memory" and pipelined
+ * registers for the Y86 processor and the function pointer array used in
  * executeStage.c
+ *
+ * Parameters:
+ *     verbosity    how verbose logging output should be
  */
-static void initialize(void) {
-    log_init(2, 0);
+static void initialize(int verbosity) {
+    log_init(verbosity, 0);
     log_debug("initializing YESS...");
 #ifdef __OpenBSD__
     // pledge(2) only works on 5.9 or higher
@@ -74,21 +77,21 @@ static void initialize(void) {
  * Validate that the file name ends in ".yo".
  *
  * Parameters:
- *     *fileName    pointer to the string to check
+ *     *filename    file name to check
  *
  * Return true if file ends in ".yo"; false otherwise
  */
-bool validatefilename(char * fileName) {
-    int len = (int) strlen(fileName);
+static bool validatefilename(char * filename) {
+    int len = (int) strlen(filename);
 
     if (len < 3) {
         log_warn("filename too short");
         return FALSE;
     }
 
-    if (fileName[len - 1] == 'o'
-        && fileName[len - 2] == 'y'
-        && fileName[len - 3] == '.') {
+    if (filename[len - 1] == 'o'
+        && filename[len - 2] == 'y'
+        && filename[len - 3] == '.') {
         log_debug("filename valid");
         return TRUE;
     } else {
@@ -98,34 +101,60 @@ bool validatefilename(char * fileName) {
 }
 
 /*
- * Validate that the correct number of arguments are provided and that the
- * second argument is a valid file name. If the arguments are invalid,
- * usage info will be printed and the program will exit.
- */
-static void validate_args(int argc, char * argv[]) {
-    if (argc != 2) {
-        usage(); /* EXIT */
-    }
-
-    char * fileName = argv[1];
-
-    // make sure file name is valid
-    if (!validatefilename(fileName)) {
-        usage(); /* EXIT */
-    }
-
-    log_debug("arguments valid");
-}
-
-/*
  * Main
  */
 int main(int argc, char * argv[]) {
-    (void)initialize();
-    (void)validate_args(argc, argv);
+    int ch;
+    bool dflag = FALSE;
+    bool vflag = FALSE;
+    int verbosity = 0;
+    char * sourcefile;
 
-    /* Load the file; terminate if there is a problem */
-    if (!(load(argv[1]))) {
+    while ((ch = getopt(argc, argv, "df:v")) != -1) {
+        switch (ch) {
+            case 'd':
+                dflag = TRUE;
+                break;
+
+            case 'f':
+                sourcefile = optarg;
+                break;
+
+            case 'v':
+                vflag = TRUE;
+                break;
+
+            default:
+                usage();
+                /* NOTREACHED */
+        }
+    }
+
+    argc -= optind;
+    argv += optind;
+
+    if (argc > 0 || sourcefile == NULL) {
+        usage(); /* EXIT */
+    }
+
+    if (vflag) {
+        verbosity = 1;
+    }
+
+    /* max verbosity, with or without -v flag */
+    if (dflag) {
+        verbosity = 2;
+    }
+
+    if (!validatefilename(sourcefile)) {
+        usage(); /* EXIT */
+    }
+
+    /* done with option parsing, now set up YESS */
+    (void)initialize(verbosity);
+
+    /* load the file; terminate if there is a problem */
+    if (!load(sourcefile)) {
         dumpMemory();
         log_warn("error loading the file");
         log_debug("exiting");
@@ -138,7 +167,7 @@ int main(int argc, char * argv[]) {
     statusType status;
     controlType control;
 
-    // Each loop iteration is 1 clock cycle
+    /* each loop iteration is 1 clock cycle */
     while (!stop) {
         stop = writebackStage(&forward, &status);
         (void)memoryStage(&forward, &status, &control);
