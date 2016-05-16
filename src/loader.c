@@ -26,7 +26,9 @@
 #include "memory.h"
 #endif
 
-#define MAXLEN 80
+#define MAXLEN    80
+#define RECORDLEN 24
+
 /* Calculate the column of the data byte */
 #define WHICH_BYTE(n)   (((n) * 2) + 7)
 
@@ -59,6 +61,7 @@ static void discardRest(FILE * filePtr);
 bool load(const char * fileName) {
     FILE * fp;
     char record[MAXLEN];
+    char buf[RECORDLEN];
     bool memError;
 
     // make sure file name is valid
@@ -95,14 +98,15 @@ bool load(const char * fileName) {
             discardRest(fp);
         }
 
+        (void)strncpy(buf, record, sizeof(buf) - 1);
+        buf[sizeof(buf) - 1] = '\0';
+
         // Error checking...
-        if (!validline(record, prevaddr)) {
+        if (!validline(buf, prevaddr)) {
             // there was an error in the record
             printf("Error on line %d\n", lineno);
 
-            int i;
-
-            for (i = 0; i < len; i++) {
+            for (int i = 0; i < len; i++) {
                 printf("%c", record[i]);
             }
 
@@ -112,16 +116,16 @@ bool load(const char * fileName) {
             return FALSE; /* EXIT */
         }
 
-        if (isaddress(record)) {
-            byteAddress = grabAddress(record);
+        if (isaddress(buf)) {
+            byteAddress = grabAddress(buf);
 
-            if (isdata(record)) {
-                numberOfBytes = numbytes(record);
+            if (isdata(buf)) {
+                numberOfBytes = numbytes(buf);
 
                 short byteNumber;
 
                 for (byteNumber = 1; byteNumber <= numberOfBytes; byteNumber++) {
-                    dataByte = grabDataByte(record, WHICH_BYTE(byteNumber));
+                    dataByte = grabDataByte(buf, WHICH_BYTE(byteNumber));
 
                     putByte(byteAddress, dataByte, &memError);
 
@@ -203,7 +207,7 @@ bool validatefilename(const char * fileName) {
  * Return true if the record has an address; false otherwise
  */
 bool isaddress(char * record) {
-    int len = strnlen(record, MAXLEN);
+    int len = strnlen(record, RECORDLEN);
 
     if (len < 8) {
         return FALSE;
@@ -268,7 +272,7 @@ bool hashexdigits(char * record, int start, int end) {
         return FALSE;
     }
 
-    int len = strnlen(record, MAXLEN);
+    int len = strnlen(record, RECORDLEN);
 
     if (len <= end) {
         return FALSE;
@@ -356,7 +360,7 @@ bool validateaddress(char * record, int prev_addr) {
  * Return true if the record contains data; false otherwise
  */
 bool isdata(char * record) {
-    int len = strnlen(record, MAXLEN);
+    int len = strnlen(record, RECORDLEN);
 
     if (len < 10) {
         return FALSE;
@@ -388,7 +392,7 @@ bool isdata(char * record) {
  * false otherwise
  */
 bool validatedata(char * record) {
-    int len = strnlen(record, MAXLEN);
+    int len = strnlen(record, RECORDLEN);
 
     if (len < 21) {
         return FALSE;
@@ -423,7 +427,7 @@ bool validatedata(char * record) {
  * Return true if the line is correctly formatted; false otherwise
  */
 bool validline(char * record, int prev_addr) {
-    int len = strnlen(record, MAXLEN);
+    int len = strnlen(record, RECORDLEN);
 
     if (len < 23) {
         return FALSE; /* EXIT */
@@ -491,7 +495,7 @@ unsigned char grabDataByte(char * record, int start) {
  * Return the number of bytes of data in the record
  */
 short numbytes(char * record) {
-    int len = strnlen(record, MAXLEN);
+    int len = strnlen(record, RECORDLEN);
 
     // each line should only have 23 columns of valid information
     if (len < 23) {
