@@ -36,10 +36,8 @@ static void usage(void) {
 }
 
 /*
- * Initialize the program. This includes pledging the program on OpenBSD,
- * setting up logging, and finally setting up the "memory" and pipelined
- * registers for the Y86 processor and the function pointer array used in
- * executeStage.c
+ * Initialize the program. This includes pledging the program on OpenBSD and
+ * setting up logging. Called AFTER parsing the options.
  *
  * Parameters:
  *     verbosity    how verbose logging output should be
@@ -47,6 +45,7 @@ static void usage(void) {
 static void initialize(int verbosity) {
     log_init(verbosity, 0);
     log_debug("initializing YESS...");
+
 #ifdef __OpenBSD__
     // pledge(2) only works on 5.9 or higher
     struct utsname name;
@@ -62,15 +61,6 @@ static void initialize(int verbosity) {
     }
 
 #endif
-    // Initialize function pointer array
-    (void)initFuncPtrArray();
-
-    (void)clearMemory();
-    (void)clearFregister();
-    (void)clearDregister();
-    (void)clearEregister();
-    (void)clearMregister();
-    (void)clearWregister();
 }
 
 /*
@@ -98,6 +88,22 @@ static bool validatefilename(char * filename) {
         log_warn("filename not valid");
         return FALSE;
     }
+}
+
+/*
+ * Set up the "memory" and pipelined registers for the Y86 processor and the
+ * function pointer array used in executeStage.c
+ */
+static void setupyess() {
+    /* initialize function pointer array */
+    (void)initFuncPtrArray();
+
+    (void)clearMemory();
+    (void)clearFregister();
+    (void)clearDregister();
+    (void)clearEregister();
+    (void)clearMregister();
+    (void)clearWregister();
 }
 
 /*
@@ -146,12 +152,15 @@ int main(int argc, char * argv[]) {
         verbosity = 2;
     }
 
+    /* done with option parsing, initialize the program */
+    (void)initialize(verbosity);
+
     if (!validatefilename(sourcefile)) {
         usage(); /* EXIT */
     }
 
-    /* done with option parsing, now set up YESS */
-    (void)initialize(verbosity);
+    /* set up the 'processor' */
+    (void)setupyess();
 
     /* load the file; terminate if there is a problem */
     if (!load(sourcefile)) {
