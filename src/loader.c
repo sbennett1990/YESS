@@ -34,7 +34,7 @@
 size_t strnlen(const char * s, size_t maxlen);
 
 static void dropprivileges(void);
-static bool validatefilename(char * fileName);
+static bool validatefilename(const char * fileName);
 static bool validateaddress(char * record, int prev_addr);
 static bool validatedata(char * record);
 static bool validline(char * record, int prevAddr);
@@ -56,7 +56,7 @@ static void discardRest(FILE * filePtr);
  *
  * Return true if load was successful; false if error occured
  */
-bool load(char * fileName) {
+bool load(const char * fileName) {
     FILE * fp;
     char record[MAXLEN];
     bool memError;
@@ -176,7 +176,7 @@ void dropprivileges() {
  *
  * Return true if file ends in ".yo"; false otherwise
  */
-bool validatefilename(char * fileName) {
+bool validatefilename(const char * fileName) {
     int len = (int) strlen(fileName);
 
     if (len < 3) {

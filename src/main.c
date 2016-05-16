@@ -31,7 +31,7 @@
  * Print usage information and exit program.
  */
 static void usage(void) {
-    fprintf(stderr, "usage: yess [-dv] -f <filename>.yo\n");
+    fprintf(stderr, "usage: yess [-duv] -f <filename>.yo\n");
     exit(EXIT_FAILURE);
 }
 
@@ -71,7 +71,7 @@ static void initialize(int verbosity) {
  *
  * Return true if file ends in ".yo"; false otherwise
  */
-static bool validatefilename(char * filename) {
+static bool validatefilename(const char * filename) {
     int len = (int) strlen(filename);
 
     if (len < 3) {
@@ -114,9 +114,9 @@ int main(int argc, char * argv[]) {
     bool dflag = FALSE;
     bool vflag = FALSE;
     int verbosity = 0;
-    char * sourcefile;
+    const char * sourcefile;
 
-    while ((ch = getopt(argc, argv, "df:v")) != -1) {
+    while ((ch = getopt(argc, argv, "df:uv")) != -1) {
         switch (ch) {
             case 'd':
                 dflag = TRUE;
@@ -125,6 +125,9 @@ int main(int argc, char * argv[]) {
             case 'f':
                 sourcefile = optarg;
                 break;
+
+            case 'u':
+                usage(); /* EXIT */
 
             case 'v':
                 vflag = TRUE;
