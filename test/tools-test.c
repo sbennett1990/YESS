@@ -66,6 +66,26 @@ static int test_getBits(int low, int high, unsigned int source, unsigned int exp
     }
 }
 
+static int test_clearBuffer() {
+    printf("\nTesting clearBuffer()");
+    char buff[5] = { 1, 2, 3, 4, 5 };
+    size_t length = sizeof(buff);
+    clearBuffer(buff, length);
+    //printf("\nExpected: %5d\nResult: %7d", expected, result);
+
+    if (length > 0) {
+        if (buff[0] != 0) {
+            printf("\nclearBuffer() Test Failed\n");
+            return 0;
+        } else {
+            printf("\nclearBuffer() Test Passed\n");
+            return 1;
+        }
+    }
+
+    return 0;
+}
+
 /*
  * Main
  */
@@ -76,6 +96,8 @@ int main(int argc, char * argv[]) {
     test_getBits(0, 2, 5, 5);
     test_getBits(31, 31, 0, 0);
     test_getBits(31, 31, -1, 1);
+
+    test_clearBuffer();
 
     return 0;
 }
