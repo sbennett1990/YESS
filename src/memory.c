@@ -1,6 +1,5 @@
 /*
- * File:   memory.c
- * Author: Scott Bennett
+ * memory.c
  */
 
 #include <stddef.h>
@@ -11,7 +10,6 @@
 
 static unsigned int memory[MEMSIZE];
 
-// Prototypes for "private" functions
 static unsigned int fetch(int address, bool * memError);
 static void store(int address, unsigned int value, bool * memError);
 
@@ -24,9 +22,6 @@ static void store(int address, unsigned int value, bool * memError);
  *  *memError   pointer to the memory error indicator
  *
  * Return the contents of the memory address, or 0 on error.
- *
- * NOTE: This function can not be accessed outside
- * of memory.c
  */
 unsigned int fetch(int address, bool * memError) {
     if (address < 0 || address >= MEMSIZE) {
@@ -47,9 +42,6 @@ unsigned int fetch(int address, bool * memError) {
  *  address     the memory address [0..1023]
  *  value       the value to store in memory at the address
  *  *memError   pointer to the memory error indicator
- *
- * NOTE: This function can not be accessed outside
- * of memory.c
  */
 void store(int address, unsigned int value, bool * memError) {
     if (address < 0 || address >= MEMSIZE) {
@@ -79,8 +71,8 @@ unsigned char getByte(int byteAddress, bool * memError) {
     *memError = FALSE;
 
     /*
-     * Retrieve the word containing the specified byte address
-     * using integer division
+     * Retrieve the word containing the specified byte address using integer
+     * division
      */
     unsigned int word = fetch((byteAddress / WORDSIZE), memError);
 
@@ -103,8 +95,10 @@ void putByte(int byteAddress, unsigned char value, bool * memError) {
     } else {
         *memError = FALSE;
 
-        // Retrieve the word containing the specified byte address
-        // using integer division
+        /*
+         * Retrieve the word containing the specified byte address using integer
+         * division
+         */
         unsigned int word = fetch((byteAddress / WORDSIZE), memError);
 
         // Modify the byte address of the word, store in newWord
@@ -157,10 +151,8 @@ void putWord(int byteAddress, unsigned int value, bool * memError) {
 }
 
 /*
- * Set all memory locations to 0 (effectively
- * "clearing" the memory).
+ * Set all memory locations to 0 (effectively "clearing" the memory).
  */
-void clearMemory() {
+void clearMemory(void) {
     clearBuffer((char *) &memory, MEMSIZE);
 }
-
