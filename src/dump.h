@@ -1,13 +1,12 @@
 /*
- * File:   dump.h
- * Author: Scott Bennett
+ * dump.h
  */
 
 #ifndef DUMP_H
 #define	DUMP_H
 
-void dumpMemory();
-void dumpProgramRegisters();
-void dumpProcessorRegisters();
+void dumpMemory(void);
+void dumpProgramRegisters(void);
+void dumpProcessorRegisters(void);
 
 #endif	/* DUMP_H */
