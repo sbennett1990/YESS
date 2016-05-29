@@ -94,7 +94,7 @@ static bool validatefilename(const char * filename) {
  * Set up the "memory" and pipelined registers for the Y86 processor and the
  * function pointer array used in executeStage.c
  */
-static void setupyess() {
+static void setupyess(void) {
     /* initialize function pointer array */
     (void)initFuncPtrArray();
 
