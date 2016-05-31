@@ -18,11 +18,10 @@
 #define WORDSPERLINE 8
 #define LINELENGTH
 
-/* Prototypes for private Functions */
-static void dumpLine(int line[WORDSPERLINE], int address);
-static void buildLine(int line[WORDSPERLINE], int address);
-static int isEqual(int prevLine[WORDSPERLINE], int currLine[WORDSPERLINE]);
-static void copy(int *, int *);
+static void dumpLine(int * line, int address);
+static void buildLine(int * line, int address);
+static int isEqual(int * prevLine, int * currLine);
+static void copy(int * pLine, int * cLine);
 
 /*
  * Outputs the contents of the YESS little-endian memory WORDSPERLINE
@@ -63,11 +62,10 @@ void dumpMemory(void) {
  * Copies the contents of the cLine array into the pLine array.
  *
  * Parameters:
- *     cLine    array of ints (current line)
- *
- * Return pLine - initialized to values in cLine (previous line)
+ *     pLine    set to values in cLine (previous line)
+ *     cLine    pointer to an array of ints (current line)
  */
-void copy(int pLine[WORDSPERLINE], int cLine[WORDSPERLINE]) {
+void copy(int * pLine, int * cLine) {
     int i;
 
     for (i = 0; i < WORDSPERLINE; i++) {
@@ -80,10 +78,10 @@ void copy(int pLine[WORDSPERLINE], int cLine[WORDSPERLINE]) {
  * line array.
  *
  * Parameters:
- *      line         array of ints to output
- *      address   row header
+ *     line      pointer to an array of ints to output
+ *     address   row header
  */
-void dumpLine(int line[WORDSPERLINE], int address) {
+void dumpLine(int * line, int address) {
     int i;
     printf("%03x: ", address * 4);
 
@@ -97,13 +95,13 @@ void dumpLine(int line[WORDSPERLINE], int address) {
  * WORDSPERLINE words from memory.
  *
  * Parameters:
- *      line         array of ints
- *      address   starting index to access memory
+ *     line       pointer to an array of ints
+ *     address    starting index to access memory
  *
  * Modifies:
  *      line - array initialized to values in memory
  */
-void buildLine(int line[WORDSPERLINE], int address) {
+void buildLine(int * line, int address) {
     int i;
     bool memError;
     char byte0, byte1, byte2, byte3;
@@ -117,12 +115,12 @@ void buildLine(int line[WORDSPERLINE], int address) {
  * Compare the contents of prevLine and currLine. Return TRUE if the are equal.
  *
  * Parameters:
- *      prevLine   array of ints
- *      currLine    array of ints
+ *     prevLine    pointer to an array of ints
+ *     currLine    pointer to an array of ints
  *
  * Return TRUE if prevLine and currLine are identical
  */
-int isEqual(int prevLine[WORDSPERLINE], int currLine[WORDSPERLINE]) {
+int isEqual(int * prevLine, int * currLine) {
     int i;
 
     for (i = 0; i < WORDSPERLINE; i++) {
