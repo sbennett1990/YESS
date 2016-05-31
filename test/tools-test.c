@@ -52,6 +52,14 @@ static void validate_args(int argc, char * argv[]) {
     }
 }
 
+static void printbuff(int * buff) {
+    size_t length = sizeof(buff);
+
+    for (size_t i = 0; i < length; i++) {
+        printf("[%d] ", buff[i]);
+    }
+}
+
 static int test_getBits(int low, int high, unsigned int source, unsigned int expected) {
     printf("\nTesting getBits(%d, %d, %d)", low, high, source);
     unsigned int result = getBits(low, high, source);
@@ -68,10 +76,17 @@ static int test_getBits(int low, int high, unsigned int source, unsigned int exp
 
 static int test_clearBuffer() {
     printf("\nTesting clearBuffer()");
-    char buff[5] = { 1, 2, 3, 4, 5 };
+    int buff[5] = { 1, 2, 3, 4, 5 };
     size_t length = sizeof(buff);
-    clearBuffer(buff, length);
+
+    printf("\nTest Buffer: ");
+    printbuff(buff);
+    clearBuffer((char *) buff, length);
     //printf("\nExpected: %5d\nResult: %7d", expected, result);
+    printf("\nCleared Buffer: ");
+    printbuff(buff);
+    printf("\n");
+    clearBuffer((char *) buff, length);
 
     if (length > 0) {
         if (buff[0] != 0) {
