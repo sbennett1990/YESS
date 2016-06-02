@@ -99,7 +99,7 @@ int test_clearBuffer() {
     int buff[5] = { 1, 2, 3, 4, 5 };
     size_t length = sizeof(buff);
 
-    printf("\nTest Buffer: ");
+    printf("\nTest Buffer:    ");
     printbuff(buff);
     clearBuffer((char *) buff, length);
     //printf("\nExpected: %5d\nResult: %7d", expected, result);
