@@ -15,6 +15,10 @@
 #include "../src/bool.h"
 #include "../src/tools.h"
 
+static void printbuff(int * buff);
+static int test_clearBuffer(void);
+static int test_getBits(int low, int high, unsigned int source, unsigned int expected);
+
 /*
  * Print usage information and exit program
  */
@@ -52,7 +56,23 @@ static void validate_args(int argc, char * argv[]) {
     }
 }
 
-static void printbuff(int * buff) {
+/*
+ * Main
+ */
+int main(int argc, char * argv[]) {
+    (void)initialize();
+    //(void)validate_args(argc, argv);
+
+    test_getBits(0, 2, 5, 5);
+    test_getBits(31, 31, 0, 0);
+    test_getBits(31, 31, -1, 1);
+
+    test_clearBuffer();
+
+    return 0;
+}
+
+void printbuff(int * buff) {
     size_t length = sizeof(buff);
 
     for (size_t i = 0; i < length; i++) {
@@ -60,7 +80,7 @@ static void printbuff(int * buff) {
     }
 }
 
-static int test_getBits(int low, int high, unsigned int source, unsigned int expected) {
+int test_getBits(int low, int high, unsigned int source, unsigned int expected) {
     printf("\nTesting getBits(%d, %d, %d)", low, high, source);
     unsigned int result = getBits(low, high, source);
     printf("\nExpected: %5d\nResult: %7d", expected, result);
@@ -74,7 +94,7 @@ static int test_getBits(int low, int high, unsigned int source, unsigned int exp
     }
 }
 
-static int test_clearBuffer() {
+int test_clearBuffer() {
     printf("\nTesting clearBuffer()");
     int buff[5] = { 1, 2, 3, 4, 5 };
     size_t length = sizeof(buff);
@@ -97,22 +117,6 @@ static int test_clearBuffer() {
             return 1;
         }
     }
-
-    return 0;
-}
-
-/*
- * Main
- */
-int main(int argc, char * argv[]) {
-    (void)initialize();
-    //(void)validate_args(argc, argv);
-
-    test_getBits(0, 2, 5, 5);
-    test_getBits(31, 31, 0, 0);
-    test_getBits(31, 31, -1, 1);
-
-    test_clearBuffer();
 
     return 0;
 }
