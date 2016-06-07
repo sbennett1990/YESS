@@ -109,7 +109,7 @@ static void setupyess(void) {
 /*
  * Main
  */
-int main(int argc, char * argv[]) {
+int main(int argc, char ** argv) {
     int ch;
     bool dflag = FALSE;
     bool vflag = FALSE;
