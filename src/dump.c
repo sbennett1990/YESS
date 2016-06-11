@@ -17,16 +17,15 @@
 
 #define WORDSPERLINE 8
 
-static void dumpLine(int * line, int address);
 static void buildLine(int * line, int address);
+static void dumpLine(int * line, int address);
 static int isEqual(int * prevLine, int * currLine);
 static void copy(int * pLine, int * cLine);
 
 /*
- * Outputs the contents of the YESS little-endian memory WORDSPERLINE
- * four-byte words per line.  A * is displayed at the end of a line if
- * each line in memory after that up to the next line displayed is
- * identical to the * line.
+ * Output the contents of the YESS memory (little-endian) in four-byte words per
+ * line. A * is displayed at the end of a line if each line after that is
+ * identical to the * line (up to the next line displayed).
  */
 void dumpMemory(void) {
     int address = 0;
@@ -94,7 +93,7 @@ void dumpProcessorRegisters(void) {
 }
 
 /*
- * Access memory for WORDSPERLINE words and sets the line array to the
+ * Access memory for WORDSPERLINE words and set the line array to the
  * WORDSPERLINE words from memory.
  *
  * Parameters:
@@ -102,7 +101,7 @@ void dumpProcessorRegisters(void) {
  *     address    starting index to access memory
  *
  * Modifies:
- *      line - array initialized to values in memory
+ *     line - array initialized to values in memory
  */
 void buildLine(int * line, int address) {
     int i;
@@ -115,12 +114,12 @@ void buildLine(int * line, int address) {
 }
 
 /*
- * Output the starting address in the variable address and the contents of the
- * line array.
+ * Output the starting address (to standard out) and the contents of the line
+ * array.
  *
  * Parameters:
- *     line      pointer to an array of ints to output
- *     address   row header
+ *     line       pointer to an array of ints
+ *     address    row header
  */
 void dumpLine(int * line, int address) {
     int i;
@@ -153,7 +152,7 @@ int isEqual(int * prevLine, int * currLine) {
 }
 
 /*
- * Copies the contents of the cLine array into the pLine array.
+ * Copy the contents of the cLine array into the pLine array.
  *
  * Parameters:
  *     pLine    set to values in cLine (previous line)
