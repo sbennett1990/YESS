@@ -58,80 +58,6 @@ void dumpMemory(void) {
 }
 
 /*
- * Copies the contents of the cLine array into the pLine array.
- *
- * Parameters:
- *     pLine    set to values in cLine (previous line)
- *     cLine    pointer to an array of ints (current line)
- */
-void copy(int * pLine, int * cLine) {
-    int i;
-
-    for (i = 0; i < WORDSPERLINE; i++) {
-        pLine[i] = cLine[i];
-    }
-}
-
-/*
- * Output the starting address in the variable address and the contents of the
- * line array.
- *
- * Parameters:
- *     line      pointer to an array of ints to output
- *     address   row header
- */
-void dumpLine(int * line, int address) {
-    int i;
-    printf("%03x: ", address * 4);
-
-    for (i = 0; i < WORDSPERLINE; i++) {
-        printf("%08x ", line[i]);
-    }
-}
-
-/*
- * Access memory for WORDSPERLINE words and sets the line array to the
- * WORDSPERLINE words from memory.
- *
- * Parameters:
- *     line       pointer to an array of ints
- *     address    starting index to access memory
- *
- * Modifies:
- *      line - array initialized to values in memory
- */
-void buildLine(int * line, int address) {
-    int i;
-    bool memError;
-    char byte0, byte1, byte2, byte3;
-
-    for (i = 0; i < WORDSPERLINE; i++, address++) {
-        line[i] = getWord((address * 4), &memError);
-    }
-}
-
-/*
- * Compare the contents of prevLine and currLine. Return TRUE if the are equal.
- *
- * Parameters:
- *     prevLine    pointer to an array of ints
- *     currLine    pointer to an array of ints
- *
- * Return TRUE if prevLine and currLine are identical
- */
-int isEqual(int * prevLine, int * currLine) {
-    int i;
-
-    for (i = 0; i < WORDSPERLINE; i++) {
-        if (prevLine[i] != currLine[i]) {
-            return FALSE;
-        }
-    }
-
-    return TRUE;
-}
-
-/*
  * Output the contents of the YESS program registers to standard out.
  */
 void dumpProgramRegisters(void) {
@@ -165,4 +91,78 @@ void dumpProcessorRegisters(void) {
            M.stat, M.icode, M.Cnd, M.valE, M.valA, M.dstE, M.dstM);
     printf("W - stat: %01x icode: %01x valE: %08x valM: %08x dstE: %01x dstM: %01x\n\n",
            W.stat, W.icode, W.valE, W.valM, W.dstE, W.dstM);
+}
+
+/*
+ * Access memory for WORDSPERLINE words and sets the line array to the
+ * WORDSPERLINE words from memory.
+ *
+ * Parameters:
+ *     line       pointer to an array of ints
+ *     address    starting index to access memory
+ *
+ * Modifies:
+ *      line - array initialized to values in memory
+ */
+void buildLine(int * line, int address) {
+    int i;
+    bool memError;
+    char byte0, byte1, byte2, byte3;
+
+    for (i = 0; i < WORDSPERLINE; i++, address++) {
+        line[i] = getWord((address * 4), &memError);
+    }
+}
+
+/*
+ * Output the starting address in the variable address and the contents of the
+ * line array.
+ *
+ * Parameters:
+ *     line      pointer to an array of ints to output
+ *     address   row header
+ */
+void dumpLine(int * line, int address) {
+    int i;
+    printf("%03x: ", address * 4);
+
+    for (i = 0; i < WORDSPERLINE; i++) {
+        printf("%08x ", line[i]);
+    }
+}
+
+/*
+ * Compare the contents of prevLine and currLine. Return TRUE if the are equal.
+ *
+ * Parameters:
+ *     prevLine    pointer to an array of ints
+ *     currLine    pointer to an array of ints
+ *
+ * Return TRUE if prevLine and currLine are identical
+ */
+int isEqual(int * prevLine, int * currLine) {
+    int i;
+
+    for (i = 0; i < WORDSPERLINE; i++) {
+        if (prevLine[i] != currLine[i]) {
+            return FALSE;
+        }
+    }
+
+    return TRUE;
+}
+
+/*
+ * Copies the contents of the cLine array into the pLine array.
+ *
+ * Parameters:
+ *     pLine    set to values in cLine (previous line)
+ *     cLine    pointer to an array of ints (current line)
+ */
+void copy(int * pLine, int * cLine) {
+    int i;
+
+    for (i = 0; i < WORDSPERLINE; i++) {
+        pLine[i] = cLine[i];
+    }
 }
