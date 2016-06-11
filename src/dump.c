@@ -16,7 +16,6 @@
 #include "memory.h"
 
 #define WORDSPERLINE 8
-#define LINELENGTH
 
 static void dumpLine(int * line, int address);
 static void buildLine(int * line, int address);
