@@ -28,10 +28,10 @@ static void copy(int * pLine, int * cLine);
  * identical to the * line (up to the next line displayed).
  */
 void dumpMemory(void) {
+    int star = 0;
     int address = 0;
     int prevLine[WORDSPERLINE];
     int currLine[WORDSPERLINE];
-    int star = 0;
 
     buildLine(prevLine, address);
     dumpLine(prevLine, address);
@@ -104,10 +104,9 @@ void dumpProcessorRegisters(void) {
  *     line - array initialized to values in memory
  */
 void buildLine(int * line, int address) {
-    int i;
     bool memError;
 
-    for (i = 0; i < WORDSPERLINE; i++, address++) {
+    for (int i = 0; i < WORDSPERLINE; i++, address++) {
         line[i] = getWord((address * 4), &memError);
     }
 }
@@ -121,10 +120,9 @@ void buildLine(int * line, int address) {
  *     address    row header
  */
 void dumpLine(int * line, int address) {
-    int i;
-    printf("%03x: ", address * 4);
+    printf("%03x: ", (address * 4));
 
-    for (i = 0; i < WORDSPERLINE; i++) {
+    for (int i = 0; i < WORDSPERLINE; i++) {
         printf("%08x ", line[i]);
     }
 }
@@ -139,9 +137,8 @@ void dumpLine(int * line, int address) {
  * Return TRUE if prevLine and currLine are identical
  */
 int isEqual(int * prevLine, int * currLine) {
-    int i;
 
-    for (i = 0; i < WORDSPERLINE; i++) {
+    for (int i = 0; i < WORDSPERLINE; i++) {
         if (prevLine[i] != currLine[i]) {
             return FALSE;
         }
@@ -158,9 +155,8 @@ int isEqual(int * prevLine, int * currLine) {
  *     cLine    pointer to an array of ints (current line)
  */
 void copy(int * pLine, int * cLine) {
-    int i;
 
-    for (i = 0; i < WORDSPERLINE; i++) {
+    for (int i = 0; i < WORDSPERLINE; i++) {
         pLine[i] = cLine[i];
     }
 }
