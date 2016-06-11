@@ -106,7 +106,6 @@ void dumpProcessorRegisters(void) {
 void buildLine(int * line, int address) {
     int i;
     bool memError;
-    char byte0, byte1, byte2, byte3;
 
     for (i = 0; i < WORDSPERLINE; i++, address++) {
         line[i] = getWord((address * 4), &memError);
