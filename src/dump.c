@@ -19,8 +19,8 @@
 
 static void buildLine(int * line, int address);
 static void dumpLine(int * line, int address);
-static int isEqual(int * prevLine, int * currLine);
-static void copy(int * pLine, int * cLine);
+static int areEqual(int * prevLine, int * currLine);
+static void copy(int * prevLine, int * currLine);
 
 /*
  * Output the contents of the YESS memory (little-endian) in four-byte words per
@@ -39,7 +39,7 @@ void dumpMemory(void) {
     for (address = WORDSPERLINE; address < MEMSIZE; address += WORDSPERLINE) {
         buildLine(currLine, address);
 
-        if (isEqual(prevLine, currLine)) {
+        if (areEqual(prevLine, currLine)) {
             if (!star) {
                 printf("*\n");
                 star = 1;
@@ -72,13 +72,19 @@ void dumpProgramRegisters(void) {
  * Output the contents of the YESS processor registers to standard out.
  */
 void dumpProcessorRegisters(void) {
+    // registers
     fregister F = getFregister();
     dregister D = getDregister();
     eregister E = getEregister();
     mregister M = getMregister();
     wregister W = getWregister();
 
-    printf("CC - ZF: %01x SF: %01x OF: %01x\n", getCC(ZF), getCC(SF), getCC(OF));
+    // condition codes
+    unsigned int zf = getCC(ZF);
+    unsigned int sf = getCC(SF);
+    unsigned int of = getCC(OF);
+
+    printf("CC - ZF: %01x SF: %01x OF: %01x\n", zf, sf, of);
     printf("F - predPC: %08x\n", F.predPC);
     printf("D - stat: %01x icode: %01x ifun: %01x rA: %01x rB: %01x valC: %08x  valP: %08x\n",
            D.stat, D.icode, D.ifun, D.rA, D.rB, D.valC, D.valP);
@@ -136,8 +142,7 @@ void dumpLine(int * line, int address) {
  *
  * Return TRUE if prevLine and currLine are identical
  */
-int isEqual(int * prevLine, int * currLine) {
-
+int areEqual(int * prevLine, int * currLine) {
     for (int i = 0; i < WORDSPERLINE; i++) {
         if (prevLine[i] != currLine[i]) {
             return FALSE;
@@ -148,15 +153,14 @@ int isEqual(int * prevLine, int * currLine) {
 }
 
 /*
- * Copy the contents of the cLine array into the pLine array.
+ * Copy the contents of the currLine array into the prevLine array.
  *
  * Parameters:
- *     pLine    set to values in cLine (previous line)
- *     cLine    pointer to an array of ints (current line)
+ *     prevLine    set to values in currLine (previous line)
+ *     currLine    pointer to an array of ints (current line)
  */
-void copy(int * pLine, int * cLine) {
-
+void copy(int * prevLine, int * currLine) {
     for (int i = 0; i < WORDSPERLINE; i++) {
-        pLine[i] = cLine[i];
+        prevLine[i] = currLine[i];
     }
 }
