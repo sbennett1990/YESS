@@ -25,6 +25,11 @@ MOCKS = $(SRC)/mocks
 tools-test: strtonum.o tools.o tools-test.o
 	$(CC) $(LDFLAGS) strtonum.o tools.o tools-test.o -o tools-test
 
+dump-test: strtonum.o tools.o memory.o fetchStage.o decodeStage.o executeStage.o \
+           memoryStage.o writebackStage.o dump.o dump-test.o
+	$(CC) $(LDFLAGS) strtonum.o tools.o memory.o fetchStage.o decodeStage.o \
+    executeStage.o memoryStage.o writebackStage.o dump.o dump-test.o -o dump-test
+
 loader-test: strtonum.o tools.o memory_mock.o loader.o loader-test.o
 	$(CC) $(LDFLAGS) strtonum.o tools.o memory_mock.o loader.o loader-test.o -o loader-test
 
@@ -97,6 +102,9 @@ loader-test.o: $(SRC)/bool.h $(SRC)/loader.h
 
 tools-test.o: $(SRC)/bool.h $(SRC)/tools.h
 	$(CC) $(CFLAGS) -c tools-test.c -o tools-test.o
+
+dump-test.o: $(SRC)/bool.h $(SRC)/dump.h $(SRC)/memory.h
+	$(CC) $(CFLAGS) -c dump-test.c -o dump-test.o
 
 clean:
 	rm -f *.o
