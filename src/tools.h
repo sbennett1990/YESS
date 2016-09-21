@@ -23,6 +23,8 @@ void expandBits(unsigned int source, char bits[36]);
 void clearBuffer(char * buff, size_t length);
 int strtoint(const char * nptr, int base);
 bool validatefilename(const char * filename);
+void initialpledge(void);
+void reduceprivileges(void);
 
 #endif /* TOOLS_H */
 
