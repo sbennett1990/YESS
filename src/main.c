@@ -2,11 +2,6 @@
  * main.c
  */
 
-/* pledge(2) the program on OpenBSD */
-#ifdef __OpenBSD__
-#include <sys/utsname.h>
-#endif
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -46,21 +41,7 @@ static void initialize(int verbosity) {
     log_init(verbosity, 0);
     log_debug("initializing YESS...");
 
-#ifdef __OpenBSD__
-    // pledge(2) only works on 5.9 or higher
-    struct utsname name;
-
-    if (uname(&name) != -1 && strncmp(name.release, "5.8", 3) > 0) {
-        const char * promises = "stdio rpath";
-
-        if (pledge(promises, NULL) == -1) {
-            err(1, "pledge");
-        }
-
-        log_info("pledge(2)'d with %s", promises);
-    }
-
-#endif
+    initialpledge();
 }
 
 /*
