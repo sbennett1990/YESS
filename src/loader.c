@@ -36,7 +36,7 @@
 size_t strnlen(const char * s, size_t maxlen);
 
 static void dropprivileges(void);
-static bool validatefilename(const char * fileName);
+static bool local_validatefilename(const char * fileName);
 static bool validateaddress(char * record, int prev_addr);
 static bool validatedata(char * record);
 static bool validline(char * record, int prevAddr);
@@ -180,7 +180,7 @@ void dropprivileges() {
  *
  * Return true if file ends in ".yo"; false otherwise
  */
-bool validatefilename(const char * fileName) {
+bool local_validatefilename(const char * fileName) {
     int len = (int) strlen(fileName);
 
     if (len < 3) {

@@ -22,6 +22,7 @@ bool isNegative(unsigned int source);
 void expandBits(unsigned int source, char bits[36]);
 void clearBuffer(char * buff, size_t length);
 int strtoint(const char * nptr, int base);
+bool validatefilename(const char * filename);
 
 #endif /* TOOLS_H */
 

@@ -71,7 +71,7 @@ static void initialize(int verbosity) {
  *
  * Return true if file ends in ".yo"; false otherwise
  */
-static bool validatefilename(const char * filename) {
+static bool local_validatefilename(const char * filename) {
     int len = (int) strlen(filename);
 
     if (len < 3) {

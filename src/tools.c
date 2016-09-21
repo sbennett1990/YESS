@@ -8,6 +8,7 @@
 #include <stdlib.h>
 
 #include "bool.h"
+#include "logger.h"
 #include "strtonum.h"
 #include "tools.h"
 
@@ -291,5 +292,32 @@ int strtoint(const char * nptr, int base) {
     num = (int) strtonum_OBSD(nptr, INT_MIN, INT_MAX, NULL, base);
 
     return num;
+}
+
+/*
+ * Validate that the given string ends in ".yo".
+ *
+ * Parameters:
+ *     *filename    file name to check
+ *
+ * Return true if file ends in ".yo"; false otherwise
+ */
+bool validatefilename(const char * filename) {
+    int len = (int) strlen(filename);
+
+    if (len < 3) {
+        log_warn("filename too short");
+        return FALSE;
+    }
+
+    if (filename[len - 1] == 'o'
+        && filename[len - 2] == 'y'
+        && filename[len - 3] == '.') {
+        log_debug("filename valid");
+        return TRUE;
+    } else {
+        log_warn("filename not valid");
+        return FALSE;
+    }
 }
 
