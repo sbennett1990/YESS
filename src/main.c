@@ -64,33 +64,6 @@ static void initialize(int verbosity) {
 }
 
 /*
- * Validate that the file name ends in ".yo".
- *
- * Parameters:
- *     *filename    file name to check
- *
- * Return true if file ends in ".yo"; false otherwise
- */
-static bool local_validatefilename(const char * filename) {
-    int len = (int) strlen(filename);
-
-    if (len < 3) {
-        log_warn("filename too short");
-        return FALSE;
-    }
-
-    if (filename[len - 1] == 'o'
-        && filename[len - 2] == 'y'
-        && filename[len - 3] == '.') {
-        log_debug("filename valid");
-        return TRUE;
-    } else {
-        log_warn("filename not valid");
-        return FALSE;
-    }
-}
-
-/*
  * Set up the "memory" and pipelined registers for the Y86 processor and the
  * function pointer array used in executeStage.c
  */
