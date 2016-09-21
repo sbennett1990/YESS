@@ -36,7 +36,6 @@
 size_t strnlen(const char * s, size_t maxlen);
 
 static void dropprivileges(void);
-static bool local_validatefilename(const char * fileName);
 static bool validateaddress(char * record, int prev_addr);
 static bool validatedata(char * record);
 static bool validline(char * record, int prevAddr);
@@ -170,30 +169,6 @@ void dropprivileges() {
 
 #endif
     return;
-}
-
-/*
- * Validate that the file name ends in ".yo".
- *
- * Parameters:
- *     *fileName    pointer to the string to check
- *
- * Return true if file ends in ".yo"; false otherwise
- */
-bool local_validatefilename(const char * fileName) {
-    int len = (int) strlen(fileName);
-
-    if (len < 3) {
-        return FALSE;
-    }
-
-    if (fileName[len - 1] == 'o'
-        && fileName[len - 2] == 'y'
-        && fileName[len - 3] == '.') {
-        return TRUE;
-    } else {
-        return FALSE;
-    }
 }
 
 /*
