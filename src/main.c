@@ -31,20 +31,6 @@ static void usage(void) {
 }
 
 /*
- * Initialize the program. This includes pledging the program on OpenBSD and
- * setting up logging. Called AFTER parsing the options.
- *
- * Parameters:
- *     verbosity    how verbose logging output should be
- */
-static void initialize(int verbosity) {
-    log_init(verbosity, 0);
-    log_debug("initializing YESS...");
-
-    initialpledge();
-}
-
-/*
  * Set up the "memory" and pipelined registers for the Y86 processor and the
  * function pointer array used in executeStage.c
  */
@@ -110,7 +96,9 @@ int main(int argc, char ** argv) {
     }
 
     /* done with option parsing, initialize the program */
-    (void)initialize(verbosity);
+    log_init(verbosity, 0);
+    log_debug("initializing YESS...");
+    initialpledge();
 
     /* set up the 'processor' */
     (void)setupyess();
