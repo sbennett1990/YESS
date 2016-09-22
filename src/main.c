@@ -112,10 +112,6 @@ int main(int argc, char ** argv) {
     /* done with option parsing, initialize the program */
     (void)initialize(verbosity);
 
-    if (!validatefilename(sourcefile)) {
-        usage(); /* EXIT */
-    }
-
     /* set up the 'processor' */
     (void)setupyess();
 
@@ -126,6 +122,8 @@ int main(int argc, char ** argv) {
         log_debug("exiting");
         return 1; /* EXIT */
     }
+
+    (void)reduceprivileges();
 
     int clockCount = 0;
     bool stop = FALSE;

@@ -56,22 +56,18 @@ bool load(const char * fileName) {
     char buf[RECORDLEN];
     bool memError;
 
-    // make sure file name is valid
     if (!validatefilename(fileName)) {
-        printf("\ninvalid file name");
-        return FALSE;
+        return FALSE; /* EXIT */
     }
 
     // Open file as read-only
+    log_debug("opening file \'%s\'", fileName);
     fp = fopen(fileName, "r");
-    reduceprivileges();
 
-    // Check if file was not opened
     if (fp == NULL) {
-        printf("\nFile opening failed");
-        printf("\nUsage: yess <filename>.yo\n");
-        fclose(fp);
-        return FALSE; /*** exit function ***/
+        log_warn("error opening the file");
+        (void)fclose(fp);
+        return FALSE; /* EXIT */
     }
 
     /* initial value since no address has been modified yet */
