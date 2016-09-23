@@ -9,7 +9,7 @@
 #include "tools.h"
 
 static unsigned int registers[REGSIZE];
-static unsigned int CC;                     /* condition code */
+static unsigned int CC = 0;                 /* condition code */
 
 /*
  * Returns the value in the specified register.
