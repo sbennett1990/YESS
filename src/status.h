@@ -1,6 +1,5 @@
 /*
- * File:   status.h
- * Author: Alex Savarda
+ * status.h
  */
 
 #ifndef STATUS_H
