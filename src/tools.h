@@ -20,8 +20,11 @@ unsigned int buildWord(unsigned char byte0, unsigned char byte1,
                        unsigned char byte2, unsigned char byte3);
 bool isNegative(unsigned int source);
 void expandBits(unsigned int source, char bits[36]);
-void clearBuffer(char * buff, int size);
+void clearBuffer(char * buff, size_t length);
 int strtoint(const char * nptr, int base);
+bool validatefilename(const char * filename);
+void initialpledge(void);
+void reduceprivileges(void);
 
 #endif /* TOOLS_H */
 

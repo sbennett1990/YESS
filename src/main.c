@@ -1,20 +1,15 @@
 /*
- * File:   main.c
- * Author: Scott Bennett
+ * main.c
  */
-
-// pledge(2) the program on OpenBSD
-#ifdef __OpenBSD__
-#include <sys/utsname.h>
-#include <unistd.h>
-#endif
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <unistd.h>
 
 #include "bool.h"
 #include "tools.h"
+#include "logger.h"
 #include "memory.h"
 #include "dump.h"
 #include "loader.h"
@@ -28,31 +23,19 @@
 #include "writebackStage.h"
 
 /*
- * Print usage information and exit program
+ * Print usage information and exit program.
  */
 static void usage(void) {
-    fprintf(stderr, "usage: yess <filename>.yo\n");
+    fprintf(stderr, "usage: yess [-duv] -f <filename>.yo\n");
     exit(EXIT_FAILURE);
 }
 
 /*
- * Initialize the program. This includes setting up the "memory" and pipelined
- * registers for the Y86 processor, and the function pointer array used in
- * executeStage.c
+ * Set up the "memory" and pipelined registers for the Y86 processor and the
+ * function pointer array used in executeStage.c
  */
-static void initialize(void) {
-#ifdef __OpenBSD__
-    // pledge(2) only works on 5.9 or higher
-    struct utsname name;
-
-    if (uname(&name) != -1 && strncmp(name.release, "5.8", 3) > 0) {
-        if (pledge("stdio rpath", NULL) == -1) {
-            err(1, "pledge");
-        }
-    }
-
-#endif
-    // Initialize function pointer array
+static void setupyess(void) {
+    /* initialize function pointer array */
     (void)initFuncPtrArray();
 
     (void)clearMemory();
@@ -64,63 +47,71 @@ static void initialize(void) {
 }
 
 /*
- * Validate that the file name ends in ".yo".
- *
- * Parameters:
- *     *fileName    pointer to the string to check
- *
- * Return true if file ends in ".yo"; false otherwise
- */
-bool validatefilename(char * fileName) {
-    int len = (int) strlen(fileName);
-
-    if (len < 3) {
-        return FALSE;
-    }
-
-    if (fileName[len - 1] == 'o'
-        && fileName[len - 2] == 'y'
-        && fileName[len - 3] == '.') {
-        return TRUE;
-    } else {
-        return FALSE;
-    }
-}
-
-/*
- * Validate that the correct number of arguments are provided and that the
- * second argument is a valid file name. If the arguments are invalid,
- * usage info will be printed and the program will exit.
- */
-static void validate_args(int argc, char * argv[]) {
-    if (argc != 2) {
-        usage(); /* EXIT */
-    }
-
-    char * fileName = argv[1];
-
-    // make sure file name is valid
-    if (!validatefilename(fileName)) {
-        printf("\ninvalid file name");
-        usage(); /* EXIT */
-    }
-}
-
-/*
  * Main
  */
-int main(int argc, char * argv[]) {
-    (void)initialize();
-    (void)validate_args(argc, argv);
+int main(int argc, char ** argv) {
+    int ch;
+    bool dflag = FALSE;
+    bool vflag = FALSE;
+    int verbosity = 0;
+    const char * sourcefile;
 
-    /*
-     * Load the file
-     * Terminate the program if there is a problem loading
-     */
-    if (!(load(argv[1]))) {
+    while ((ch = getopt(argc, argv, "df:uv")) != -1) {
+        switch (ch) {
+            case 'd':
+                dflag = TRUE;
+                break;
+
+            case 'f':
+                sourcefile = optarg;
+                break;
+
+            case 'u':
+                usage(); /* EXIT */
+
+            case 'v':
+                vflag = TRUE;
+                break;
+
+            default:
+                usage();
+                /* NOTREACHED */
+        }
+    }
+
+    argc -= optind;
+    argv += optind;
+
+    if (argc > 0 || sourcefile == NULL) {
+        usage(); /* EXIT */
+    }
+
+    if (vflag) {
+        verbosity = 1;
+    }
+
+    /* max verbosity, with or without -v flag */
+    if (dflag) {
+        verbosity = 2;
+    }
+
+    /* done with option parsing, initialize the program */
+    log_init(verbosity, 0);
+    log_debug("initializing YESS...");
+    initialpledge();
+
+    /* set up the 'processor' */
+    (void)setupyess();
+
+    /* load the file; terminate if there is a problem */
+    if (!load(sourcefile)) {
         dumpMemory();
+        log_warn("error loading the file");
+        log_debug("exiting");
         return 1; /* EXIT */
     }
+
+    (void)reduceprivileges();
 
     int clockCount = 0;
     bool stop = FALSE;
@@ -128,7 +119,7 @@ int main(int argc, char * argv[]) {
     statusType status;
     controlType control;
 
-    // Each loop iteration is 1 clock cycle
+    /* each loop iteration is 1 clock cycle */
     while (!stop) {
         stop = writebackStage(&forward, &status);
         (void)memoryStage(&forward, &status, &control);

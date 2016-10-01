@@ -1,6 +1,5 @@
 /* 
- * File:   forwarding.h
- * Author: Scott Bennett
+ * forwarding.h
  */
 
 #ifndef FORWARDING_H

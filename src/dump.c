@@ -1,7 +1,5 @@
 /*
- * File:   dump.c
- * Author: Cindy Norris
- * Modified: Scott Bennett
+ * dump.c
  */
 
 #include <stdio.h>
@@ -31,11 +29,8 @@ static void copy(int *, int *);
  * four-byte words per line.  A * is displayed at the end of a line if
  * each line in memory after that up to the next line displayed is
  * identical to the * line.
- *
- * Parameters:
- *      none
  */
-void dumpMemory() {
+void dumpMemory(void) {
     int address = 0;
     int prevLine[WORDSPERLINE];
     int currLine[WORDSPERLINE];
@@ -65,10 +60,10 @@ void dumpMemory() {
 }
 
 /*
- * This Function copies the contents of the cLine array into the pLine array.
+ * Copies the contents of the cLine array into the pLine array.
  *
  * Parameters:
- *      cLine   array of ints (current line)
+ *     cLine    array of ints (current line)
  *
  * Return pLine - initialized to values in cLine (previous line)
  */
@@ -81,14 +76,12 @@ void copy(int pLine[WORDSPERLINE], int cLine[WORDSPERLINE]) {
 }
 
 /*
- * This Function outputs the starting address in the variable
- * address and the contents of the line array.
+ * Output the starting address in the variable address and the contents of the
+ * line array.
  *
  * Parameters:
- *      line    array of ints to output
- *      address row header
- *
- * Return none
+ *      line         array of ints to output
+ *      address   row header
  */
 void dumpLine(int line[WORDSPERLINE], int address) {
     int i;
@@ -100,14 +93,12 @@ void dumpLine(int line[WORDSPERLINE], int address) {
 }
 
 /*
- * This function accesses memory for WORDSPERLINE words and sets
- * the line array to the WORDSPERLINE words from memory.
+ * Access memory for WORDSPERLINE words and sets the line array to the
+ * WORDSPERLINE words from memory.
  *
  * Parameters:
- *      line    array of ints
- *      address starting index to access memory
- *
- * Return none
+ *      line         array of ints
+ *      address   starting index to access memory
  *
  * Modifies:
  *      line - array initialized to values in memory
@@ -123,11 +114,10 @@ void buildLine(int line[WORDSPERLINE], int address) {
 }
 
 /*
- * This function compares the contents of prevLine and currLine
- * and returns TRUE if the are equal.
+ * Compare the contents of prevLine and currLine. Return TRUE if the are equal.
  *
  * Parameters:
- *      prevLine    array of ints
+ *      prevLine   array of ints
  *      currLine    array of ints
  *
  * Return TRUE if prevLine and currLine are identical
@@ -145,15 +135,9 @@ int isEqual(int prevLine[WORDSPERLINE], int currLine[WORDSPERLINE]) {
 }
 
 /*
- * This function outputs the contents of the YESS program registers
- * to standard out.
- *
- * Parameters:
- *      none
- *
- * Return none
+ * Output the contents of the YESS program registers to standard out.
  */
-void dumpProgramRegisters() {
+void dumpProgramRegisters(void) {
     printf("%%eax: %08x %%ecx: %08x %%edx: %08x %%ebx: %08x\n",
            getRegister(EAX), getRegister(ECX), getRegister(EDX),
            getRegister(EBX));
@@ -163,15 +147,9 @@ void dumpProgramRegisters() {
 }
 
 /*
- * This function outputs the contents of the YESS processor
- * registers to standard out.
- *
- * Parameters:
- *      none
- *
- * Return none
+ * Output the contents of the YESS processor registers to standard out.
  */
-void dumpProcessorRegisters() {
+void dumpProcessorRegisters(void) {
     fregister F = getFregister();
     dregister D = getDregister();
     eregister E = getEregister();

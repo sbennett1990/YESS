@@ -8,7 +8,7 @@
 #ifndef LOADER_H
 #define LOADER_H
 
-bool load(char * fileName);
+bool load(const char * fileName);
 
 #endif  /* LOADER_H */
 

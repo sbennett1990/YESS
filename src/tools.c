@@ -3,10 +3,17 @@
  * Author: Scott Bennett
  */
 
+/* pledge(2) the program on OpenBSD */
+#ifdef __OpenBSD__
+#include <sys/utsname.h>
+#endif
+
 #include <limits.h>
+#include <stddef.h>
 #include <stdlib.h>
 
 #include "bool.h"
+#include "logger.h"
 #include "strtonum.h"
 #include "tools.h"
 
@@ -259,15 +266,19 @@ void expandBits(unsigned int source, char bits[36]) {
 }
 
 /*
- * Set each value in buff to zero, effectively
- * "clearing" it. Can clear a buffer of any size.
+ * Write 'length' zeroes to the buffer, effectively "clearing" it. If length is
+ * zero, this function does nothing. Can clear a buffer of any size, up to
+ * SIZE_MAX.
+ *
+ * Parameters:
+ *     *buff    buffer
+ *     length   length of the buffer
  */
-void clearBuffer(char * buff, int size) {
-    unsigned int i;
+void clearBuffer(char * buff, size_t length) {
+    char * p;
 
-    for (i = 0; i < size; i++) {
-        *buff = 0;
-        buff++;
+    for (p = buff; length--; ) {
+        *p++ = 0;
     }
 }
 
@@ -286,5 +297,71 @@ int strtoint(const char * nptr, int base) {
     num = (int) strtonum_OBSD(nptr, INT_MIN, INT_MAX, NULL, base);
 
     return num;
+}
+
+/*
+ * Validate that the given string ends in ".yo".
+ *
+ * Parameters:
+ *     *filename    file name to check
+ *
+ * Return true if file ends in ".yo"; false otherwise
+ */
+bool validatefilename(const char * filename) {
+    int len = (int) strlen(filename);
+
+    if (len < 3) {
+        log_warn("filename too short");
+        return FALSE;
+    }
+
+    if (filename[len - 1] == 'o'
+        && filename[len - 2] == 'y'
+        && filename[len - 3] == '.') {
+        log_debug("filename valid");
+        return TRUE;
+    } else {
+        log_warn("filename not valid");
+        return FALSE;
+    }
+}
+
+/*
+ * Put all the complex system testing code in one place. Functions can pass a
+ * list of promises. Be careful to only reduce privileges!
+ */
+static void pledge_wrapper(const char * promises) {
+#ifdef __OpenBSD__
+    // pledge(2) only works on 5.9 or higher
+    struct utsname name;
+
+    if (uname(&name) != -1 && strncmp(name.release, "5.8", 3) > 0) {
+        if (pledge(promises, NULL) == -1) {
+            err(1, "pledge");
+        }
+
+        log_info("pledge(2)'d with %s", promises);
+    } else {
+        log_info("not running OpenBSD >5.9, no pledge");
+    }
+#else
+    log_info("not running OpenBSD, no pledge");
+#endif
+}
+
+/*
+ * If running on OpenBSD 5.9 or higher, reduce privileges to "stdio" and "rpath"
+ * because a file has to be opened. If any other OS, do nothing.
+ */
+void initialpledge(void) {
+    pledge_wrapper("stdio rpath");
+}
+
+/*
+ * If running on OpenBSD 5.9 or higher, reduce privileges to "stdio" after
+ * opening the file. If any other OS, do nothing.
+ */
+void reduceprivileges(void) {
+    pledge_wrapper("stdio");
 }
 

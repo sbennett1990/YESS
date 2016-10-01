@@ -1,6 +1,5 @@
 /*
- * File:   control.h
- * Author: Alex Savarda
+ * control.h
  */
 
 #ifndef CONTROL_H

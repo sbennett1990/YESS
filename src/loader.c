@@ -5,18 +5,13 @@
  * error checking on the source file.
  */
 
-// pledge(2) the program on OpenBSD
-#ifdef __OpenBSD__
-#include <sys/utsname.h>
-#include <unistd.h>
-#endif
-
 #include <ctype.h>
 #include <stdio.h>
 #include <string.h>
 
 #include "bool.h"
 #include "loader.h"
+#include "logger.h"
 #include "tools.h"
 
 #ifdef TEST
@@ -25,15 +20,15 @@
 #include "memory.h"
 #endif
 
-#define MAXLEN 80
+#define MAXLEN    80
+#define RECORDLEN 24
+
 /* Calculate the column of the data byte */
 #define WHICH_BYTE(n)   (((n) * 2) + 7)
 
 /* Prototype of strnlen(3), to get rid of compiler warning */
 size_t strnlen(const char * s, size_t maxlen);
 
-static void dropprivileges(void);
-static bool validatefilename(char * fileName);
 static bool validateaddress(char * record, int prev_addr);
 static bool validatedata(char * record);
 static bool validline(char * record, int prevAddr);
@@ -55,27 +50,24 @@ static void discardRest(FILE * filePtr);
  *
  * Return true if load was successful; false if error occured
  */
-bool load(char * fileName) {
+bool load(const char * fileName) {
     FILE * fp;
     char record[MAXLEN];
+    char buf[RECORDLEN];
     bool memError;
 
-    // make sure file name is valid
     if (!validatefilename(fileName)) {
-        printf("\ninvalid file name");
-        return FALSE;
+        return FALSE; /* EXIT */
     }
 
     // Open file as read-only
+    log_debug("opening file \'%s\'", fileName);
     fp = fopen(fileName, "r");
-    dropprivileges();
 
-    // Check if file was not opened
     if (fp == NULL) {
-        printf("\nFile opening failed");
-        printf("\nUsage: yess <filename>.yo\n");
-        fclose(fp);
-        return FALSE; /*** exit function ***/
+        log_warn("error opening the file");
+        (void)fclose(fp);
+        return FALSE; /* EXIT */
     }
 
     /* initial value since no address has been modified yet */
@@ -94,14 +86,15 @@ bool load(char * fileName) {
             discardRest(fp);
         }
 
+        (void)strncpy(buf, record, sizeof(buf) - 1);
+        buf[sizeof(buf) - 1] = '\0';
+
         // Error checking...
-        if (!validline(record, prevaddr)) {
+        if (!validline(buf, prevaddr)) {
             // there was an error in the record
             printf("Error on line %d\n", lineno);
 
-            int i;
-
-            for (i = 0; i < len; i++) {
+            for (int i = 0; i < len; i++) {
                 printf("%c", record[i]);
             }
 
@@ -111,16 +104,16 @@ bool load(char * fileName) {
             return FALSE; /* EXIT */
         }
 
-        if (isaddress(record)) {
-            byteAddress = grabAddress(record);
+        if (isaddress(buf)) {
+            byteAddress = grabAddress(buf);
 
-            if (isdata(record)) {
-                numberOfBytes = numbytes(record);
+            if (isdata(buf)) {
+                numberOfBytes = numbytes(buf);
 
                 short byteNumber;
 
                 for (byteNumber = 1; byteNumber <= numberOfBytes; byteNumber++) {
-                    dataByte = grabDataByte(record, WHICH_BYTE(byteNumber));
+                    dataByte = grabDataByte(buf, WHICH_BYTE(byteNumber));
 
                     putByte(byteAddress, dataByte, &memError);
 
@@ -145,49 +138,6 @@ bool load(char * fileName) {
 }
 
 /*
- * If running on OpenBSD 5.9 or higher, reduce privileges to "stdio" after
- * opening the file. If any other OS, do nothing.
- */
-void dropprivileges() {
-#ifdef __OpenBSD__
-    // pledge(2) only works on 5.9 or higher
-    struct utsname name;
-
-    if (uname(&name) != -1 && strncmp(name.release, "5.8", 3) > 0) {
-        if (pledge("stdio", NULL) == -1) {
-            err(1, "pledge");
-        }
-    }
-
-#endif
-    return;
-}
-
-/*
- * Validate that the file name ends in ".yo".
- *
- * Parameters:
- *     *fileName    pointer to the string to check
- *
- * Return true if file ends in ".yo"; false otherwise
- */
-bool validatefilename(char * fileName) {
-    int len = (int) strlen(fileName);
-
-    if (len < 3) {
-        return FALSE;
-    }
-
-    if (fileName[len - 1] == 'o'
-        && fileName[len - 2] == 'y'
-        && fileName[len - 3] == '.') {
-        return TRUE;
-    } else {
-        return FALSE;
-    }
-}
-
-/*
  * Determine if the record contains an address. No
  * error checking is done on the address, but the syntax
  * of the address is checked.
@@ -198,7 +148,7 @@ bool validatefilename(char * fileName) {
  * Return true if the record has an address; false otherwise
  */
 bool isaddress(char * record) {
-    int len = strnlen(record, MAXLEN);
+    int len = strnlen(record, RECORDLEN);
 
     if (len < 8) {
         return FALSE;
@@ -263,7 +213,7 @@ bool hashexdigits(char * record, int start, int end) {
         return FALSE;
     }
 
-    int len = strnlen(record, MAXLEN);
+    int len = strnlen(record, RECORDLEN);
 
     if (len <= end) {
         return FALSE;
@@ -351,7 +301,7 @@ bool validateaddress(char * record, int prev_addr) {
  * Return true if the record contains data; false otherwise
  */
 bool isdata(char * record) {
-    int len = strnlen(record, MAXLEN);
+    int len = strnlen(record, RECORDLEN);
 
     if (len < 10) {
         return FALSE;
@@ -383,7 +333,7 @@ bool isdata(char * record) {
  * false otherwise
  */
 bool validatedata(char * record) {
-    int len = strnlen(record, MAXLEN);
+    int len = strnlen(record, RECORDLEN);
 
     if (len < 21) {
         return FALSE;
@@ -418,7 +368,7 @@ bool validatedata(char * record) {
  * Return true if the line is correctly formatted; false otherwise
  */
 bool validline(char * record, int prev_addr) {
-    int len = strnlen(record, MAXLEN);
+    int len = strnlen(record, RECORDLEN);
 
     if (len < 23) {
         return FALSE; /* EXIT */
@@ -486,7 +436,7 @@ unsigned char grabDataByte(char * record, int start) {
  * Return the number of bytes of data in the record
  */
 short numbytes(char * record) {
-    int len = strnlen(record, MAXLEN);
+    int len = strnlen(record, RECORDLEN);
 
     // each line should only have 23 columns of valid information
     if (len < 23) {

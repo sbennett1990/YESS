@@ -3,6 +3,8 @@
  * Author: Scott Bennett
  */
 
+#include <stddef.h>
+
 #include "bool.h"
 #include "tools.h"
 #include "memory.h"

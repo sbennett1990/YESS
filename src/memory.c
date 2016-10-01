@@ -1,7 +1,8 @@
 /*
- * File:   memory.c
- * Author: Scott Bennett
+ * memory.c
  */
+
+#include <stddef.h>
 
 #include "bool.h"
 #include "tools.h"
@@ -9,7 +10,6 @@
 
 static unsigned int memory[MEMSIZE];
 
-// Prototypes for "private" functions
 static unsigned int fetch(int address, bool * memError);
 static void store(int address, unsigned int value, bool * memError);
 
@@ -22,11 +22,8 @@ static void store(int address, unsigned int value, bool * memError);
  *  *memError   pointer to the memory error indicator
  *
  * Return the contents of the memory address, or 0 on error.
- *
- * NOTE: This function can not be accessed outside
- * of memory.c
  */
-unsigned int fetch(int address, bool * memError) {
+static unsigned int fetch(int address, bool * memError) {
     if (address < 0 || address >= MEMSIZE) {
         *memError = TRUE;
         return 0;
@@ -45,17 +42,15 @@ unsigned int fetch(int address, bool * memError) {
  *  address     the memory address [0..1023]
  *  value       the value to store in memory at the address
  *  *memError   pointer to the memory error indicator
- *
- * NOTE: This function can not be accessed outside
- * of memory.c
  */
-void store(int address, unsigned int value, bool * memError) {
+static void store(int address, unsigned int value, bool * memError) {
     if (address < 0 || address >= MEMSIZE) {
         *memError = TRUE;
-    } else {
-        *memError = FALSE;
-        memory[address] = value;
+        return;
     }
+
+    *memError = FALSE;
+    memory[address] = value;
 }
 
 /*
@@ -77,8 +72,8 @@ unsigned char getByte(int byteAddress, bool * memError) {
     *memError = FALSE;
 
     /*
-     * Retrieve the word containing the specified byte address
-     * using integer division
+     * Retrieve the word containing the specified byte address using integer
+     * division
      */
     unsigned int word = fetch((byteAddress / WORDSIZE), memError);
 
@@ -98,18 +93,21 @@ unsigned char getByte(int byteAddress, bool * memError) {
 void putByte(int byteAddress, unsigned char value, bool * memError) {
     if (byteAddress < 0 || byteAddress > HIGHBYTE) {
         *memError = TRUE;
-    } else {
-        *memError = FALSE;
-
-        // Retrieve the word containing the specified byte address
-        // using integer division
-        unsigned int word = fetch((byteAddress / WORDSIZE), memError);
-
-        // Modify the byte address of the word, store in newWord
-        unsigned int newWord = putByteNumber((byteAddress % WORDSIZE), value, word);
-
-        store((byteAddress / WORDSIZE), newWord, memError);
+        return;
     }
+
+    *memError = FALSE;
+
+    /*
+     * Retrieve the word containing the specified byte address using integer
+     * division
+     */
+    unsigned int word = fetch((byteAddress / WORDSIZE), memError);
+
+    // Modify the byte address of the word, store in newWord
+    unsigned int newWord = putByteNumber((byteAddress % WORDSIZE), value, word);
+
+    store((byteAddress / WORDSIZE), newWord, memError);
 }
 
 /*
@@ -124,13 +122,14 @@ void putByte(int byteAddress, unsigned char value, bool * memError) {
  * Return the contents of memory at the byte address, or 0 on error
  */
 unsigned int getWord(int byteAddress, bool * memError) {
-    if (byteAddress % WORDSIZE) { // byteAddress not a multiple of 4
+    /* ensure byteAddress is a multiple of WORDSIZE */
+    if (byteAddress % WORDSIZE) {
         *memError = TRUE;
         return 0;
     }
 
-    // byteAddress is an acceptable word address
     *memError = FALSE;
+
     return fetch((byteAddress / WORDSIZE), memError);
 }
 
@@ -146,19 +145,20 @@ unsigned int getWord(int byteAddress, bool * memError) {
  *  *memError       pointer to the memory error indicator
  */
 void putWord(int byteAddress, unsigned int value, bool * memError) {
-    if (byteAddress % WORDSIZE) { // byteAddress not a multiple of 4
+    /* ensure byteAddress is a multiple of WORDSIZE */
+    if (byteAddress % WORDSIZE) {
         *memError = TRUE;
-    } else {    // byteAddress is an acceptable word address
-        *memError = FALSE;
-        store((byteAddress / WORDSIZE), value, memError);
+        return;
     }
+
+    *memError = FALSE;
+
+    store((byteAddress / WORDSIZE), value, memError);
 }
 
 /*
- * Set all memory locations to 0 (effectively
- * "clearing" the memory).
+ * Set all memory locations to 0 (effectively "clearing" the memory).
  */
-void clearMemory() {
+void clearMemory(void) {
     clearBuffer((char *) &memory, MEMSIZE);
 }
-

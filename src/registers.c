@@ -1,14 +1,15 @@
 /*
- * File:   registers.c
- * Author: Scott Bennett
+ * registers.c
  */
+
+#include <stddef.h>
 
 #include "bool.h"
 #include "registers.h"
 #include "tools.h"
 
 static unsigned int registers[REGSIZE];
-static unsigned int CC;   // Condition code
+static unsigned int CC = 0;                 /* condition code */
 
 /*
  * Returns the value in the specified register.
@@ -16,8 +17,7 @@ static unsigned int CC;   // Condition code
  * Parameters:
  *  regNum  register number
  *
- * Return the value in the register. In case of error,
- *  return 0
+ * Return the value in the register, or 0 on error
  */
 unsigned int getRegister(int regNum) {
     if (regNum >= 0 && regNum < REGSIZE) {
@@ -73,7 +73,7 @@ void setCC(unsigned int bitNumber, unsigned int value) {
  * Parameters:
  *  bitNumber   the condition code to get
  *
- * Return the value of the bitNumber bit in CC
+ * Return the value of the bitNumber bit in CC, or 0 on error
  */
 unsigned int getCC(unsigned int bitNumber) {
     if (bitNumber == ZF || bitNumber == SF || bitNumber == OF) {
