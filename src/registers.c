@@ -2,9 +2,6 @@
  * registers.c
  */
 
-#include <stddef.h>
-
-#include "bool.h"
 #include "registers.h"
 #include "tools.h"
 
