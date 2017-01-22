@@ -9,6 +9,9 @@
 #ifndef TOOLS_H
 #define TOOLS_H
 
+#include <stddef.h>
+#include "bool.h"
+
 unsigned int getBits(int low, int high, unsigned int source);
 unsigned int setBits(int low, int high, unsigned int source);
 unsigned int clearBits(int low, int high, unsigned int source);
