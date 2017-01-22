@@ -9,7 +9,6 @@
 #include <stdio.h>
 #include <string.h>
 
-#include "bool.h"
 #include "loader.h"
 #include "logger.h"
 #include "tools.h"
