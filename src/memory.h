@@ -10,6 +10,8 @@
 #ifndef MEMORY_H
 #define	MEMORY_H
 
+#include "bool.h"
+
 void clearMemory(void);
 unsigned char getByte(int address, bool * memError);
 void putByte(int address, unsigned char value, bool * memError);
