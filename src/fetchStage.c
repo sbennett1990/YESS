@@ -3,14 +3,11 @@
  * Author: Scott Bennett
  */
 
-#include <stddef.h>
-
 #include "bool.h"
 #include "tools.h"
 #include "memory.h"
 #include "registers.h"
 #include "instructions.h"
-#include "status.h"
 #include "control.h"
 #include "forwarding.h"
 #include "fetchStage.h"
