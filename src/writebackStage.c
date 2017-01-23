@@ -4,17 +4,13 @@
  */
 
 #include <stdio.h>
-#include "bool.h"
+
 #include "tools.h"
 #include "dump.h"
 #include "instructions.h"
 #include "status.h"
-#include "control.h"
 #include "forwarding.h"
 #include "writebackStage.h"
-#include "executeStage.h"
-#include "decodeStage.h"
-
 
 /*
  * W register holds the input for the writeback stage.
