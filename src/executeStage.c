@@ -3,7 +3,6 @@
  * Author: Alex Savarda
  */
 
-#include <stdio.h>
 #include "bool.h"
 #include "tools.h"
 #include "registers.h"
