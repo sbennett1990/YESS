@@ -3,10 +3,10 @@
  * Author: Alex Savarda
  */
 
-#define INSTR_COUNT     16   // Possible size of the instruction set
-
 #ifndef EXECUTESTAGE_H
 #define EXECUTESTAGE_H
+
+#define INSTR_COUNT     16   // Possible size of the instruction set
 
 typedef struct {
     unsigned int stat;

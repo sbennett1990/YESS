@@ -3,11 +3,11 @@
  * Author: Scott Bennett
  */
 
-#define BYTESIZE   8  // Size of one byte in bits
-#define INTHIGHBIT 31 // Highest bit for type int
-
 #ifndef TOOLS_H
 #define TOOLS_H
+
+#define BYTESIZE   8  // Size of one byte in bits
+#define INTHIGHBIT 31 // Highest bit for type int
 
 #include <stddef.h>
 #include "bool.h"

@@ -3,6 +3,9 @@
  * Author: Scott Bennett
  */
 
+#ifndef INSTRUCTIONS_H
+#define INSTRUCTIONS_H
+
 // icodes
 #define HALT    0x0
 #define NOP     0x1
@@ -46,4 +49,5 @@
 #define SADR  3
 #define SINS  4
 
+#endif /* INSTRUCTIONS_H */
 

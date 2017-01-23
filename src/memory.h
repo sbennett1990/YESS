@@ -2,13 +2,13 @@
  * memory.h
  */
 
+#ifndef MEMORY_H
+#define MEMORY_H
+
 #define MEMSIZE     1024    // 1024 words of memory
 #define WORDSIZE       4    // Size of one word in bytes
 #define HIGHBYTE    4095    // Highest byte address in memory
 #define NOADDRESS      0    // Value for a "no address"
-
-#ifndef MEMORY_H
-#define	MEMORY_H
 
 #include "bool.h"
 

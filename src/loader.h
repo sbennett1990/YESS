@@ -3,10 +3,10 @@
  * Author: Scott Bennett
  */
 
-#define HEX     16      // Hexidecimal base number
-
 #ifndef LOADER_H
 #define LOADER_H
+
+#define HEX     16      // Hexidecimal base number
 
 #include "bool.h"
 

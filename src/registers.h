@@ -2,6 +2,9 @@
  * registers.h
  */
 
+#ifndef REGISTERS_H
+#define REGISTERS_H
+
 #define REGSIZE    8     /* number of registers */
 #define EAX      0x0
 #define ECX      0x1
@@ -16,9 +19,6 @@
 #define ZF       0x2     /* zero flag     - bit 2 of the CC */
 #define SF       0x1     /* sign flag     - bit 1 of the CC */
 #define OF       0x0     /* overflow flag - bit 0 of the CC */
-
-#ifndef REGISTERS_H
-#define	REGISTERS_H
 
 void clearCC(void);
 void clearRegisters(void);
