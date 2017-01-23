@@ -3,8 +3,6 @@
  * Author: Alex Savarda
  */
 
-#include <stddef.h>
-
 #include "bool.h"
 #include "tools.h"
 #include "memory.h"
@@ -14,7 +12,6 @@
 #include "forwarding.h"
 #include "memoryStage.h"
 #include "writebackStage.h"
-#include "executeStage.h"
 
 // M register holds the input for the execute stage
 // It is only accessible from within this file (static)
