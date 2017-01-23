@@ -6,7 +6,6 @@
 
 #include "bool.h"
 #include "dump.h"
-#include "forwarding.h"
 #include "fetchStage.h"
 #include "decodeStage.h"
 #include "executeStage.h"
