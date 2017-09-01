@@ -16,10 +16,10 @@ extension `.yo`.
 #### Use
 
 To assemble y86 source:
-> unix> ./yas \<filename\>.ys
+> $ ./yas \<filename\>.ys
 
 To simulate y86 machine code:
-> unix> ./yess \<filename\>.yo
+> $ ./yess \<filename\>.yo
 
 #### References
 
