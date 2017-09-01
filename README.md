@@ -19,7 +19,7 @@ To assemble y86 source:
 > $ ./yas \<filename\>.ys
 
 To simulate y86 machine code:
-> $ ./yess \<filename\>.yo
+> $ ./yess [-duv] -f \<filename\>.yo
 
 #### References
 
