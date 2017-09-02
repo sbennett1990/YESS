@@ -19,11 +19,11 @@
 #include "memory.h"
 #endif
 
-#define MAXLEN    80
-#define RECORDLEN 24
+#define MAXLEN	80
+#define RECORDLEN	24
 
 /* Calculate the column of the data byte */
-#define WHICH_BYTE(n)   (((n) * 2) + 7)
+#define WHICH_BYTE(n)	(((n) * 2) + 7)
 
 /* Prototype of strnlen(3), to get rid of compiler warning */
 size_t strnlen(const char * s, size_t maxlen);
