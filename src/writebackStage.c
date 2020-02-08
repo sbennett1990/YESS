@@ -3,8 +3,6 @@
  * Author: Alex Savarda
  */
 
-#include <stdio.h>
-
 #include "tools.h"
 #include "dump.h"
 #include "registers.h"
