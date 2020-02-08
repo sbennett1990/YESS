@@ -28,4 +28,3 @@ void setCC(unsigned int bitNumber, unsigned int value);
 void setRegister(int regNum, unsigned int regValue);
 
 #endif	/* REGISTERS_H */
-
