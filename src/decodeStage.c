@@ -1,4 +1,4 @@
-/**
+/*
  * File:   decodeStage.c
  * Author: Scott Bennett
  */
@@ -12,11 +12,11 @@
 #include "decodeStage.h"
 #include "executeStage.h"
 
-//D register holds the input for the fetch stage.
-//It is only accessible from this file. (static)
+/*
+ * D register holds the input for the fetch stage.
+ */
 static dregister D;
 
-// Prototypes for "private" functions
 static unsigned int getSrcA(void);
 static unsigned int getSrcB(void);
 static unsigned int getDstE(void);
@@ -26,14 +26,14 @@ static unsigned int forwardB(unsigned int srcB, forwardType forward);
 static bool stallE(void);
 static bool bubbleE(controlType control);
 
-/**
+/*
  * Return a copy of the D register
  */
 dregister getDregister() {
     return D;
 }
 
-/**
+/*
  * Clear D register then initialize its icode to NOP and
  * its stat to SAOK.
  */
@@ -43,15 +43,17 @@ void clearDregister() {
     D.icode = NOP;
 }
 
-/**
+/*
  * Read up to two operands from the register file, giving values
  * to valA and/or valB.
  *
- * @param forward  Holds values forwarded from previous stages
- * @param *control Pointer to struct that holds values forwarded from
- *                   later stages
+ * Parameters:
+ *  forward	Holds values forwarded from previous stages
+ *  *control	Pointer to struct that holds values forwarded from later stages
  */
-void decodeStage(forwardType forward, controlType * control) {
+void
+decodeStage(forwardType forward, controlType * control)
+{
     unsigned int srcA = getSrcA();
     unsigned int srcB = getSrcB();
     unsigned int dstE = getDstE();
@@ -65,24 +67,24 @@ void decodeStage(forwardType forward, controlType * control) {
     control->D_icode = D.icode;
 
     // Bubble E?
-    if (bubbleE(*control))
+    if (bubbleE(*control)) {
         // Insert a NOP
-    {
         updateEregister(SAOK, NOP, 0, 0, 0, 0, RNONE, RNONE, RNONE, RNONE);
-    } else
+    }
+    else {
         // Update E as normal
-    {
         updateEregister(D.stat, D.icode, D.ifun, D.valC, valA, valB, dstE, dstM, srcA,
                         srcB);
     }
 }
 
-/**
+/*
  * Update the values in the D register
  */
-void updateDregister(unsigned int stat, unsigned int icode, unsigned int ifun,
-                     unsigned int rA, unsigned int rB, unsigned int valC,
-                     unsigned int valP) {
+void
+updateDregister(unsigned int stat, unsigned int icode, unsigned int ifun,
+    unsigned int rA, unsigned int rB, unsigned int valC, unsigned int valP)
+{
     D.stat = stat;
     D.icode = icode;
     D.ifun = ifun;
@@ -92,7 +94,7 @@ void updateDregister(unsigned int stat, unsigned int icode, unsigned int ifun,
     D.valP = valP;
 }
 
-/**
+/*
  * Retrieve the first register id (register number)
  * based on current icode.
  *
@@ -121,7 +123,7 @@ unsigned int getSrcA() {
     return srcA;
 }
 
-/**
+/*
  * Retrieve the second register id (register number)
  * based on the current icode.
  *
@@ -151,7 +153,7 @@ unsigned int getSrcB() {
     return srcB;
 }
 
-/**
+/*
  * Determine the destination register for write port E.
  *
  * @return Destination register id
@@ -180,7 +182,7 @@ unsigned int getDstE() {
     return dstE;
 }
 
-/**
+/*
  * Determine the destination register for write port M.
  *
  * @return Destination register id
@@ -193,7 +195,7 @@ unsigned int getDstM() {
     }
 }
 
-/**
+/*
  * Merge valP signal into valA and implement forwarding logic
  * for source operand valA.
  *
@@ -221,7 +223,7 @@ unsigned int selectFwdA(unsigned int srcA, forwardType forward) {
     }
 }
 
-/**
+/*
  *  Selects which forwarded value to use for valB
  *
  * @param srcB    Register id used
@@ -246,7 +248,7 @@ unsigned int forwardB(unsigned int srcB, forwardType forward) {
     }
 }
 
-/**
+/*
  * Determine if the E register should be stalled. According to HCL,
  * E will never be stalled, therefore it returns false.
  */
@@ -254,7 +256,7 @@ bool stallE() {
     return FALSE;
 }
 
-/**
+/*
  * Determine if E needs to be bubbled based on input forwarded
  * by later stages.
  *
@@ -272,4 +274,3 @@ bool bubbleE(controlType control) {
 
     return bubble;
 }
-
