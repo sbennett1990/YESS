@@ -1,4 +1,4 @@
-/**
+/*
  * File:   memoryStage.c
  * Author: Alex Savarda
  */
@@ -13,25 +13,25 @@
 #include "memoryStage.h"
 #include "writebackStage.h"
 
-// M register holds the input for the execute stage
-// It is only accessible from within this file (static)
+/*
+ * M register holds the input for the execute stage.
+ */
 static mregister M;
 
-// Prototypes for "private" functions
 static unsigned int mem_addr(void);
 static bool mem_write(void);
 static bool mem_read(void);
 static bool W_stall(statusType status);
 static bool W_bubble(void);
 
-/**
+/*
  * Return a copy of the M register
  */
 mregister getMregister() {
     return M;
 }
 
-/**
+/*
  * Clear M register then initialize its icode to NOP and
  * its stat to SAOK.
  */
