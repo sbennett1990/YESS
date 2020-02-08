@@ -27,7 +27,6 @@ static unsigned int pcIncrement(unsigned int f_pc, unsigned int icode);
 static bool instructionValid(unsigned int icode);
 static unsigned int getIcode(unsigned int memByte, bool memError);
 static unsigned int getIfun(unsigned int memByte, bool memError);
-static unsigned int determineStat(void);
 static bool needRegids(unsigned int icode);
 static bool needValC(unsigned int icode);
 static unsigned int getValC(unsigned int f_pc, bool * memError);
