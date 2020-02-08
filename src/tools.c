@@ -11,6 +11,8 @@
 #include <limits.h>
 #include <stddef.h>
 #include <string.h>
+#include <err.h>
+#include <unistd.h>
 
 #include "logger.h"
 #include "strtonum.h"
