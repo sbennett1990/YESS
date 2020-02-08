@@ -15,9 +15,8 @@
 
 /*
  * F register holds the input for the fetch stage.
- * It is only accessible from this file.
  */
-static fregister F;
+static struct fregister F;
 
 // Prototypes for "private" functions
 static unsigned int selectPC(forwardType forward);
@@ -40,7 +39,7 @@ static bool stallD(controlType control);
  *
  * Return an fregister
  */
-fregister
+struct fregister
 getFregister()
 {
     return F;

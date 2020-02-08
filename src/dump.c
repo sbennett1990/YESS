@@ -149,7 +149,7 @@ void dumpProgramRegisters(void) {
  * Output the contents of the YESS processor registers to standard out.
  */
 void dumpProcessorRegisters(void) {
-    fregister F = getFregister();
+    struct fregister F = getFregister();
     dregister D = getDregister();
     eregister E = getEregister();
     mregister M = getMregister();
