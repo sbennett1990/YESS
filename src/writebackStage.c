@@ -13,14 +13,11 @@
 
 /*
  * W register holds the input for the writeback stage.
- * It is only accessible from this file (static)
  */
 static wregister W;
 
 /*
  * Return a copy of the W register.
- *
- * Return a wregister
  */
 wregister
 getWregister()
@@ -62,13 +59,15 @@ writebackStage(forwardType * forward, statusType * status)
         dumpProcessorRegisters();
         dumpMemory();
         return -1;
-    } else if (W.stat == SADR) {
+    }
+    else if (W.stat == SADR) {
         printf("Invalid memory address\n");
         dumpProgramRegisters();
         dumpProcessorRegisters();
         dumpMemory();
         return -1;
-    } else if (W.stat == SHLT) {
+    }
+    else if (W.stat == SHLT) {
         return -1;
     }
 
