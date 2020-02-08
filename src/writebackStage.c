@@ -7,6 +7,7 @@
 
 #include "tools.h"
 #include "dump.h"
+#include "registers.h"
 #include "instructions.h"
 #include "status.h"
 #include "forwarding.h"
