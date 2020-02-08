@@ -6,7 +6,8 @@
 #include "tools.h"
 
 static unsigned int registers[REGSIZE];
-static unsigned int CC = 0;                 /* condition code */
+/* condition code */
+static unsigned int CC = 0;
 
 /*
  * Returns the value in the specified register.
@@ -47,7 +48,7 @@ setRegister(int reg, unsigned int val)
 void
 clearRegisters()
 {
-    clearBuffer((char *) &registers, REGSIZE);
+	clearBuffer((char *) &registers, REGSIZE);
 }
 
 /*
@@ -65,9 +66,9 @@ clearRegisters()
 void
 setCC(unsigned int bitNumber, unsigned int value)
 {
-    if (bitNumber == ZF || bitNumber == SF || bitNumber == OF) {
-        CC = assignOneBit(bitNumber, value, CC);
-    }
+	if (bitNumber == ZF || bitNumber == SF || bitNumber == OF) {
+		CC = assignOneBit(bitNumber, value, CC);
+	}
 }
 
 /*
@@ -83,11 +84,11 @@ setCC(unsigned int bitNumber, unsigned int value)
 unsigned int
 getCC(unsigned int bitNumber)
 {
-    if (bitNumber == ZF || bitNumber == SF || bitNumber == OF) {
-        return getBits(bitNumber, bitNumber, CC);
-    } else {
-        return 0;
-    }
+	if (bitNumber == ZF || bitNumber == SF || bitNumber == OF) {
+		return getBits(bitNumber, bitNumber, CC);
+	}
+
+	return 0;
 }
 
 /*
@@ -96,5 +97,5 @@ getCC(unsigned int bitNumber)
 void
 clearCC()
 {
-    CC = 0;
+	CC = 0;
 }
