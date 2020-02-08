@@ -6,8 +6,6 @@
 #ifndef WRITEBACKSTAGE_H
 #define	WRITEBACKSTAGE_H
 
-#include "bool.h"
-
 typedef struct {
     unsigned int stat;
     unsigned int icode;
