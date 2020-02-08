@@ -12,32 +12,32 @@ static unsigned int CC = 0;                 /* condition code */
  * Returns the value in the specified register.
  *
  * Parameters:
- *  regNum  register number
+ *  reg		register number
  *
  * Return the value in the register, or 0 on error
  */
 unsigned int
-getRegister(int regNum)
+getRegister(int reg)
 {
-    if (regNum >= 0 && regNum < REGSIZE) {
-        return registers[regNum];
+    if (reg >= 0 && reg < REGSIZE) {
+        return registers[reg];
     } else {
         return 0;
     }
 }
 
 /*
- * Set register regNum to the value regValue.
+ * Set register reg to the value val.
  *
  * Parameters:
- *  regNum      register number
- *  regValue    the value to put in the register
+ *  reg		register number
+ *  val		the value to put in the register
  */
 void
-setRegister(int regNum, unsigned int regValue)
+setRegister(int reg, unsigned int val)
 {
-    if (regNum >= 0 || regNum < REGSIZE) {
-        registers[regNum] = regValue;
+    if (reg >= 0 || reg < REGSIZE) {
+        registers[reg] = val;
     }
 }
 
