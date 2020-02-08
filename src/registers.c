@@ -16,7 +16,9 @@ static unsigned int CC = 0;                 /* condition code */
  *
  * Return the value in the register, or 0 on error
  */
-unsigned int getRegister(int regNum) {
+unsigned int
+getRegister(int regNum)
+{
     if (regNum >= 0 && regNum < REGSIZE) {
         return registers[regNum];
     } else {
@@ -31,7 +33,9 @@ unsigned int getRegister(int regNum) {
  *  regNum      register number
  *  regValue    the value to put in the register
  */
-void setRegister(int regNum, unsigned int regValue) {
+void
+setRegister(int regNum, unsigned int regValue)
+{
     if (regNum >= 0 || regNum < REGSIZE) {
         registers[regNum] = regValue;
     }
@@ -40,7 +44,9 @@ void setRegister(int regNum, unsigned int regValue) {
 /*
  * Clear the program registers.
  */
-void clearRegisters() {
+void
+clearRegisters()
+{
     clearBuffer((char *) &registers, REGSIZE);
 }
 
@@ -56,7 +62,9 @@ void clearRegisters() {
  *  bitNumber   the condition code to set
  *  value       the value to set the condition code
  */
-void setCC(unsigned int bitNumber, unsigned int value) {
+void
+setCC(unsigned int bitNumber, unsigned int value)
+{
     if (bitNumber == ZF || bitNumber == SF || bitNumber == OF) {
         CC = assignOneBit(bitNumber, value, CC);
     }
@@ -72,7 +80,9 @@ void setCC(unsigned int bitNumber, unsigned int value) {
  *
  * Return the value of the bitNumber bit in CC, or 0 on error
  */
-unsigned int getCC(unsigned int bitNumber) {
+unsigned int
+getCC(unsigned int bitNumber)
+{
     if (bitNumber == ZF || bitNumber == SF || bitNumber == OF) {
         return getBits(bitNumber, bitNumber, CC);
     } else {
@@ -83,6 +93,8 @@ unsigned int getCC(unsigned int bitNumber) {
 /*
  * Clear the condition code register.
  */
-void clearCC() {
+void
+clearCC()
+{
     CC = 0;
 }
