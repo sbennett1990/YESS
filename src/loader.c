@@ -49,7 +49,9 @@ static void discardRest(FILE * filePtr);
  *
  * Return true if load was successful; false if error occured
  */
-bool load(const char * fileName) {
+bool
+load(const char * fileName)
+{
     FILE * fp;
     char record[MAXLEN];
     char buf[RECORDLEN];
@@ -146,7 +148,9 @@ bool load(const char * fileName) {
  *
  * Return true if the record has an address; false otherwise
  */
-bool isaddress(char * record) {
+bool
+isaddress(char * record)
+{
     int len = strnlen(record, RECORDLEN);
 
     if (len < 8) {
@@ -174,7 +178,9 @@ bool isaddress(char * record) {
  * Return true if record contains spaces at indices;
  * false otherwise
  */
-bool hasspaces(char * record, int start, int end) {
+bool
+hasspaces(char * record, int start, int end)
+{
     if (start > end) {
         return FALSE;
     }
@@ -207,7 +213,9 @@ bool hasspaces(char * record, int start, int end) {
  *
  * Return true if every digit is a hex digit; false otherwise
  */
-bool hashexdigits(char * record, int start, int end) {
+bool
+hashexdigits(char * record, int start, int end)
+{
     if (start > end) {
         return FALSE;
     }
@@ -239,7 +247,9 @@ bool hashexdigits(char * record, int start, int end) {
  *
  * Return the address in base 10
  */
-int grabAddress(char * record) {
+int
+grabAddress(char * record)
+{
     char hex_addr[8] = {
         record[0],
         record[1],
@@ -269,7 +279,9 @@ int grabAddress(char * record) {
  *
  * Return true if the address is correct; false otherwise
  */
-bool validateaddress(char * record, int prev_addr) {
+bool
+validateaddress(char * record, int prev_addr)
+{
     if (!hashexdigits(record, 4, 6)) {
         // address not formatted correctly
         return FALSE;
@@ -299,7 +311,9 @@ bool validateaddress(char * record, int prev_addr) {
  *
  * Return true if the record contains data; false otherwise
  */
-bool isdata(char * record) {
+bool
+isdata(char * record)
+{
     int len = strnlen(record, RECORDLEN);
 
     if (len < 10) {
@@ -331,7 +345,9 @@ bool isdata(char * record) {
  * Return true if the data is correctly formatted;
  * false otherwise
  */
-bool validatedata(char * record) {
+bool
+validatedata(char * record)
+{
     int len = strnlen(record, RECORDLEN);
 
     if (len < 21) {
@@ -366,7 +382,9 @@ bool validatedata(char * record) {
  *
  * Return true if the line is correctly formatted; false otherwise
  */
-bool validline(char * record, int prev_addr) {
+bool
+validline(char * record, int prev_addr)
+{
     int len = strnlen(record, RECORDLEN);
 
     if (len < 23) {
@@ -415,7 +433,9 @@ bool validline(char * record, int prev_addr) {
  *
  * Return one byte of data from the record
  */
-unsigned char grabDataByte(char * record, int start) {
+unsigned char
+grabDataByte(char * record, int start)
+{
     char byte[3];
 
     byte[0] = record[start];
@@ -434,7 +454,9 @@ unsigned char grabDataByte(char * record, int start) {
  *
  * Return the number of bytes of data in the record
  */
-short numbytes(char * record) {
+short
+numbytes(char * record)
+{
     int len = strnlen(record, RECORDLEN);
 
     // each line should only have 23 columns of valid information
@@ -462,7 +484,9 @@ short numbytes(char * record) {
  * Parameters:
  *  *filePtr    pointer to the file
  */
-void discardRest(FILE * filePtr) {
+void
+discardRest(FILE * filePtr)
+{
     // remove chars in file
     while (fgetc(filePtr) != '\n' && !feof(filePtr)) {
         // rest is discarded with no additional statements
