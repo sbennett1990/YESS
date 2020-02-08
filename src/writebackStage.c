@@ -23,7 +23,9 @@ static wregister W;
  *
  * Return a wregister
  */
-wregister getWregister() {
+wregister
+getWregister()
+{
     return W;
 }
 
@@ -31,7 +33,9 @@ wregister getWregister() {
  * Clear the W register then initialize its icode to NOP and
  * its stat to SAOK.
  */
-void clearWregister() {
+void
+clearWregister()
+{
     clearBuffer((char *) &W, sizeof(W));
     W.icode = NOP;
     W.stat = SAOK;
@@ -49,7 +53,9 @@ void clearWregister() {
  * Return true if an exception is encountered, and false to
  * continue program execution.
  */
-bool writebackStage(forwardType * forward, statusType * status) {
+bool
+writebackStage(forwardType * forward, statusType * status)
+{
     // if stat == SINS, SADR, SHLT; HALT program and dump
     if (W.stat == SINS) {
         printf("Invalid instruction\n");
@@ -108,8 +114,10 @@ bool writebackStage(forwardType * forward, statusType * status) {
  *  dstM
  *
  */
-void updateWRegister(unsigned int stat, unsigned int icode, unsigned int valE,
-                     unsigned int valM, unsigned int dstE, unsigned int dstM) {
+void
+updateWRegister(unsigned int stat, unsigned int icode, unsigned int valE,
+    unsigned int valM, unsigned int dstE, unsigned int dstM)
+{
     W.stat = stat;
     W.icode = icode;
     W.valE = valE;
