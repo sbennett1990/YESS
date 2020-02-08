@@ -45,16 +45,16 @@ clearWregister()
 /*
  * Writes up to two results to the register file.
  * Check the current 'stat' for SINS, SADR, and SHLT to HALT or continue
- * program. When an exception is encountered, writeback will return TRUE.
+ * program. When an exception is encountered, writeback will return -1.
  *
  * Parameters:
  *  *forward    Holds values forwarded to previous stages
  *  *status     Holds values of statuses
  *
- * Return true if an exception is encountered, and false to
+ * Returns -1 if an exception occurs, and >0 to
  * continue program execution.
  */
-bool
+int
 writebackStage(forwardType * forward, statusType * status)
 {
     // if stat == SINS, SADR, SHLT; HALT program and dump
@@ -63,15 +63,15 @@ writebackStage(forwardType * forward, statusType * status)
         dumpProgramRegisters();
         dumpProcessorRegisters();
         dumpMemory();
-        return TRUE;
+        return -1;
     } else if (W.stat == SADR) {
         printf("Invalid memory address\n");
         dumpProgramRegisters();
         dumpProcessorRegisters();
         dumpMemory();
-        return TRUE;
+        return -1;
     } else if (W.stat == SHLT) {
-        return TRUE;
+        return -1;
     }
 
     // if icode = DUMP, dump appropriate information
@@ -87,7 +87,6 @@ writebackStage(forwardType * forward, statusType * status)
         dumpMemory();
     }
 
-
     // set fields of forward and status struct to current values
     forward->W_dstE = W.dstE;
     forward->W_valE = W.valE;
@@ -100,7 +99,7 @@ writebackStage(forwardType * forward, statusType * status)
     setRegister(W.dstE, W.valE);
     setRegister(W.dstM, W.valM);
 
-    return FALSE;
+    return 1;
 }
 
 /*

@@ -24,16 +24,20 @@
 /*
  * Print usage information and exit program.
  */
-static void usage(void) {
+static void
+usage(void)
+{
     fprintf(stderr, "usage: yess [-duv] -f <filename>.yo\n");
     exit(EXIT_FAILURE);
 }
 
 /*
  * Set up the "memory" and pipelined registers for the Y86 processor and the
- * function pointer array used in executeStage.c
+ * function pointer array used in the Execute Stage.
  */
-static void setupyess(void) {
+static void
+setupyess(void)
+{
     /* initialize function pointer array */
     (void)initFuncPtrArray();
 
@@ -48,7 +52,9 @@ static void setupyess(void) {
 /*
  * Main
  */
-int main(int argc, char ** argv) {
+int
+main(int argc, char ** argv)
+{
     int ch;
     bool dflag = FALSE;
     bool vflag = FALSE;
@@ -113,13 +119,13 @@ int main(int argc, char ** argv) {
     (void)reduceprivileges();
 
     int clockCount = 0;
-    bool stop = FALSE;
+    int stop = 0;
     forwardType forward;
     statusType status;
     controlType control;
 
     /* each loop iteration is 1 clock cycle */
-    while (!stop) {
+    while (stop != -1) {
         stop = writebackStage(&forward, &status);
         (void)memoryStage(&forward, &status, &control);
         (void)executeStage(&forward, status, &control);

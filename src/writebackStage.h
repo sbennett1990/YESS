@@ -29,9 +29,8 @@ struct W {
 
 wregister getWregister(void);
 void clearWregister(void);
-bool writebackStage();
+int writebackStage();
 void updateWRegister(unsigned int stat, unsigned int icode, unsigned int valE,
-                     unsigned int valM, unsigned int dstE, unsigned int dstM);
+    unsigned int valM, unsigned int dstE, unsigned int dstM);
 
 #endif	/* WRITEBACKSTAGE_H */
-
