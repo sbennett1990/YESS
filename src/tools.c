@@ -315,27 +315,27 @@ strtoint(const char * nptr, int base)
  * Parameters:
  *     *filename    file name to check
  *
- * Return true if file ends in ".yo"; false otherwise
+ * Return >0 if file ends in ".yo"; -1 otherwise
  */
-bool
+int
 validatefilename(const char * filename)
 {
     int len = (int) strnlen(filename, FILENAME_MAX);
 
     if (len < 3) {
         log_warn("filename too short");
-        return FALSE;
+        return -1;
     }
 
     if (filename[len - 1] == 'o'
         && filename[len - 2] == 'y'
         && filename[len - 3] == '.') {
         log_debug("filename valid");
-        return TRUE;
+        return 1;
     }
     else {
         log_warn("filename not valid");
-        return FALSE;
+        return -1;
     }
 }
 

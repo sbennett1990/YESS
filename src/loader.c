@@ -57,7 +57,7 @@ load(const char * fileName)
     char buf[RECORDLEN];
     bool memError;
 
-    if (!validatefilename(fileName)) {
+    if (validatefilename(fileName) == -1) {
         return FALSE; /* EXIT */
     }
 
