@@ -47,7 +47,7 @@ static void discardRest(FILE * filePtr);
  * Parameters:
  *     *fileName    name of the file to load
  *
- * Return true if load was successful; false if error occured
+ * Return true if load was successful; false if error occurred
  */
 bool
 load(const char * fileName)
