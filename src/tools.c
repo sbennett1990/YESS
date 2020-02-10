@@ -274,7 +274,9 @@ void expandBits(unsigned int source, char bits[36]) {
  *     *buff    buffer
  *     length   length of the buffer
  */
-void clearBuffer(char * buff, size_t length) {
+void
+clearBuffer(char * buff, size_t length)
+{
     char * p;
 
     for (p = buff; length--; ) {
@@ -299,9 +301,10 @@ strtoint(const char * nptr, int base)
     const char *errstr;
 
     num = (int) strtonum_OBSD(nptr, INT_MIN, INT_MAX, &errstr, base);
-    if (errstr != null)
+    if (errstr != null) {
         // TODO: display an error with the returned errstr
         return -1;
+    }
 
     return num;
 }
@@ -314,7 +317,9 @@ strtoint(const char * nptr, int base)
  *
  * Return true if file ends in ".yo"; false otherwise
  */
-bool validatefilename(const char * filename) {
+bool
+validatefilename(const char * filename)
+{
     int len = (int) strlen(filename);
 
     if (len < 3) {
@@ -327,7 +332,8 @@ bool validatefilename(const char * filename) {
         && filename[len - 3] == '.') {
         log_debug("filename valid");
         return TRUE;
-    } else {
+    }
+    else {
         log_warn("filename not valid");
         return FALSE;
     }
@@ -337,7 +343,9 @@ bool validatefilename(const char * filename) {
  * Put all the complex system testing code in one place. Functions can pass a
  * list of promises. Be careful to only reduce privileges!
  */
-static void pledge_wrapper(const char * promises) {
+static void
+pledge_wrapper(const char * promises)
+{
 #ifdef __OpenBSD__
     // pledge(2) only works on 5.9 or higher
     struct utsname name;
@@ -348,7 +356,8 @@ static void pledge_wrapper(const char * promises) {
         }
 
         log_info("pledge(2)'d with %s", promises);
-    } else {
+    }
+    else {
         log_info("not running OpenBSD >5.9, no pledge");
     }
 #else
@@ -360,7 +369,9 @@ static void pledge_wrapper(const char * promises) {
  * If running on OpenBSD 5.9 or higher, reduce privileges to "stdio" and "rpath"
  * because a file has to be opened. If any other OS, do nothing.
  */
-void initialpledge(void) {
+void
+initialpledge(void)
+{
     pledge_wrapper("stdio rpath");
 }
 
@@ -368,7 +379,8 @@ void initialpledge(void) {
  * If running on OpenBSD 5.9 or higher, reduce privileges to "stdio" after
  * opening the file. If any other OS, do nothing.
  */
-void reduceprivileges(void) {
+void
+reduceprivileges(void)
+{
     pledge_wrapper("stdio");
 }
-
