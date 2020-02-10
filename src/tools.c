@@ -229,7 +229,7 @@ unsigned int buildWord(unsigned char byte0, unsigned char byte1,
  * Parameters:
  *      source  integer to test
  *
- * Return 1 if source is negatrive, 0 otherwise.
+ * Return 1 if source is negative, 0 otherwise.
  */
 bool isNegative(unsigned int source) {
     source = source >> INTHIGHBIT;
@@ -266,7 +266,7 @@ void expandBits(unsigned int source, char bits[36]) {
 }
 
 /*
- * Write 'length' zeroes to the buffer, effectively "clearing" it. If length is
+ * Write 'length' zeros to the buffer, effectively "clearing" it. If length is
  * zero, this function does nothing. Can clear a buffer of any size, up to
  * SIZE_MAX.
  *
