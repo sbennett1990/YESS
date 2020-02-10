@@ -13,7 +13,7 @@
 #include "executeStage.h"
 
 /*
- * D register holds the input for the fetch stage.
+ * D register holds the input from the fetch stage.
  */
 static dregister D;
 

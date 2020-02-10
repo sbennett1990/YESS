@@ -14,7 +14,7 @@
 #include "writebackStage.h"
 
 /*
- * M register holds the input for the execute stage.
+ * M register holds the input from the execute stage.
  */
 static mregister M;
 

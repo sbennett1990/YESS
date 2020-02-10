@@ -12,7 +12,7 @@
 #include "writebackStage.h"
 
 /*
- * W register holds the input for the writeback stage.
+ * W register holds the input from the memory stage.
  */
 static wregister W;
 
