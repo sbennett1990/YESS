@@ -5,17 +5,18 @@
 #include "registers.h"
 #include "tools.h"
 
+/* Program Registers */
 static unsigned int registers[REGSIZE];
-/* condition code */
+/* Condition Codes */
 static unsigned int CC = 0;
 
 /*
- * Returns the value in the specified register.
+ * Returns the value in the specified program register.
  *
  * Parameters:
- *  reg		register number
+ *  reg		Program register
  *
- * Return the value in the register, or 0 on error
+ * Return the value in the register, or 0 on error.
  */
 unsigned int
 getRegister(int reg)
@@ -28,10 +29,10 @@ getRegister(int reg)
 }
 
 /*
- * Set register reg to the value val.
+ * Set program register reg to the value val.
  *
  * Parameters:
- *  reg		register number
+ *  reg		Program register
  *  val		the value to put in the register
  */
 void
@@ -48,7 +49,7 @@ setRegister(int reg, unsigned int val)
 void
 clearRegisters()
 {
-	clearBuffer((char *) &registers, REGSIZE);
+	clearBuffer((char *) &registers, REGSIZE); // TODO: use recallocarray(3)?
 }
 
 /*
@@ -66,6 +67,7 @@ clearRegisters()
 void
 setCC(unsigned int bitNumber, unsigned int value)
 {
+	// TODO: error check the value param
 	if (bitNumber == ZF || bitNumber == SF || bitNumber == OF) {
 		CC = assignOneBit(bitNumber, value, CC);
 	}
