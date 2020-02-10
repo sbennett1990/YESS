@@ -1,6 +1,5 @@
 /*
  * File:   tools.c
- * Author: Scott Bennett
  */
 
 /* pledge(2) the program on OpenBSD */
@@ -291,11 +290,18 @@ void clearBuffer(char * buff, size_t length) {
  *     *nptr   string representation of an int
  *     base    a base between 2 and 36 inclusive, or 0
  *
- * Returns the result of the conversion, or 0 on error
+ * Returns the result of the conversion, or -1 on error
  */
-int strtoint(const char * nptr, int base) {
+int
+strtoint(const char * nptr, int base)
+{
     int num;
-    num = (int) strtonum_OBSD(nptr, INT_MIN, INT_MAX, NULL, base);
+    const char *errstr;
+
+    num = (int) strtonum_OBSD(nptr, INT_MIN, INT_MAX, &errstr, base);
+    if (errstr != null)
+        // TODO: display an error with the returned errstr
+        return -1;
 
     return num;
 }

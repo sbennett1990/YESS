@@ -261,6 +261,7 @@ grabAddress(char * record)
         '\0'
     };
 
+    // TODO: check for the error value -1
     int addr = strtoint(hex_addr, HEX);
     return addr;
 }
@@ -442,6 +443,7 @@ grabDataByte(char * record, int start)
     byte[1] = record[start + 1];
     byte[2] = '\0';
 
+    // TODO: check for the error value -1
     return (unsigned char) strtoint(byte, HEX);
 }
 
