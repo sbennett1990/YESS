@@ -22,7 +22,7 @@ static wregister W;
 wregister
 getWregister()
 {
-    return W;
+	return W;
 }
 
 /*
@@ -32,9 +32,9 @@ getWregister()
 void
 clearWregister()
 {
-    clearBuffer((char *) &W, sizeof(W));
-    W.icode = NOP;
-    W.stat = SAOK;
+	clearBuffer((char *) &W, sizeof(W));
+	W.icode = NOP;
+	W.stat = SAOK;
 }
 
 /*
@@ -43,8 +43,8 @@ clearWregister()
  * program. When an exception is encountered, writeback will return -1.
  *
  * Parameters:
- *  *forward    Holds values forwarded to previous stages
- *  *status     Holds values of statuses
+ *	*forward    Holds values forwarded to previous stages
+ *	*status     Holds values of statuses
  *
  * Returns -1 if an exception occurs, and >0 to
  * continue program execution.
@@ -52,51 +52,51 @@ clearWregister()
 int
 writebackStage(forwardType * forward, statusType * status)
 {
-    // if stat == SINS, SADR, SHLT; HALT program and dump
-    if (W.stat == SINS) {
-        printf("Invalid instruction\n");
-        dumpProgramRegisters();
-        dumpProcessorRegisters();
-        dumpMemory();
-        return -1;
-    }
-    else if (W.stat == SADR) {
-        printf("Invalid memory address\n");
-        dumpProgramRegisters();
-        dumpProcessorRegisters();
-        dumpMemory();
-        return -1;
-    }
-    else if (W.stat == SHLT) {
-        return -1;
-    }
+	// if stat == SINS, SADR, SHLT; HALT program and dump
+	if (W.stat == SINS) {
+		printf("Invalid instruction\n");
+		dumpProgramRegisters();
+		dumpProcessorRegisters();
+		dumpMemory();
+		return -1;
+	}
+	else if (W.stat == SADR) {
+		printf("Invalid memory address\n");
+		dumpProgramRegisters();
+		dumpProcessorRegisters();
+		dumpMemory();
+		return -1;
+	}
+	else if (W.stat == SHLT) {
+		return -1;
+	}
 
-    // if icode = DUMP, dump appropriate information
-    if (W.icode == DUMP && getBits(0, 0, W.valE)) {
-        dumpProgramRegisters();
-    }
+	// if icode = DUMP, dump appropriate information
+	if (W.icode == DUMP && getBits(0, 0, W.valE)) {
+		dumpProgramRegisters();
+	}
 
-    if (W.icode == DUMP && getBits(1, 1, W.valE)) {
-        dumpProcessorRegisters();
-    }
+	if (W.icode == DUMP && getBits(1, 1, W.valE)) {
+		dumpProcessorRegisters();
+	}
 
-    if (W.icode == DUMP && getBits(2, 2, W.valE)) {
-        dumpMemory();
-    }
+	if (W.icode == DUMP && getBits(2, 2, W.valE)) {
+		dumpMemory();
+	}
 
-    // set fields of forward and status struct to current values
-    forward->W_dstE = W.dstE;
-    forward->W_valE = W.valE;
-    forward->W_dstM = W.dstM;
-    forward->W_valM = W.valM;
-    forward->W_icode = W.icode;
-    status->W_stat = W.stat;
+	// set fields of forward and status struct to current values
+	forward->W_dstE = W.dstE;
+	forward->W_valE = W.valE;
+	forward->W_dstM = W.dstM;
+	forward->W_valM = W.valM;
+	forward->W_icode = W.icode;
+	status->W_stat = W.stat;
 
-    // write result to appropriate register
-    setRegister(W.dstE, W.valE);
-    setRegister(W.dstM, W.valM);
+	// write result to appropriate register
+	setRegister(W.dstE, W.valE);
+	setRegister(W.dstM, W.valM);
 
-    return 1;
+	return 1;
 }
 
 /*
@@ -113,12 +113,12 @@ writebackStage(forwardType * forward, statusType * status)
  */
 void
 updateWRegister(unsigned int stat, unsigned int icode, unsigned int valE,
-    unsigned int valM, unsigned int dstE, unsigned int dstM)
+	unsigned int valM, unsigned int dstE, unsigned int dstM)
 {
-    W.stat = stat;
-    W.icode = icode;
-    W.valE = valE;
-    W.valM = valM;
-    W.dstE = dstE;
-    W.dstM = dstM;
+	W.stat = stat;
+	W.icode = icode;
+	W.valE = valE;
+	W.valM = valM;
+	W.dstE = dstE;
+	W.dstM = dstM;
 }
