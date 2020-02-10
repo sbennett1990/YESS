@@ -320,7 +320,7 @@ strtoint(const char * nptr, int base)
 bool
 validatefilename(const char * filename)
 {
-    int len = (int) strlen(filename);
+    int len = (int) strnlen(filename, FILENAME_MAX);
 
     if (len < 3) {
         log_warn("filename too short");
