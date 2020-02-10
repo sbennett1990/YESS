@@ -2,12 +2,12 @@
  * status.h
  */
 
-#ifndef STATUS_H
-#define STATUS_H
+#ifndef	STATUS_H
+#define	STATUS_H
 
 typedef struct {
-    unsigned int m_stat;
-    unsigned int W_stat;
+	unsigned int m_stat;
+	unsigned int W_stat;
 } statusType;
 
-#endif  /* STATUS_H */
+#endif	/* STATUS_H */
