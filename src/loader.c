@@ -261,8 +261,8 @@ grabAddress(char * record)
         '\0'
     };
 
-    long addr = strtoint(hex_addr, HEX);
-    return (int) addr;
+    int addr = strtoint(hex_addr, HEX);
+    return addr;
 }
 
 /*
