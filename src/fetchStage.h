@@ -1,15 +1,13 @@
-/* 
- * File:   fetchStage.h
- * Author: Cindy Norris
+/*
+ * File: fetchStage.h
  */
 
-#ifndef FETCHSTAGE_H
+#ifndef	FETCHSTAGE_H
 #define	FETCHSTAGE_H
 
 struct fregister {
-    unsigned int predPC;
+	unsigned int predPC;
 };
-
 
 struct fregister getFregister(void);
 void clearFregister(void);
