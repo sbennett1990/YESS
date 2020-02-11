@@ -17,7 +17,11 @@ typedef struct {
 	unsigned int dstM;
 } wregister;
 
-
+/*
+ * +----+---------------------------------------------------------------------+
+ * | W  | icode |               |  valE  |  valM  |       |dstE|dstM|         |
+ * +----+---------------------------------------------------------------------+
+ */
 struct W {
 	unsigned int stat;
 	unsigned int icode;

@@ -21,6 +21,11 @@ typedef struct {
     unsigned int srcB;
 } eregister;
 
+/*
+ * +----+---------------------------------------------------------------------+
+ * | E  | icode | ifun  |      |  valC  |  valA  |  valB  |dstE|dstM|srcA|srcB|
+ * +----+---------------------------------------------------------------------+
+ */
 struct E {
     unsigned int stat;
     unsigned int icode;
@@ -41,8 +46,8 @@ void clearEregister(void);
 void executeStage();
 void initFuncPtrArray(void);
 void updateEregister(unsigned int stat, unsigned int icode, unsigned int ifun,
-                     unsigned int valC, unsigned int valA, unsigned int valB, 
-                     unsigned int dstE, unsigned int dstM, unsigned int srcA, 
+                     unsigned int valC, unsigned int valA, unsigned int valB,
+                     unsigned int dstE, unsigned int dstM, unsigned int srcA,
                      unsigned int srcB);
 #endif	/* EXECUTESTAGE_H */
 

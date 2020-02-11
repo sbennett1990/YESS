@@ -15,12 +15,17 @@ typedef struct {
 	unsigned int valP;
 } dregister;
 
-struct D {
+/*
+ * +----+---------------------------------------------------------------------+
+ * | D  | icode | ifun  |      | rA | rB |   valC   |   valP   |              |
+ * +----+---------------------------------------------------------------------+
+ */
+struct D {  // dregister
 	unsigned int stat;
 	unsigned int icode;
 	unsigned int ifun;
-	unsigned int rA;
-	unsigned int rB;
+	unsigned int rA;	// Program Register
+	unsigned int rB;	// Program Register
 	unsigned int valC;
 	unsigned int valP;
 };
