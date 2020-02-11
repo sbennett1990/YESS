@@ -7,9 +7,6 @@
 #include "tools.h"
 #include "memory.h"
 #include "instructions.h"
-#include "status.h"
-#include "control.h"
-#include "forwarding.h"
 #include "memoryStage.h"
 #include "writebackStage.h"
 
