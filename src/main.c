@@ -39,14 +39,14 @@ static void
 setupyess(void)
 {
     /* initialize function pointer array */
-    (void)initFuncPtrArray();
+    initFuncPtrArray();
 
-    (void)clearMemory();
-    (void)clearFregister();
-    (void)clearDregister();
-    (void)clearEregister();
-    (void)clearMregister();
-    (void)clearWregister();
+    clearMemory();
+    clearFregister();
+    clearDregister();
+    clearEregister();
+    clearMregister();
+    clearWregister();
 }
 
 /*
@@ -66,18 +66,14 @@ main(int argc, char ** argv)
             case 'd':
                 dflag = TRUE;
                 break;
-
             case 'f':
                 sourcefile = optarg;
                 break;
-
             case 'u':
                 usage(); /* EXIT */
-
             case 'v':
                 vflag = TRUE;
                 break;
-
             default:
                 usage();
                 /* NOTREACHED */
@@ -105,10 +101,10 @@ main(int argc, char ** argv)
     log_debug("initializing YESS...");
     initialpledge();
 
-    /* set up the 'processor' */
-    (void)setupyess();
+    /* initialize the 'processor' */
+    setupyess();
 
-    /* load the file; terminate if there is a problem */
+    /* load 'program' file into 'memory'; terminate if there is a problem */
     if (!load(sourcefile)) {
         dumpMemory();
         log_warn("error loading the file");
@@ -116,25 +112,25 @@ main(int argc, char ** argv)
         return 1; /* EXIT */
     }
 
-    (void)reduceprivileges();
+	/* reduce privileges */
+    reduceprivileges();
 
+	/* execute the 'program' */
     int clockCount = 0;
     int stop = 0;
     forwardType forward;
     statusType status;
     controlType control;
 
-    /* each loop iteration is 1 clock cycle */
     while (stop != -1) {
         stop = writebackStage(&forward, &status);
-        (void)memoryStage(&forward, &status, &control);
-        (void)executeStage(&forward, status, &control);
-        (void)decodeStage(forward, &control);
-        (void)fetchStage(forward, control);
-        clockCount++;
+        memoryStage(&forward, &status, &control);
+        executeStage(&forward, status, &control);
+        decodeStage(forward, &control);
+        fetchStage(forward, control);
+        clockCount++;	/* each loop iteration is 1 clock cycle */
     }
 
     printf("\nTotal clock cycles = %d\n", clockCount);
-
     return 0;
 }
