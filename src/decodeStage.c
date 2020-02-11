@@ -7,8 +7,6 @@
 #include "tools.h"
 #include "registers.h"
 #include "instructions.h"
-#include "control.h"
-#include "forwarding.h"
 #include "decodeStage.h"
 #include "executeStage.h"
 

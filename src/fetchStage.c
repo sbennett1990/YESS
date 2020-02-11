@@ -8,8 +8,6 @@
 #include "memory.h"
 #include "registers.h"
 #include "instructions.h"
-#include "control.h"
-#include "forwarding.h"
 #include "fetchStage.h"
 #include "decodeStage.h"
 

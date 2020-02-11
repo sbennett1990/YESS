@@ -5,6 +5,9 @@
 #ifndef	FETCHSTAGE_H
 #define	FETCHSTAGE_H
 
+#include "forwarding.h"
+#include "control.h"
+
 /*
  * +----+---------------------------------------------------------------------+
  * | F  |          | predPC |                                                 |
@@ -16,6 +19,6 @@ struct fregister {
 
 struct fregister getFregister(void);
 void clearFregister(void);
-void fetchStage();
+void fetchStage(forwardType, controlType);
 
 #endif	/* FETCHSTAGE_H */
