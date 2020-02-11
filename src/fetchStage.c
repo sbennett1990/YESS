@@ -188,8 +188,7 @@ selectPC(forwardType forward)
  * Return the predicted PC
  */
 unsigned int
-predictPC(unsigned int icode, unsigned int valC,
-    unsigned int valP)
+predictPC(unsigned int icode, unsigned int valC, unsigned int valP)
 {
 	if (icode == JXX || icode == CALL) {
 		return valC;
