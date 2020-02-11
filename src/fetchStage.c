@@ -252,7 +252,7 @@ pcIncrement(unsigned int f_pc, unsigned int icode)
  *
  * Parameters:
  *  memByte     a byte that should contain the instruction code
- *  memError    specifies whether a memory error occured
+ *  memError    specifies whether a memory error occurred
  *
  * Return the instruction code, or a NOP for a memory error
  */
@@ -271,7 +271,7 @@ getIcode(unsigned int memByte, bool memError)
  *
  * Parameters:
  *  memByte     a byte that should contain the instruction function
- *  memError    specifies whether a memory error occured
+ *  memError    specifies whether a memory error occurred
  *
  * Return the instruction function, or FNONE for a memory error
  */
