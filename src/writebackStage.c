@@ -54,14 +54,14 @@ writebackStage(forwardType * forward, statusType * status)
 {
 	// if stat == SINS, SADR, SHLT; HALT program and dump
 	if (W.stat == SINS) {
-		printf("Invalid instruction\n");
+		printf("\n*** Invalid instruction ***\n");
 		dumpProgramRegisters();
 		dumpProcessorRegisters();
 		dumpMemory();
 		return -1;
 	}
 	else if (W.stat == SADR) {
-		printf("Invalid memory address\n");
+		printf("\n*** Invalid memory address ***\n");
 		dumpProgramRegisters();
 		dumpProcessorRegisters();
 		dumpMemory();
