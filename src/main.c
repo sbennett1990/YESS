@@ -130,12 +130,14 @@ main(int argc, char ** argv)
         clockCount++;	/* each loop iteration is 1 clock cycle */
     }
 
+	/* XXX: need to not dump if error encountered */
+#if 0
 	if (dflag) {
 		dumpProgramRegisters();
 		dumpProcessorRegisters();
 		dumpMemory();
 	}
-
+#endif
 	printf("\nTotal clock cycles = %d\n", clockCount);
 	return 0;
 }
