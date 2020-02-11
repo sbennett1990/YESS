@@ -301,7 +301,7 @@ strtoint(const char * nptr, int base)
     const char *errstr;
 
     num = (int) strtonum_OBSD(nptr, INT_MIN, INT_MAX, &errstr, base);
-    if (errstr != null) {
+    if (errstr != NULL) {
         // TODO: display an error with the returned errstr
         return -1;
     }
@@ -320,7 +320,7 @@ strtoint(const char * nptr, int base)
 int
 validatefilename(const char * filename)
 {
-    int len = (int) strnlen(filename, FILENAME_MAX);
+    int len = (int) strnlen(filename, FILENAME_LEN);
 
     if (len < 3) {
         log_warn("filename too short");

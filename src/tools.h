@@ -8,7 +8,7 @@
 #define BYTESIZE	8   // Size of one byte in bits
 #define INTHIGHBIT	31  // Highest bit for type int
 
-#define FILENAME_MAX	50
+#define FILENAME_LEN	50
 
 #include <stddef.h>
 #include "bool.h"
