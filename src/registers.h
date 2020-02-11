@@ -18,6 +18,12 @@
 #define RNONE	0xf	/* i.e. - no register needed */
 
 /* Condition Codes (CC) */
+/*
+ * Set with each arithmetic/logical operation (OPL).
+ * ZF: was the result 0?
+ * SF: was the result < 0?
+ * OF: did the result overflow? (2's complement)
+ */
 #define ZF		0x2		/* zero flag     - bit 2 of the CC */
 #define SF		0x1		/* sign flag     - bit 1 of the CC */
 #define OF		0x0		/* overflow flag - bit 0 of the CC */
