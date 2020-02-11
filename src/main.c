@@ -56,15 +56,15 @@ int
 main(int argc, char ** argv)
 {
     int ch;
-    bool dflag = FALSE;
-    bool vflag = FALSE;
+    int dflag = 0;	/* debug */
+    int vflag = 0;	/* verbose */
     int verbosity = 0;
     const char * sourcefile;
 
     while ((ch = getopt(argc, argv, "df:uv")) != -1) {
         switch (ch) {
             case 'd':
-                dflag = TRUE;
+                dflag = 1;
                 break;
             case 'f':
                 sourcefile = optarg;
@@ -72,14 +72,13 @@ main(int argc, char ** argv)
             case 'u':
                 usage(); /* EXIT */
             case 'v':
-                vflag = TRUE;
+                vflag = 1;
                 break;
             default:
                 usage();
                 /* NOTREACHED */
         }
     }
-
     argc -= optind;
     argv += optind;
 
