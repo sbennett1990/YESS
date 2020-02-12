@@ -7,15 +7,12 @@ CC = gcc
 CFLAGS = -std=c99 -O0 -Wall
 CFLAGS += -g
 
-LDFLAGS = -Wl,-O1 -Wl,--no-undefined
-LDFLAGS += -Wl,-z,relro -Wl,-z,now
-
 SRC = ./src
 
 yess: strtonum.o logger.o tools.o registers.o memory.o fetchStage.o \
       decodeStage.o executeStage.o memoryStage.o writebackStage.o loader.o \
       dump.o main.o
-	$(CC) $(LDFLAGS) strtonum.o logger.o tools.o registers.o memory.o fetchStage.o \
+	$(CC) strtonum.o logger.o tools.o registers.o memory.o fetchStage.o \
     decodeStage.o executeStage.o memoryStage.o writebackStage.o loader.o \
     dump.o main.o -o yess
 
