@@ -5,11 +5,6 @@
 CC = gcc
 
 CFLAGS = -std=c99 -Wall
-
-#CFLAGS = -Wno-unused-parameter -Wformat \
-# -fstack-protector -Wformat-security -Wformat-nonliteral \
-# -Wno-deprecated -Winit-self -Wpointer-arith -fno-exceptions
-
 CFLAGS += -g
 
 LDFLAGS = -Wl,-O1 -Wl,--no-undefined
