@@ -105,8 +105,6 @@ void dumpLine(int line[WORDSPERLINE], int address) {
 void buildLine(int line[WORDSPERLINE], int address) {
     int i;
     bool memError;
-    char byte0, byte1, byte2, byte3;
-
     for (i = 0; i < WORDSPERLINE; i++, address++) {
         line[i] = getWord((address * 4), &memError);
     }
