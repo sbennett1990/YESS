@@ -15,7 +15,7 @@
  */
 static dregister D;
 
-static unsigned int getSrcA(dregister);
+static unsigned int getSrcA(dregister *);
 static unsigned int getSrcB(dregister);
 static unsigned int getDstE(dregister);
 static unsigned int getDstM(dregister);
@@ -52,7 +52,7 @@ void clearDregister() {
 void
 decodeStage(forwardType forward, controlType * control)
 {
-    unsigned int srcA = getSrcA(D);
+    unsigned int srcA = getSrcA(&D);
     unsigned int srcB = getSrcB(D);
     unsigned int dstE = getDstE(D);
     unsigned int dstM = getDstM(D);
@@ -98,15 +98,15 @@ updateDregister(unsigned int stat, unsigned int icode, unsigned int ifun,
  *
  * @return register id needed
  */
-unsigned int getSrcA(dregister d) {
+unsigned int getSrcA(const dregister *d) {
     unsigned int srcA = RNONE;
 
-    switch (d.icode) {
+    switch (d->icode) {
         case RRMOVL:
         case RMMOVL:
         case OPL:
         case PUSHL:
-            srcA = d.rA;
+            srcA = d->rA;
             break;
 
         case POPL:
