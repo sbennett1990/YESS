@@ -68,7 +68,7 @@ writebackStage(forwardType * forward, statusType * status)
 		return -1;
 	}
 	else if (W.stat == SHLT) {
-		return -1;
+		return -1; // XXX: maybe return a different code to differentiate?
 	}
 
 	// if icode = DUMP, dump appropriate information
@@ -92,7 +92,7 @@ writebackStage(forwardType * forward, statusType * status)
 	forward->W_icode = W.icode;
 	status->W_stat = W.stat;
 
-	// write result to appropriate register
+	// write result to appropriate program register
 	setRegister(W.dstE, W.valE);
 	setRegister(W.dstM, W.valM);
 
@@ -100,16 +100,15 @@ writebackStage(forwardType * forward, statusType * status)
 }
 
 /*
- * Update the values in the W register
+ * Update the values in the W register.
  *
  * Parameters:
- *  stat
- *  icode
- *  valE
- *  valM
- *  dstE
- *  dstM
- *
+ *	stat     Status (?)
+ *	icode    Instruction Code from the M register
+ *	valE     Value destined for program register 'E'
+ *	valM     Value destined for program register 'M', if applicable
+ *	dstE     Destination program register 'E', from the M register
+ *	dstM     Destination program register 'M', from the M register
  */
 void
 updateWRegister(unsigned int stat, unsigned int icode, unsigned int valE,
