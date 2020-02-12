@@ -15,11 +15,11 @@
  */
 static dregister D;
 
-static unsigned int getSrcA(void);
-static unsigned int getSrcB(void);
-static unsigned int getDstE(void);
-static unsigned int getDstM(void);
-static unsigned int selectFwdA(unsigned int srcA, forwardType forward);
+static unsigned int getSrcA(dregister);
+static unsigned int getSrcB(dregister);
+static unsigned int getDstE(dregister);
+static unsigned int getDstM(dregister);
+static unsigned int selectFwdA(dregister, unsigned int srcA, forwardType forward);
 static unsigned int forwardB(unsigned int srcB, forwardType forward);
 static bool stallE(void);
 static bool bubbleE(controlType control);
@@ -52,11 +52,11 @@ void clearDregister() {
 void
 decodeStage(forwardType forward, controlType * control)
 {
-    unsigned int srcA = getSrcA();
-    unsigned int srcB = getSrcB();
-    unsigned int dstE = getDstE();
-    unsigned int dstM = getDstM();
-    unsigned int valA = selectFwdA(srcA, forward);
+    unsigned int srcA = getSrcA(D);
+    unsigned int srcB = getSrcB(D);
+    unsigned int dstE = getDstE(D);
+    unsigned int dstM = getDstM(D);
+    unsigned int valA = selectFwdA(D, srcA, forward);
     unsigned int valB = forwardB(srcB, forward);
 
     // Update values that need to be forwarded
@@ -98,15 +98,15 @@ updateDregister(unsigned int stat, unsigned int icode, unsigned int ifun,
  *
  * @return register id needed
  */
-unsigned int getSrcA() {
+unsigned int getSrcA(dregister d) {
     unsigned int srcA = RNONE;
 
-    switch (D.icode) {
+    switch (d.icode) {
         case RRMOVL:
         case RMMOVL:
         case OPL:
         case PUSHL:
-            srcA = D.rA;
+            srcA = d.rA;
             break;
 
         case POPL:
@@ -127,14 +127,14 @@ unsigned int getSrcA() {
  *
  * @return register id needed
  */
-unsigned int getSrcB() {
+unsigned int getSrcB(dregister d) {
     unsigned int srcB = RNONE;
 
-    switch (D.icode) {
+    switch (d.icode) {
         case OPL:
         case RMMOVL:
         case MRMOVL:
-            srcB = D.rB;
+            srcB = d.rB;
             break;
 
         case POPL:
@@ -156,14 +156,14 @@ unsigned int getSrcB() {
  *
  * @return Destination register id
  */
-unsigned int getDstE() {
+unsigned int getDstE(dregister d) {
     unsigned int dstE = RNONE;
 
-    switch (D.icode) {
+    switch (d.icode) {
         case OPL:
         case RRMOVL:
         case IRMOVL:
-            dstE = D.rB;
+            dstE = d.rB;
             break;
 
         case POPL:
@@ -185,9 +185,9 @@ unsigned int getDstE() {
  *
  * @return Destination register id
  */
-unsigned int getDstM() {
-    if (D.icode == MRMOVL || D.icode == POPL) {
-        return D.rA;
+unsigned int getDstM(dregister d) {
+    if (d.icode == MRMOVL || d.icode == POPL) {
+        return d.rA;
     } else {
         return RNONE;
     }
@@ -201,9 +201,9 @@ unsigned int getDstM() {
  * @param forward Holds values forwarded from previous stages
  * @return Value (valA) to send to E register
  */
-unsigned int selectFwdA(unsigned int srcA, forwardType forward) {
-    if (D.icode == CALL || D.icode == JXX) {
-        return D.valP;
+unsigned int selectFwdA(dregister d, unsigned int srcA, forwardType forward) {
+    if (d.icode == CALL || d.icode == JXX) {
+        return d.valP;
     } else if (srcA == RNONE) {
         return 0;
     } else if (srcA == forward.e_dstE) {
