@@ -4,7 +4,7 @@
 
 CC = gcc
 
-CFLAGS = -std=c99 -Wall
+CFLAGS = -std=c99 -O0 -Wall
 CFLAGS += -g
 
 LDFLAGS = -Wl,-O1 -Wl,--no-undefined
