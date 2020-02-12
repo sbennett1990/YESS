@@ -15,7 +15,6 @@
  */
 static eregister E;
 
-// Prototypes for "private" functions
 static unsigned int (*funcPtr[INSTR_COUNT])(void);
 static unsigned int performZero(void);
 static unsigned int performDUMP(void);
@@ -29,11 +28,14 @@ static unsigned int performPushl(void);
 static unsigned int performJXX(void);
 static unsigned int performCall(void);
 static unsigned int performRet(void);
-static void computeCC(int result, int a, int b);
-static int computeCnd(void);
-static bool changeCC;
+
+static void computeCC(int result, int a, int b);	// XXX: what was this?
+static int computeCnd(eregister);
+
 static bool M_stall(void);
 static bool M_bubble(statusType status);
+
+static bool changeCC;
 
 /**
  * Return a copy of the E register
@@ -76,7 +78,7 @@ void executeStage(forwardType * forward, statusType status,
 
     // Execute the instruction and compute Cnd
     unsigned int valE = funcPtr[E.icode]();
-    int e_Cnd = computeCnd();
+    int e_Cnd = computeCnd(E);
 
     if ((E.icode == RRMOVL) && !e_Cnd) {
         E.dstE = RNONE;
@@ -107,7 +109,8 @@ void executeStage(forwardType * forward, statusType status,
 void updateEregister(unsigned int stat, unsigned int icode, unsigned int ifun,
                      unsigned int valC, unsigned int valA, unsigned int valB,
                      unsigned int dstE, unsigned int dstM, unsigned int srcA,
-                     unsigned int srcB) {
+                     unsigned int srcB)
+{
     E.stat = stat;
     E.icode = icode;
     E.ifun = ifun;
@@ -154,14 +157,14 @@ void initFuncPtrArray() {
  *
  * @return Computed value of e_Cnd
  */
-int computeCnd() {
+int computeCnd(eregister ereg) {
     int e_Cnd = 0;
     int sf = getCC(SF);
     int zf = getCC(ZF);
     int of = getCC(OF);
 
-    if (E.icode == RRMOVL || E.icode == JXX) {
-        switch (E.ifun) {
+    if (ereg.icode == RRMOVL || ereg.icode == JXX) {
+        switch (ereg.ifun) {
             case RRMOVLF:
                 e_Cnd = 1;
                 break;
@@ -281,7 +284,7 @@ unsigned int performIrmovl() {
  * @return Result of valB <OPL> valA
  */
 unsigned int performOpl() {
-    int a = (int) E.valA;
+    int a = (int) E.valA;	// XXX: should these be cast?
     int b = (int) E.valB;
     int result = 0;
 
