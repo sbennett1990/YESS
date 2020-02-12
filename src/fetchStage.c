@@ -152,6 +152,7 @@ fetchStage(forwardType forward, controlType control)
  *
  * Parameters:
  *  forward     holds values forwarded from previous stages
+ *  predPC	current value of F.predPC
  *
  * Return source value for the PC
  */
