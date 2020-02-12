@@ -24,7 +24,7 @@
  * SYNOPSIS
  * #include "strtonum.h"
  * long
- * strtonum(const char *numstr, long minval, long maxval, const char **errstr, int base);
+ * strtonum(const char *numstr, long minval, long maxval, const char **errstrp, int base);
  *
  * DESCRIPTION
  * The strtonum() function converts the string in numstr to a long value. The strtonum()
@@ -32,17 +32,17 @@
  * of the atoi(3) and strtol(3) family of interfaces.
  * The string may begin with an arbitrary amount of whitespace (as determined by isspace(3))
  * followed by a single optional '+' or '-' sign.
- * 
- * The remainder of the string is converted to a long value according to the given base, which 
+ *
+ * The remainder of the string is converted to a long value according to the given base, which
  * must be a number between 2 and 36 inclusive or the special value 0 (see strtol(3)).
- * 
- * The value obtained is then checked against the provided minval and maxval bounds. If errstr 
- * is non-null, strtonum() stores an error string in *errstr indicating the failure.
+ *
+ * The value obtained is then checked against the provided minval and maxval bounds. If errstrp
+ * is non-null, strtonum() stores an error string in *errstrp indicating the failure.
  *
  * RETURN VALUES
  * The strtonum() function returns the result of the conversion, unless the value would exceed
- * the provided bounds or is invalid. On error, 0 is returned, errno is set, and errstr will
- * point to an error message. *errstr will be set to NULL on success; this fact can be used to
+ * the provided bounds or is invalid. On error, 0 is returned, errno is set, and errstrp will
+ * point to an error message. *errstrp will be set to NULL on success; this fact can be used to
  * differentiate a successful return of 0 from an error.
  *
  * EXAMPLES
@@ -50,27 +50,23 @@
  *
  * int iterations;
  * const char *errstr;
- * 
+ *
  * iterations = strtonum(optarg, 1, 64, &errstr, 10);
  * if (errstr)
  *    errx(1, "number of iterations is %s: %s", errstr, optarg);
+ *
  * The above example will guarantee that the value of iterations is between 1 and 64 (inclusive).
  *
  * ERRORS
- * [ERANGE]
- * The given string was out of range.
- * [EINVAL]
- * The given string did not consist solely of digit characters.
- * [EINVAL]
- * minval was larger than maxval.
- * If an error occurs, errstr will be set to one of the following strings:
+ * [ERANGE]    The given string was out of range.
+ * [EINVAL]    The given string did not consist solely of digit characters.
+ * [EINVAL]    minval was larger than maxval.
  *
- * "too large"
- * The result was larger than the provided maximum value.
- * "too small"
- * The result was smaller than the provided minimum value.
- * "invalid"
- * The string did not consist solely of digit characters.
+ * If an error occurs, errstrp will be set to one of the following strings:
+ *
+ * "too large"  The result was larger than the provided maximum value.
+ * "too small"  The result was smaller than the provided minimum value.
+ * "invalid"    The string did not consist solely of digit characters.
  *
  * SEE ALSO
  * atof(3), atoi(3), atol(3), atoll(3), sscanf(3), strtod(3), strtol(3), strtoul(3)
@@ -90,7 +86,8 @@
 
 long
 strtonum_OBSD(const char * numstr, long minval, long maxval,
-              const char ** errstrp, int base) {
+    const char **errstrp, int base)
+{
     long l = 0;
     int error = 0;
     char * ep;

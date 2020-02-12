@@ -1,6 +1,5 @@
 /*
  * File:   tools.c
- * Author: Scott Bennett
  */
 
 /* pledge(2) the program on OpenBSD */
@@ -10,9 +9,10 @@
 
 #include <limits.h>
 #include <stddef.h>
-#include <stdlib.h>
+#include <string.h>
+#include <err.h>
+#include <unistd.h>
 
-#include "bool.h"
 #include "logger.h"
 #include "strtonum.h"
 #include "tools.h"
@@ -229,7 +229,7 @@ unsigned int buildWord(unsigned char byte0, unsigned char byte1,
  * Parameters:
  *      source  integer to test
  *
- * Return 1 if source is negatrive, 0 otherwise.
+ * Return 1 if source is negative, 0 otherwise.
  */
 bool isNegative(unsigned int source) {
     source = source >> INTHIGHBIT;
@@ -266,7 +266,7 @@ void expandBits(unsigned int source, char bits[36]) {
 }
 
 /*
- * Write 'length' zeroes to the buffer, effectively "clearing" it. If length is
+ * Write 'length' zeros to the buffer, effectively "clearing" it. If length is
  * zero, this function does nothing. Can clear a buffer of any size, up to
  * SIZE_MAX.
  *
@@ -274,7 +274,9 @@ void expandBits(unsigned int source, char bits[36]) {
  *     *buff    buffer
  *     length   length of the buffer
  */
-void clearBuffer(char * buff, size_t length) {
+void
+clearBuffer(char * buff, size_t length)
+{
     char * p;
 
     for (p = buff; length--; ) {
@@ -290,11 +292,19 @@ void clearBuffer(char * buff, size_t length) {
  *     *nptr   string representation of an int
  *     base    a base between 2 and 36 inclusive, or 0
  *
- * Returns the result of the conversion, or 0 on error
+ * Returns the result of the conversion, or -1 on error
  */
-int strtoint(const char * nptr, int base) {
+int
+strtoint(const char * nptr, int base)
+{
     int num;
-    num = (int) strtonum_OBSD(nptr, INT_MIN, INT_MAX, NULL, base);
+    const char *errstr;
+
+    num = (int) strtonum_OBSD(nptr, INT_MIN, INT_MAX, &errstr, base);
+    if (errstr != NULL) {
+        // TODO: display an error with the returned errstr
+        return -1;
+    }
 
     return num;
 }
@@ -305,24 +315,27 @@ int strtoint(const char * nptr, int base) {
  * Parameters:
  *     *filename    file name to check
  *
- * Return true if file ends in ".yo"; false otherwise
+ * Return >0 if file ends in ".yo"; -1 otherwise
  */
-bool validatefilename(const char * filename) {
-    int len = (int) strlen(filename);
+int
+validatefilename(const char * filename)
+{
+    int len = (int) strnlen(filename, FILENAME_LEN);
 
     if (len < 3) {
         log_warn("filename too short");
-        return FALSE;
+        return -1;
     }
 
     if (filename[len - 1] == 'o'
         && filename[len - 2] == 'y'
         && filename[len - 3] == '.') {
         log_debug("filename valid");
-        return TRUE;
-    } else {
+        return 1;
+    }
+    else {
         log_warn("filename not valid");
-        return FALSE;
+        return -1;
     }
 }
 
@@ -330,7 +343,9 @@ bool validatefilename(const char * filename) {
  * Put all the complex system testing code in one place. Functions can pass a
  * list of promises. Be careful to only reduce privileges!
  */
-static void pledge_wrapper(const char * promises) {
+static void
+pledge_wrapper(const char * promises)
+{
 #ifdef __OpenBSD__
     // pledge(2) only works on 5.9 or higher
     struct utsname name;
@@ -341,7 +356,8 @@ static void pledge_wrapper(const char * promises) {
         }
 
         log_info("pledge(2)'d with %s", promises);
-    } else {
+    }
+    else {
         log_info("not running OpenBSD >5.9, no pledge");
     }
 #else
@@ -353,7 +369,9 @@ static void pledge_wrapper(const char * promises) {
  * If running on OpenBSD 5.9 or higher, reduce privileges to "stdio" and "rpath"
  * because a file has to be opened. If any other OS, do nothing.
  */
-void initialpledge(void) {
+void
+initialpledge(void)
+{
     pledge_wrapper("stdio rpath");
 }
 
@@ -361,7 +379,8 @@ void initialpledge(void) {
  * If running on OpenBSD 5.9 or higher, reduce privileges to "stdio" after
  * opening the file. If any other OS, do nothing.
  */
-void reduceprivileges(void) {
+void
+reduceprivileges(void)
+{
     pledge_wrapper("stdio");
 }
-

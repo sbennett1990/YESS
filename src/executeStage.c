@@ -3,19 +3,16 @@
  * Author: Alex Savarda
  */
 
-#include <stdio.h>
 #include "bool.h"
 #include "tools.h"
 #include "registers.h"
 #include "instructions.h"
-#include "status.h"
-#include "control.h"
-#include "forwarding.h"
 #include "executeStage.h"
 #include "memoryStage.h"
 
-// E register holds the input from the decode stage.
-// It is only accessible from this file (static)
+/*
+ * E register holds the input from the decode stage.
+ */
 static eregister E;
 
 // Prototypes for "private" functions

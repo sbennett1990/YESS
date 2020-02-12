@@ -1,40 +1,34 @@
-/**
+/*
  * File:   memoryStage.c
  * Author: Alex Savarda
  */
-
-#include <stddef.h>
 
 #include "bool.h"
 #include "tools.h"
 #include "memory.h"
 #include "instructions.h"
-#include "status.h"
-#include "control.h"
-#include "forwarding.h"
 #include "memoryStage.h"
 #include "writebackStage.h"
-#include "executeStage.h"
 
-// M register holds the input for the execute stage
-// It is only accessible from within this file (static)
+/*
+ * M register holds the input from the execute stage.
+ */
 static mregister M;
 
-// Prototypes for "private" functions
 static unsigned int mem_addr(void);
 static bool mem_write(void);
 static bool mem_read(void);
 static bool W_stall(statusType status);
 static bool W_bubble(void);
 
-/**
+/*
  * Return a copy of the M register
  */
 mregister getMregister() {
     return M;
 }
 
-/**
+/*
  * Clear M register then initialize its icode to NOP and
  * its stat to SAOK.
  */
@@ -44,16 +38,18 @@ void clearMregister() {
     M.stat = SAOK;
 }
 
-/**
- * May write data to memory, or read data from memory
- * updates W register
+/*
+ * May write data to memory or read data from memory.
+ * Updates the W register.
  *
- * @param *forward Holds values forwarded to previous stages
- * @param *status  Holds values forwarded to previous stages
- * @param *control Holds values forwarded to previous stages
+ * Parameters:
+ *  *forward	Holds values forwarded to previous stages
+ *  *status	Holds values forwarded to previous stages
+ *  *control	Holds values forwarded to previous stages
  */
-void memoryStage(forwardType * forward, statusType * status,
-                 controlType * control) {
+void
+memoryStage(forwardType * forward, statusType * status, controlType * control)
+{
     unsigned int address = mem_addr();
     unsigned int stat = M.stat;
     unsigned int valM = NOADDRESS;
@@ -73,7 +69,7 @@ void memoryStage(forwardType * forward, statusType * status,
         stat = SADR;
     }
 
-    //set values of forwarding, status, and control structs
+    // set values of forwarding, status, and control structs
     forward->M_dstM = M.dstM;
     forward->M_dstE = M.dstE;
     forward->m_valM = valM;
@@ -84,10 +80,12 @@ void memoryStage(forwardType * forward, statusType * status,
     status->m_stat = stat;
     control->M_icode = M.icode;
 
-    // Stall W?
+    // stall W?
     if (!W_stall(*status)) {
-        // If stall is true, do nothing to keep current
-        // values in writeback Stage
+	/*
+	 * If stall is true, do nothing to keep current
+	 * values in the Writeback Stage.
+	 */
         updateWRegister(stat, M.icode, M.valE, valM, M.dstE, M.dstM);
     }
 }

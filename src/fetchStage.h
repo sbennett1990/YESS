@@ -1,23 +1,24 @@
-/* 
- * File:   fetchStage.h
- * Author: Cindy Norris
+/*
+ * File: fetchStage.h
  */
 
-#ifndef FETCHSTAGE_H
+#ifndef	FETCHSTAGE_H
 #define	FETCHSTAGE_H
 
-typedef struct {
-    unsigned int predPC;
-} fregister;
+#include "forwarding.h"
+#include "control.h"
 
-struct F {
-    unsigned int predPC;
+/*
+ * +----+---------------------------------------------------------------------+
+ * | F  |          | predPC |                                                 |
+ * +----+---------------------------------------------------------------------+
+ */
+struct fregister {
+	unsigned int predPC;
 };
 
-
-fregister getFregister(void);
+struct fregister getFregister(void);
 void clearFregister(void);
-void fetchStage();
+void fetchStage(forwardType, controlType);
 
 #endif	/* FETCHSTAGE_H */
-

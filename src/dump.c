@@ -6,7 +6,6 @@
 
 #include "bool.h"
 #include "dump.h"
-#include "forwarding.h"
 #include "fetchStage.h"
 #include "decodeStage.h"
 #include "executeStage.h"
@@ -106,8 +105,6 @@ void dumpLine(int line[WORDSPERLINE], int address) {
 void buildLine(int line[WORDSPERLINE], int address) {
     int i;
     bool memError;
-    char byte0, byte1, byte2, byte3;
-
     for (i = 0; i < WORDSPERLINE; i++, address++) {
         line[i] = getWord((address * 4), &memError);
     }
@@ -150,7 +147,7 @@ void dumpProgramRegisters(void) {
  * Output the contents of the YESS processor registers to standard out.
  */
 void dumpProcessorRegisters(void) {
-    fregister F = getFregister();
+    struct fregister F = getFregister();
     dregister D = getDregister();
     eregister E = getEregister();
     mregister M = getMregister();

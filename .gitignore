@@ -34,3 +34,7 @@
 
 # Debug files
 *.dSYM/
+
+# VS stuff
+.vs/
+/src/.vs/

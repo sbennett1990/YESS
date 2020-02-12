@@ -2,49 +2,54 @@
  * registers.c
  */
 
-#include <stddef.h>
-
-#include "bool.h"
 #include "registers.h"
 #include "tools.h"
 
+/* Program Registers */
 static unsigned int registers[REGSIZE];
-static unsigned int CC = 0;                 /* condition code */
+/* Condition Codes */
+static unsigned int CC = 0;
 
 /*
- * Returns the value in the specified register.
+ * Returns the value in the specified program register.
  *
  * Parameters:
- *  regNum  register number
+ *  reg		Program register
  *
- * Return the value in the register, or 0 on error
+ * Return the value in the register, or 0 on error.
  */
-unsigned int getRegister(int regNum) {
-    if (regNum >= 0 && regNum < REGSIZE) {
-        return registers[regNum];
+unsigned int
+getRegister(int reg)
+{
+    if (reg >= 0 && reg < REGSIZE) {
+        return registers[reg];
     } else {
         return 0;
     }
 }
 
 /*
- * Set register regNum to the value regValue.
+ * Set program register reg to the value val.
  *
  * Parameters:
- *  regNum      register number
- *  regValue    the value to put in the register
+ *  reg		Program register
+ *  val		the value to put in the register
  */
-void setRegister(int regNum, unsigned int regValue) {
-    if (regNum >= 0 || regNum < REGSIZE) {
-        registers[regNum] = regValue;
+void
+setRegister(int reg, unsigned int val)
+{
+    if (reg >= 0 || reg < REGSIZE) {
+        registers[reg] = val;
     }
 }
 
 /*
  * Clear the program registers.
  */
-void clearRegisters() {
-    clearBuffer((char *) &registers, REGSIZE);
+void
+clearRegisters()
+{
+	clearBuffer((char *) &registers, REGSIZE); // TODO: use recallocarray(3)?
 }
 
 /*
@@ -59,10 +64,13 @@ void clearRegisters() {
  *  bitNumber   the condition code to set
  *  value       the value to set the condition code
  */
-void setCC(unsigned int bitNumber, unsigned int value) {
-    if (bitNumber == ZF || bitNumber == SF || bitNumber == OF) {
-        CC = assignOneBit(bitNumber, value, CC);
-    }
+void
+setCC(unsigned int bitNumber, unsigned int value)
+{
+	// TODO: error check the value param
+	if (bitNumber == ZF || bitNumber == SF || bitNumber == OF) {
+		CC = assignOneBit(bitNumber, value, CC);
+	}
 }
 
 /*
@@ -75,17 +83,21 @@ void setCC(unsigned int bitNumber, unsigned int value) {
  *
  * Return the value of the bitNumber bit in CC, or 0 on error
  */
-unsigned int getCC(unsigned int bitNumber) {
-    if (bitNumber == ZF || bitNumber == SF || bitNumber == OF) {
-        return getBits(bitNumber, bitNumber, CC);
-    } else {
-        return 0;
-    }
+unsigned int
+getCC(unsigned int bitNumber)
+{
+	if (bitNumber == ZF || bitNumber == SF || bitNumber == OF) {
+		return getBits(bitNumber, bitNumber, CC);
+	}
+
+	return 0;
 }
 
 /*
  * Clear the condition code register.
  */
-void clearCC() {
-    CC = 0;
+void
+clearCC()
+{
+	CC = 0;
 }

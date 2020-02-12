@@ -3,34 +3,27 @@
  * Author: Scott Bennett
  */
 
-#include <stddef.h>
-
 #include "bool.h"
 #include "tools.h"
 #include "memory.h"
 #include "registers.h"
 #include "instructions.h"
-#include "status.h"
-#include "control.h"
-#include "forwarding.h"
 #include "fetchStage.h"
 #include "decodeStage.h"
 
 /*
  * F register holds the input for the fetch stage.
- * It is only accessible from this file.
  */
-static fregister F;
+static struct fregister F;
 
 // Prototypes for "private" functions
-static unsigned int selectPC(forwardType forward);
+static unsigned int selectPC(forwardType forward, unsigned int);
 static unsigned int predictPC(unsigned int icode, unsigned int valC,
-                              unsigned int valP);
+    unsigned int valP);
 static unsigned int pcIncrement(unsigned int f_pc, unsigned int icode);
 static bool instructionValid(unsigned int icode);
 static unsigned int getIcode(unsigned int memByte, bool memError);
 static unsigned int getIfun(unsigned int memByte, bool memError);
-static unsigned int determineStat(void);
 static bool needRegids(unsigned int icode);
 static bool needValC(unsigned int icode);
 static unsigned int getValC(unsigned int f_pc, bool * memError);
@@ -44,14 +37,18 @@ static bool stallD(controlType control);
  *
  * Return an fregister
  */
-fregister getFregister() {
+struct fregister
+getFregister()
+{
     return F;
 }
 
 /*
  * Clear the F register
  */
-void clearFregister() {
+void
+clearFregister()
+{
     clearBuffer((char *) &F, sizeof(F));
 }
 
@@ -63,9 +60,11 @@ void clearFregister() {
  *  forward     holds values forwarded from previous stages
  *  control     holds values forwarded from later stages
  */
-void fetchStage(forwardType forward, controlType control) {
+void
+fetchStage(forwardType forward, controlType control)
+{
     bool memError = FALSE;
-    unsigned int f_pc = selectPC(forward);
+    unsigned int f_pc = selectPC(forward, F.predPC);
     unsigned int stat = SAOK;
     unsigned int icode;
     unsigned int ifun;
@@ -119,7 +118,8 @@ void fetchStage(forwardType forward, controlType control) {
                 stat = SADR;
             }
         }
-    } else {
+    }
+    else {
         stat = SINS;
         F.predPC = F.predPC + 1;
     }
@@ -130,7 +130,8 @@ void fetchStage(forwardType forward, controlType control) {
     // Stall F? keep previous value
     if (stallF(control)) {
         F.predPC = f_pc;
-    } else {
+    }
+    else {
         F.predPC = predictPC(icode, valC, valP);
     }
 
@@ -138,10 +139,12 @@ void fetchStage(forwardType forward, controlType control) {
     if (bubbleD(control)) {
         // Insert a NOP
         updateDregister(SAOK, NOP, 0, RNONE, RNONE, 0, valP);
-    } else if (!stallD(control)) {
+    }
+    else if (!stallD(control)) {
         // Update D as normal (do not stall)
         updateDregister(stat, icode, ifun, rA, rB, valC, valP);
-    } // else do nothing because D should be stalled
+    }
+	// else do nothing because D should be stalled
 }
 
 /*
@@ -149,10 +152,13 @@ void fetchStage(forwardType forward, controlType control) {
  *
  * Parameters:
  *  forward     holds values forwarded from previous stages
+ *  predPC	current value of F.predPC
  *
  * Return source value for the PC
  */
-unsigned int selectPC(forwardType forward) {
+unsigned int
+selectPC(forwardType forward, unsigned int predPC)
+{
     // Uses forwarded M_valA, W_valM
     // Mispredicted branch. Fetch at incremented PC
     if (forward.M_icode == JXX && !(forward.M_Cnd)) {
@@ -165,7 +171,7 @@ unsigned int selectPC(forwardType forward) {
     }
 
     // Default
-    return F.predPC;
+    return predPC;
 }
 
 /*
@@ -180,13 +186,15 @@ unsigned int selectPC(forwardType forward) {
  *
  * Return the predicted PC
  */
-unsigned int predictPC(unsigned int icode, unsigned int valC,
-                       unsigned int valP) {
-    if (icode == JXX || icode == CALL) {
-        return valC;
-    } else {
-        return valP;
-    }
+unsigned int
+predictPC(unsigned int icode, unsigned int valC, unsigned int valP)
+{
+	if (icode == JXX || icode == CALL) {
+		return valC;
+	}
+	else {
+		return valP;
+	}
 }
 
 /*
@@ -199,7 +207,9 @@ unsigned int predictPC(unsigned int icode, unsigned int valC,
  *
  * Return the address of the next sequential instruction
  */
-unsigned int pcIncrement(unsigned int f_pc, unsigned int icode) {
+unsigned int
+pcIncrement(unsigned int f_pc, unsigned int icode)
+{
     unsigned int valP;
 
     switch (icode) {
@@ -240,11 +250,13 @@ unsigned int pcIncrement(unsigned int f_pc, unsigned int icode) {
  *
  * Parameters:
  *  memByte     a byte that should contain the instruction code
- *  memError    specifies whether a memory error occured
+ *  memError    specifies whether a memory error occurred
  *
  * Return the instruction code, or a NOP for a memory error
  */
-unsigned int getIcode(unsigned int memByte, bool memError) {
+unsigned int
+getIcode(unsigned int memByte, bool memError)
+{
     if (memError) {
         return NOP;
     } else {
@@ -257,11 +269,13 @@ unsigned int getIcode(unsigned int memByte, bool memError) {
  *
  * Parameters:
  *  memByte     a byte that should contain the instruction function
- *  memError    specifies whether a memory error occured
+ *  memError    specifies whether a memory error occurred
  *
  * Return the instruction function, or FNONE for a memory error
  */
-unsigned int getIfun(unsigned int memByte, bool memError) {
+unsigned int
+getIfun(unsigned int memByte, bool memError)
+{
     if (memError) {
         return 0;
     } else {
@@ -277,7 +291,9 @@ unsigned int getIfun(unsigned int memByte, bool memError) {
  *
  * Return true if icode is valid; false otherwise
  */
-bool instructionValid(unsigned int icode) {
+bool
+instructionValid(unsigned int icode)
+{
     bool valid = FALSE;
 
     switch (icode) {
@@ -312,7 +328,9 @@ bool instructionValid(unsigned int icode) {
  *
  * Return true if icode requires a regid; false otherwise
  */
-bool needRegids(unsigned int icode) {
+bool
+needRegids(unsigned int icode)
+{
     bool need = FALSE;
 
     switch (icode) {
@@ -341,7 +359,9 @@ bool needRegids(unsigned int icode) {
  *
  * Return true if instruction needs a valC; false otherwise
  */
-bool needValC(unsigned int icode) {
+bool
+needValC(unsigned int icode)
+{
     bool need = FALSE;
 
     switch (icode) {
@@ -370,7 +390,9 @@ bool needValC(unsigned int icode) {
  *
  * Return the constant word, valC
  */
-unsigned int getValC(unsigned int f_pc, bool * memError) {
+unsigned int
+getValC(unsigned int f_pc, bool * memError)
+{
     unsigned char byte0, byte1, byte2, byte3;
 
     byte0 = getByte(f_pc + 1, memError);
@@ -386,7 +408,9 @@ unsigned int getValC(unsigned int f_pc, bool * memError) {
  * According to HCL, F will never be bubbled,
  * therefore it returns false.
  */
-bool bubbleF() {
+bool
+bubbleF()
+{
     return FALSE;
 }
 
@@ -399,7 +423,9 @@ bool bubbleF() {
  *
  * Return true if F need to be stalled; false otherwise
  */
-bool stallF(controlType control) {
+bool
+stallF(controlType control)
+{
     bool stall = FALSE;
 
     if (((control.E_icode == MRMOVL || control.E_icode == POPL)
@@ -421,7 +447,9 @@ bool stallF(controlType control) {
  *
  * Return true if D should be bubbled; false otherwise
  */
-bool bubbleD(controlType control) {
+bool
+bubbleD(controlType control)
+{
     bool bubble = FALSE;
 
     // conditions for mispredicted branch
@@ -445,7 +473,9 @@ bool bubbleD(controlType control) {
  *
  * Return true if D should be stalled; false otherwise
  */
-bool stallD(controlType control) {
+bool
+stallD(controlType control)
+{
     bool stall = FALSE;
 
     // conditions for load/use hazard
@@ -457,4 +487,3 @@ bool stallD(controlType control) {
 
     return stall;
 }
-
