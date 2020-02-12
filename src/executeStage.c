@@ -1,4 +1,4 @@
-/**
+/*
  * File:   executeStage.c
  * Author: Alex Savarda
  */
@@ -37,24 +37,27 @@ static bool M_bubble(statusType status);
 
 static bool changeCC;
 
-/**
+/*
  * Return a copy of the E register
  */
-eregister getEregister() {
+eregister
+getEregister()
+{
     return E;
 }
 
-/**
- * Clear E register then initialize its icode to NOP and
- * its stat to SAOK.
+/*
+ * Clear E register then initialize its icode to NOP and its stat to SAOK.
  */
-void clearEregister() {
+void
+clearEregister()
+{
     clearBuffer((char *) &E, sizeof(E));
     E.icode = NOP;
     E.stat = SAOK;
 }
 
-/**
+/*
  * Perform the operation based on the instruction.
  * Compute e_Cnd and dstE and update the values in the M
  * register.
@@ -64,8 +67,9 @@ void clearEregister() {
  * @param *control  Pointer to struct that holds values forwarded from
  *                    later stages
  */
-void executeStage(forwardType * forward, statusType status,
-                  controlType * control) {
+void
+executeStage(forwardType * forward, statusType status, controlType * control)
+{
     bool m_bubble = M_bubble(status);
     changeCC = TRUE;
 
@@ -92,24 +96,23 @@ void executeStage(forwardType * forward, statusType status,
     control->E_dstM = E.dstM;
 
     // Bubble M?
-    if (m_bubble)
+    if (m_bubble) {}
         // Insert a NOP
-    {
         updateMRegister(SAOK, NOP, 0, 0, 0, RNONE, RNONE);
-    } else
+    }
+    else {
         // Update M register as normal
-    {
         updateMRegister(E.stat, E.icode, e_Cnd, valE, E.valA, E.dstE, E.dstM);
     }
 }
 
-/**
- * Update the values in the E register
+/*
+ * Update the values in the E register.
  */
-void updateEregister(unsigned int stat, unsigned int icode, unsigned int ifun,
-                     unsigned int valC, unsigned int valA, unsigned int valB,
-                     unsigned int dstE, unsigned int dstM, unsigned int srcA,
-                     unsigned int srcB)
+void
+updateEregister(unsigned int stat, unsigned int icode, unsigned int ifun,
+    unsigned int valC, unsigned int valA, unsigned int valB, unsigned int dstE,
+	unsigned int dstM, unsigned int srcA, unsigned int srcB)
 {
     E.stat = stat;
     E.icode = icode;
@@ -123,14 +126,15 @@ void updateEregister(unsigned int stat, unsigned int icode, unsigned int ifun,
     E.srcB = srcB;
 }
 
-/**
+/*
  * Initialize the array of function pointers.
  * This should only be called in main, so that it's initialized once.
  */
-void initFuncPtrArray() {
+void
+initFuncPtrArray()
+{
     // First initialize array to 0's
     int i;
-
     for (i = 0; i < INSTR_COUNT; i++) {
         funcPtr[i] = performZero;
     }
