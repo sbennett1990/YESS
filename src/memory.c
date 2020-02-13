@@ -148,26 +148,34 @@ getWord(int byteAddress, bool * memError)
 }
 
 /*
- * Store a value (1 word) in memory. If there is an error,
- * *memError is set to true, otherwise it's false. If address
- * isn't a valid memory address, then memory isn't modified.
+ * Write a value (1 word) to memory at the given byte address. Word accesses
+ * must be aligned on a 4 byte boundary. If there is an error, *memError is
+ * set to true. If address isn't a valid memory address, then memory isn't
+ * modified.
  *
  * Parameters:
- *  byteAddress     a byte address of memory [0..4095] that is
- *                     a multiple of 4
- *  value           the value to store in memory at the address
- *  *memError       pointer to the memory error indicator
+ *	byteAddress   a byte address of memory [0..4095] that is a
+ *                multiple of 4
+ *	value         the word to store in memory at address
+ *	*memError     indicates memory write error
  */
-void putWord(int byteAddress, unsigned int value, bool * memError) {
-    /* ensure byteAddress is a multiple of WORDSIZE */
-    if (byteAddress % WORDSIZE) {
-        *memError = TRUE;
-        return;
-    }
+void
+putWord(int byteAddress, unsigned int value, bool * memError)
+{
+	// TODO: test this function!
+	if (byteAddress < 0 || byteAddress > HIGHBYTE) {
+		*memError = TRUE;
+		return;
+	}
 
-    *memError = FALSE;
+	/* ensure byteAddress is a multiple of WORDSIZE */
+	if (byteAddress % WORDSIZE) {
+		*memError = TRUE;
+		return;
+	}
 
-    store((byteAddress / WORDSIZE), value, memError);
+	*memError = FALSE; // XXX: this assignment is probably unnecessary
+	store((byteAddress / WORDSIZE), value, memError);
 }
 
 /*
