@@ -11,16 +11,18 @@ static unsigned int fetch(int address, bool * memError);
 static void store(int address, unsigned int value, bool * memError);
 
 /*
- * Read and return a word of memory. If there is an error,
- * *memError is set to true, otherwise it's false.
+ * Retrieve a word from memory. If there is an error,
+ * *memError is set to true.
  *
  * Parameters:
- *  address     the memory address [0..1023]
- *  *memError   pointer to the memory error indicator
+ *	address     the word address [0..1023]
+ *	*memError   indicates memory read error
  *
- * Return the contents of the memory address, or 0 on error.
+ * Return the contents of memory at address, or 0 on error.
  */
-static unsigned int fetch(int address, bool * memError) {
+static unsigned int
+fetch(int address, bool * memError)
+{
     if (address < 0 || address >= MEMSIZE) {
         *memError = TRUE;
         return 0;
@@ -31,16 +33,18 @@ static unsigned int fetch(int address, bool * memError) {
 }
 
 /*
- * Store a value (1 word) in memory. If there is an error,
- * *memError is set to true, otherwise it's false. If address
- * isn't a valid memory address, then memory isn't modified.
+ * Write a value (1 word) to memory. If there is an error,
+ * *memError is set to true. If address isn't a valid memory
+ * address, then memory isn't modified.
  *
  * Parameters:
- *  address     the memory address [0..1023]
- *  value       the value to store in memory at the address
- *  *memError   pointer to the memory error indicator
+ *	address     the word address [0..1023]
+ *	value       the value to store in memory at address
+ *	*memError   indicates memory write error
  */
-static void store(int address, unsigned int value, bool * memError) {
+static void
+store(int address, unsigned int value, bool * memError)
+{
     if (address < 0 || address >= MEMSIZE) {
         *memError = TRUE;
         return;
