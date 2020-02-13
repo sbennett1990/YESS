@@ -5,7 +5,7 @@
 #include "tools.h"
 #include "memory.h"
 
-static unsigned int memory[MEMSIZE];
+static unsigned int memory[MEMSIZE]; // XXX: should MEMSIZE be 1023?
 
 static unsigned int fetch(int address, bool * memError);
 static void store(int address, unsigned int value, bool * memError);
@@ -112,17 +112,30 @@ void putByte(int byteAddress, unsigned char value, bool * memError) {
 }
 
 /*
- * Read a word of memory using it's byte address. If there is
- * an error, *memError is set to true, otherwise it's false.
+ * Retrieve a word from memory at the given byte address. Word accesses
+ * must be aligned on a 4 byte boundary. If there is an error, *memError
+ * is set to true.
  *
  * Parameters:
- *  byteAddress     a byte address of memory [0..4095] that is
- *                     a multiple of 4
- *  *memError       pointer to the memory error indicator
+ *	byteAddress   a byte address of memory [0..4095] that is a
+ *                multiple of 4
+ *	*memError     indicates memory read error
  *
- * Return the contents of memory at the byte address, or 0 on error
+ * Return the contents of memory at byte address, or 0 on error.
  */
-unsigned int getWord(int byteAddress, bool * memError) {
+unsigned int
+getWord(int byteAddress, bool * memError)
+{
+	// TODO: test this function!
+	if (byteAddress < 0 || byteAddress > HIGHBYTE) {
+		*memError = TRUE;
+		return 0;
+	}
+
+	if (byteAddress == 0) {
+		return fetch(0, memError);
+	}
+
     /* ensure byteAddress is a multiple of WORDSIZE */
     if (byteAddress % WORDSIZE) {
         *memError = TRUE;
@@ -130,7 +143,7 @@ unsigned int getWord(int byteAddress, bool * memError) {
     }
 
     *memError = FALSE;
-
+	// How does this work if byteAddress is 1 or 0?
     return fetch((byteAddress / WORDSIZE), memError);
 }
 
