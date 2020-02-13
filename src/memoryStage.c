@@ -13,18 +13,20 @@
 /*
  * M register holds the input from the execute stage.
  */
-static mregister M;
+static struct mregister M;
 
-static unsigned int mem_addr(const mregister *);
-static bool mem_write(const mregister *);
-static bool mem_read(const mregister *);
+static unsigned int mem_addr(const struct mregister *);
+static bool mem_write(const struct mregister *);
+static bool mem_read(const struct mregister *);
 static bool W_stall(statusType status);
 static bool W_bubble(void);
 
 /*
  * Return a copy of the M register
  */
-mregister getMregister() {
+struct mregister
+getMregister()
+{
     return M;
 }
 
@@ -110,7 +112,7 @@ void updateMRegister(unsigned int stat, unsigned int icode, unsigned int Cnd,
  *
  * @return The memory address. Default is NOADDRESS.
  */
-unsigned int mem_addr(const mregister *mreg) {
+unsigned int mem_addr(const struct mregister *mreg) {
     unsigned int address = NOADDRESS;
 
     //set address to valE for these opcodes
@@ -138,7 +140,7 @@ unsigned int mem_addr(const mregister *mreg) {
 /**
  * Set write control signal
  */
-bool mem_write(const mregister *mreg) {
+bool mem_write(const struct mregister *mreg) {
     bool write = FALSE;
 
     //if icode equals MRMOVL, PUSHL, CALL
@@ -160,7 +162,7 @@ bool mem_write(const mregister *mreg) {
 /**
  * Set read control signal
  */
-bool mem_read(const mregister *mreg) {
+bool mem_read(const struct mregister *mreg) {
     bool read = FALSE;
 
     //if icode equals MRMOVL, POPL, RET

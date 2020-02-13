@@ -150,7 +150,7 @@ void dumpProcessorRegisters(void) {
     struct fregister F = getFregister();
     struct dregister D = getDregister();
     struct eregister E = getEregister();
-    mregister M = getMregister();
+    struct mregister M = getMregister();
     wregister W = getWregister();
 
     printf("CC - ZF: %01x SF: %01x OF: %01x\n", getCC(ZF), getCC(SF), getCC(OF));
