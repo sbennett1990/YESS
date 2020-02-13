@@ -13,14 +13,14 @@
 /*
  * D register holds the input from the fetch stage.
  */
-static dregister D;
+static struct dregister D;
 
-static unsigned int getSrcA(const dregister *);
-static unsigned int getSrcB(const dregister *);
-static unsigned int getDstE(const dregister *);
-static unsigned int getDstM(const dregister *);
-static unsigned int selectFwdA(const dregister *, unsigned int srcA,
-	const forwardType *);
+static unsigned int getSrcA(const struct dregister *);
+static unsigned int getSrcB(const struct dregister *);
+static unsigned int getDstE(const struct dregister *);
+static unsigned int getDstM(const struct dregister *);
+static unsigned int selectFwdA(const struct dregister *, unsigned int srcA,
+    const forwardType *);
 static unsigned int forwardB(unsigned int srcB, const forwardType *);
 static bool stallE(void);
 static bool bubbleE(const controlType *);
@@ -28,8 +28,10 @@ static bool bubbleE(const controlType *);
 /*
  * Return a copy of the D register
  */
-dregister getDregister() {
-    return D;
+struct dregister
+getDregister()
+{
+	return D;
 }
 
 /*
@@ -99,7 +101,7 @@ updateDregister(unsigned int stat, unsigned int icode, unsigned int ifun,
  *
  * @return register id needed
  */
-unsigned int getSrcA(const dregister *dreg) {
+unsigned int getSrcA(const struct dregister *dreg) {
     unsigned int srcA = RNONE;
 
     switch (dreg->icode) {
@@ -128,7 +130,7 @@ unsigned int getSrcA(const dregister *dreg) {
  *
  * @return register id needed
  */
-unsigned int getSrcB(const dregister *dreg) {
+unsigned int getSrcB(const struct dregister *dreg) {
     unsigned int srcB = RNONE;
 
     switch (dreg->icode) {
@@ -157,7 +159,7 @@ unsigned int getSrcB(const dregister *dreg) {
  *
  * @return Destination register id
  */
-unsigned int getDstE(const dregister *dreg) {
+unsigned int getDstE(const struct dregister *dreg) {
     unsigned int dstE = RNONE;
 
     switch (dreg->icode) {
@@ -186,7 +188,7 @@ unsigned int getDstE(const dregister *dreg) {
  *
  * @return Destination register id
  */
-unsigned int getDstM(const dregister *dreg) {
+unsigned int getDstM(const struct dregister *dreg) {
     if (dreg->icode == MRMOVL || dreg->icode == POPL) {
         return dreg->rA;
     } else {
@@ -203,7 +205,7 @@ unsigned int getDstM(const dregister *dreg) {
  * @return Value (valA) to send to E register
  */
 unsigned int
-selectFwdA(const dregister *dreg, unsigned int srcA, const forwardType *forward)
+selectFwdA(const struct dregister *dreg, unsigned int srcA, const forwardType *forward)
 {
     if (dreg->icode == CALL || dreg->icode == JXX) {
         return dreg->valP;

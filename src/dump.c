@@ -148,7 +148,7 @@ void dumpProgramRegisters(void) {
  */
 void dumpProcessorRegisters(void) {
     struct fregister F = getFregister();
-    dregister D = getDregister();
+    struct dregister D = getDregister();
     eregister E = getEregister();
     mregister M = getMregister();
     wregister W = getWregister();
