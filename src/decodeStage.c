@@ -19,10 +19,11 @@ static unsigned int getSrcA(const dregister *);
 static unsigned int getSrcB(const dregister *);
 static unsigned int getDstE(const dregister *);
 static unsigned int getDstM(const dregister *);
-static unsigned int selectFwdA(const dregister *, unsigned int srcA, forwardType forward);
-static unsigned int forwardB(unsigned int srcB, forwardType forward);
+static unsigned int selectFwdA(const dregister *, unsigned int srcA,
+	const forwardType *);
+static unsigned int forwardB(unsigned int srcB, const forwardType *);
 static bool stallE(void);
-static bool bubbleE(controlType control);
+static bool bubbleE(const controlType *);
 
 /*
  * Return a copy of the D register
@@ -56,8 +57,8 @@ decodeStage(forwardType forward, controlType * control)
     unsigned int srcB = getSrcB(&D);
     unsigned int dstE = getDstE(&D);
     unsigned int dstM = getDstM(&D);
-    unsigned int valA = selectFwdA(&D, srcA, forward);
-    unsigned int valB = forwardB(srcB, forward);
+    unsigned int valA = selectFwdA(&D, srcA, &forward);
+    unsigned int valB = forwardB(srcB, &forward);
 
     // Update values that need to be forwarded
     control->d_srcA = srcA;
@@ -65,7 +66,7 @@ decodeStage(forwardType forward, controlType * control)
     control->D_icode = D.icode;
 
     // Bubble E?
-    if (bubbleE(*control)) {
+    if (bubbleE(control)) {
         // Insert a NOP
         updateEregister(SAOK, NOP, 0, 0, 0, 0, RNONE, RNONE, RNONE, RNONE);
     }
@@ -202,22 +203,22 @@ unsigned int getDstM(const dregister *dreg) {
  * @return Value (valA) to send to E register
  */
 unsigned int
-selectFwdA(const dregister *dreg, unsigned int srcA, forwardType forward)
+selectFwdA(const dregister *dreg, unsigned int srcA, const forwardType *forward)
 {
     if (dreg->icode == CALL || dreg->icode == JXX) {
         return dreg->valP;
     } else if (srcA == RNONE) {
         return 0;
-    } else if (srcA == forward.e_dstE) {
-        return forward.e_valE;
-    } else if (srcA == forward.M_dstM) {
-        return forward.m_valM;
-    } else if (srcA == forward.M_dstE) {
-        return forward.M_valE;
-    } else if (srcA == forward.W_dstM) {
-        return forward.W_valM;
-    } else if (srcA == forward.W_dstE) {
-        return forward.W_valE;
+    } else if (srcA == forward->e_dstE) {
+        return forward->e_valE;
+    } else if (srcA == forward->M_dstM) {
+        return forward->m_valM;
+    } else if (srcA == forward->M_dstE) {
+        return forward->M_valE;
+    } else if (srcA == forward->W_dstM) {
+        return forward->W_valM;
+    } else if (srcA == forward->W_dstE) {
+        return forward->W_valE;
     } else {
         return getRegister(srcA);
     }
@@ -230,19 +231,19 @@ selectFwdA(const dregister *dreg, unsigned int srcA, forwardType forward)
  * @param forward Holds values forwarded from previous stages
  * @return Value (valB) to send to E register
  */
-unsigned int forwardB(unsigned int srcB, forwardType forward) {
+unsigned int forwardB(unsigned int srcB, const forwardType *forward) {
     if (srcB == RNONE) {
         return 0;
-    } else if (srcB == forward.e_dstE) {
-        return forward.e_valE;
-    } else if (srcB == forward.M_dstM) {
-        return forward.m_valM;
-    } else if (srcB == forward.M_dstE) {
-        return forward.M_valE;
-    } else if (srcB == forward.W_dstM) {
-        return forward.W_valM;
-    } else if (srcB == forward.W_dstE) {
-        return forward.W_valE;
+    } else if (srcB == forward->e_dstE) {
+        return forward->e_valE;
+    } else if (srcB == forward->M_dstM) {
+        return forward->m_valM;
+    } else if (srcB == forward->M_dstE) {
+        return forward->M_valE;
+    } else if (srcB == forward->W_dstM) {
+        return forward->W_valM;
+    } else if (srcB == forward->W_dstE) {
+        return forward->W_valE;
     } else {
         return getRegister(srcB);
     }
@@ -263,12 +264,12 @@ bool stallE() {
  * @param control Holds values from later stages
  * @return True if E should be bubbled, false otherwise
  */
-bool bubbleE(controlType control) {
+bool bubbleE(const controlType *control) {
     bool bubble = FALSE;
 
-    if ((control.E_icode == JXX && !control.e_Cnd) ||
-        (control.E_icode == MRMOVL || control.E_icode == POPL) &&
-        (control.E_dstM == control.d_srcA || control.E_dstM == control.d_srcB)) {
+    if ((control->E_icode == JXX && !control->e_Cnd) ||
+        (control->E_icode == MRMOVL || control->E_icode == POPL) &&
+        (control->E_dstM == control->d_srcA || control->E_dstM == control->d_srcB)) {
         bubble = TRUE;
     }
 
