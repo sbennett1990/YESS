@@ -43,7 +43,7 @@ static bool changeCC;
 struct eregister
 getEregister()
 {
-    return E;
+	return E;
 }
 
 /*
@@ -52,9 +52,16 @@ getEregister()
 void
 clearEregister()
 {
-    clearBuffer((char *) &E, sizeof(E));
-    E.icode = NOP;
-    E.stat = SAOK;
+	E.stat = SAOK;
+	E.icode = NOP;
+	E.ifun = 0;
+	E.valC = 0;
+	E.valA = 0;
+	E.valB = 0;
+	E.dstE = RNONE;
+	E.dstM = RNONE;
+	E.srcA = RNONE;
+	E.srcB = RNONE;
 }
 
 /*

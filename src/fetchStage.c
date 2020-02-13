@@ -40,7 +40,7 @@ static bool stallD(controlType control);
 struct fregister
 getFregister()
 {
-    return F;
+	return F;
 }
 
 /*
@@ -49,7 +49,7 @@ getFregister()
 void
 clearFregister()
 {
-    clearBuffer((char *) &F, sizeof(F));
+	F.predPC = 0;
 }
 
 /*

@@ -38,10 +38,16 @@ getDregister()
  * Clear D register then initialize its icode to NOP and
  * its stat to SAOK.
  */
-void clearDregister() {
-    clearBuffer((char *) &D, sizeof(D));
-    D.stat = SAOK;
-    D.icode = NOP;
+void
+clearDregister()
+{
+	D.stat = SAOK;
+	D.icode = NOP;
+	D.ifun = 0;
+	D.rA = RNONE;
+	D.rB = RNONE;
+	D.valC = 0;
+	D.valP = 0;
 }
 
 /*

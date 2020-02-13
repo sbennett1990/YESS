@@ -32,9 +32,12 @@ getWregister()
 void
 clearWregister()
 {
-	clearBuffer((char *) &W, sizeof(W));
-	W.icode = NOP;
 	W.stat = SAOK;
+	W.icode = NOP;
+	W.valE = 0;
+	W.valM = 0;
+	W.dstE = RNONE;
+	W.dstM = RNONE;
 }
 
 /*

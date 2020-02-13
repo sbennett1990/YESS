@@ -7,6 +7,7 @@
 #include "tools.h"
 #include "memory.h"
 #include "instructions.h"
+#include "registers.h"
 #include "memoryStage.h"
 #include "writebackStage.h"
 
@@ -35,9 +36,13 @@ getMregister()
  * its stat to SAOK.
  */
 void clearMregister() {
-    clearBuffer((char *) &M, sizeof(M));
-    M.icode = NOP;
-    M.stat = SAOK;
+	M.stat = SAOK;
+	M.icode = NOP;
+	M.Cnd = 0;
+	M.valE = 0;
+	M.valA = 0;
+	M.dstE = RNONE;
+	M.dstM = RNONE;
 }
 
 /*
