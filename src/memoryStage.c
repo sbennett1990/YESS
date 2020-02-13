@@ -15,9 +15,9 @@
  */
 static mregister M;
 
-static unsigned int mem_addr(mregister mreg);
-static bool mem_write(mregister mreg);
-static bool mem_read(mregister mreg);
+static unsigned int mem_addr(const mregister *);
+static bool mem_write(const mregister *);
+static bool mem_read(const mregister *);
 static bool W_stall(statusType status);
 static bool W_bubble(void);
 
@@ -50,18 +50,18 @@ void clearMregister() {
 void
 memoryStage(forwardType * forward, statusType * status, controlType * control)
 {
-    unsigned int address = mem_addr(M);
+    unsigned int address = mem_addr(&M);
     unsigned int stat = M.stat;
     unsigned int valM = NOADDRESS;
     bool memError = FALSE;
 
     // read data from memory?
-    if (mem_read(M)) {
+    if (mem_read(&M)) {
         valM = getWord(address, &memError);
     }
 
     // write data to memory?
-    if (mem_write(M)) {
+    if (mem_write(&M)) {
         putWord(address, M.valA, &memError);
     }
 
@@ -110,22 +110,22 @@ void updateMRegister(unsigned int stat, unsigned int icode, unsigned int Cnd,
  *
  * @return The memory address. Default is NOADDRESS.
  */
-unsigned int mem_addr(mregister mreg) {
+unsigned int mem_addr(const mregister *mreg) {
     unsigned int address = NOADDRESS;
 
     //set address to valE for these opcodes
-    switch (mreg.icode) {
+    switch (mreg->icode) {
         case RMMOVL:
         case PUSHL:
         case CALL:
         case MRMOVL:
-            address = mreg.valE;
+            address = mreg->valE;
             break;
 
         //set address to valA for these opcodes
         case POPL:
         case RET:
-            address = mreg.valA;
+            address = mreg->valA;
             break;
 
         default:
@@ -138,12 +138,12 @@ unsigned int mem_addr(mregister mreg) {
 /**
  * Set write control signal
  */
-bool mem_write(mregister mreg) {
+bool mem_write(const mregister *mreg) {
     bool write = FALSE;
 
     //if icode equals MRMOVL, PUSHL, CALL
     //set write to TRUE
-    switch (mreg.icode) {
+    switch (mreg->icode) {
         case RMMOVL:
         case PUSHL:
         case CALL:
@@ -160,12 +160,12 @@ bool mem_write(mregister mreg) {
 /**
  * Set read control signal
  */
-bool mem_read(mregister mreg) {
+bool mem_read(const mregister *mreg) {
     bool read = FALSE;
 
     //if icode equals MRMOVL, POPL, RET
     //set read to TRUE
-    switch (mreg.icode) {
+    switch (mreg->icode) {
         case MRMOVL:
         case POPL:
         case RET:
