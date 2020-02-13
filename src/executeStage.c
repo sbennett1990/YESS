@@ -1,4 +1,4 @@
-/**
+/*
  * File:   executeStage.c
  * Author: Alex Savarda
  */
@@ -13,9 +13,8 @@
 /*
  * E register holds the input from the decode stage.
  */
-static eregister E;
+static struct eregister E;
 
-// Prototypes for "private" functions
 static unsigned int (*funcPtr[INSTR_COUNT])(void);
 static unsigned int performZero(void);
 static unsigned int performDUMP(void);
@@ -29,30 +28,36 @@ static unsigned int performPushl(void);
 static unsigned int performJXX(void);
 static unsigned int performCall(void);
 static unsigned int performRet(void);
-static void computeCC(int result, int a, int b);
-static int computeCnd(void);
-static bool changeCC;
+
+static void computeCC(int result, int a, int b);	// XXX: what was this?
+static int computeCnd(const struct eregister *);
+
 static bool M_stall(void);
 static bool M_bubble(statusType status);
 
-/**
+static bool changeCC;
+
+/*
  * Return a copy of the E register
  */
-eregister getEregister() {
+struct eregister
+getEregister()
+{
     return E;
 }
 
-/**
- * Clear E register then initialize its icode to NOP and
- * its stat to SAOK.
+/*
+ * Clear E register then initialize its icode to NOP and its stat to SAOK.
  */
-void clearEregister() {
+void
+clearEregister()
+{
     clearBuffer((char *) &E, sizeof(E));
     E.icode = NOP;
     E.stat = SAOK;
 }
 
-/**
+/*
  * Perform the operation based on the instruction.
  * Compute e_Cnd and dstE and update the values in the M
  * register.
@@ -62,8 +67,9 @@ void clearEregister() {
  * @param *control  Pointer to struct that holds values forwarded from
  *                    later stages
  */
-void executeStage(forwardType * forward, statusType status,
-                  controlType * control) {
+void
+executeStage(forwardType * forward, statusType status, controlType * control)
+{
     bool m_bubble = M_bubble(status);
     changeCC = TRUE;
 
@@ -76,7 +82,7 @@ void executeStage(forwardType * forward, statusType status,
 
     // Execute the instruction and compute Cnd
     unsigned int valE = funcPtr[E.icode]();
-    int e_Cnd = computeCnd();
+    int e_Cnd = computeCnd(&E);
 
     if ((E.icode == RRMOVL) && !e_Cnd) {
         E.dstE = RNONE;
@@ -90,24 +96,24 @@ void executeStage(forwardType * forward, statusType status,
     control->E_dstM = E.dstM;
 
     // Bubble M?
-    if (m_bubble)
+    if (m_bubble) {
         // Insert a NOP
-    {
         updateMRegister(SAOK, NOP, 0, 0, 0, RNONE, RNONE);
-    } else
+    }
+    else {
         // Update M register as normal
-    {
         updateMRegister(E.stat, E.icode, e_Cnd, valE, E.valA, E.dstE, E.dstM);
     }
 }
 
-/**
- * Update the values in the E register
+/*
+ * Update the values in the E register.
  */
-void updateEregister(unsigned int stat, unsigned int icode, unsigned int ifun,
-                     unsigned int valC, unsigned int valA, unsigned int valB,
-                     unsigned int dstE, unsigned int dstM, unsigned int srcA,
-                     unsigned int srcB) {
+void
+updateEregister(unsigned int stat, unsigned int icode, unsigned int ifun,
+    unsigned int valC, unsigned int valA, unsigned int valB, unsigned int dstE,
+    unsigned int dstM, unsigned int srcA, unsigned int srcB)
+{
     E.stat = stat;
     E.icode = icode;
     E.ifun = ifun;
@@ -120,14 +126,15 @@ void updateEregister(unsigned int stat, unsigned int icode, unsigned int ifun,
     E.srcB = srcB;
 }
 
-/**
+/*
  * Initialize the array of function pointers.
  * This should only be called in main, so that it's initialized once.
  */
-void initFuncPtrArray() {
+void
+initFuncPtrArray()
+{
     // First initialize array to 0's
     int i;
-
     for (i = 0; i < INSTR_COUNT; i++) {
         funcPtr[i] = performZero;
     }
@@ -154,14 +161,14 @@ void initFuncPtrArray() {
  *
  * @return Computed value of e_Cnd
  */
-int computeCnd() {
+int computeCnd(const struct eregister *ereg) {
     int e_Cnd = 0;
     int sf = getCC(SF);
     int zf = getCC(ZF);
     int of = getCC(OF);
 
-    if (E.icode == RRMOVL || E.icode == JXX) {
-        switch (E.ifun) {
+    if (ereg->icode == RRMOVL || ereg->icode == JXX) {
+        switch (ereg->ifun) {
             case RRMOVLF:
                 e_Cnd = 1;
                 break;
@@ -281,7 +288,7 @@ unsigned int performIrmovl() {
  * @return Result of valB <OPL> valA
  */
 unsigned int performOpl() {
-    int a = (int) E.valA;
+    int a = (int) E.valA;	// XXX: should these be cast?
     int b = (int) E.valB;
     int result = 0;
 

@@ -10,22 +10,12 @@
 #include "control.h"
 #include "status.h"
 
-typedef struct {
-    unsigned int stat;
-    unsigned int icode;
-    unsigned int Cnd;
-    unsigned int valE;
-    unsigned int valA;
-    unsigned int dstE;
-    unsigned int dstM;
-} mregister;
-
 /*
  * +----+---------------------------------------------------------------------+
  * | M  | icode |    | Cnd |    |  valE  |  valA  |       |dstE|dstM|         |
  * +----+---------------------------------------------------------------------+
  */
-struct M {
+struct mregister {
     unsigned int stat;
     unsigned int icode;
     unsigned int Cnd;
@@ -35,7 +25,7 @@ struct M {
     unsigned int dstM;
 };
 
-mregister getMregister(void);
+struct mregister getMregister(void);
 void clearMregister(void);
 void memoryStage(forwardType *, statusType *, controlType *);
 void updateMRegister(unsigned int stat, unsigned int icode, unsigned int Cnd,

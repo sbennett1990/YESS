@@ -12,25 +12,12 @@
 
 #define INSTR_COUNT     16   // Possible size of the instruction set
 
-typedef struct {
-    unsigned int stat;
-    unsigned int icode;
-    unsigned int ifun;
-    unsigned int valC;
-    unsigned int valA;
-    unsigned int valB;
-    unsigned int dstE;
-    unsigned int dstM;
-    unsigned int srcA;
-    unsigned int srcB;
-} eregister;
-
 /*
  * +----+---------------------------------------------------------------------+
  * | E  | icode | ifun  |      |  valC  |  valA  |  valB  |dstE|dstM|srcA|srcB|
  * +----+---------------------------------------------------------------------+
  */
-struct E {
+struct eregister {
     unsigned int stat;
     unsigned int icode;
     unsigned int ifun;
@@ -45,7 +32,7 @@ struct E {
 
 
 // Function prototypes
-eregister getEregister(void);
+struct eregister getEregister(void);
 void clearEregister(void);
 void executeStage(forwardType *, statusType, controlType *);
 void initFuncPtrArray(void);

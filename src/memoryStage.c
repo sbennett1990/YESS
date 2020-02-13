@@ -13,18 +13,20 @@
 /*
  * M register holds the input from the execute stage.
  */
-static mregister M;
+static struct mregister M;
 
-static unsigned int mem_addr(void);
-static bool mem_write(void);
-static bool mem_read(void);
+static unsigned int mem_addr(const struct mregister *);
+static bool mem_write(const struct mregister *);
+static bool mem_read(const struct mregister *);
 static bool W_stall(statusType status);
 static bool W_bubble(void);
 
 /*
  * Return a copy of the M register
  */
-mregister getMregister() {
+struct mregister
+getMregister()
+{
     return M;
 }
 
@@ -50,18 +52,18 @@ void clearMregister() {
 void
 memoryStage(forwardType * forward, statusType * status, controlType * control)
 {
-    unsigned int address = mem_addr();
+    unsigned int address = mem_addr(&M);
     unsigned int stat = M.stat;
     unsigned int valM = NOADDRESS;
     bool memError = FALSE;
 
     // read data from memory?
-    if (mem_read()) {
+    if (mem_read(&M)) {
         valM = getWord(address, &memError);
     }
 
     // write data to memory?
-    if (mem_write()) {
+    if (mem_write(&M)) {
         putWord(address, M.valA, &memError);
     }
 
@@ -110,22 +112,22 @@ void updateMRegister(unsigned int stat, unsigned int icode, unsigned int Cnd,
  *
  * @return The memory address. Default is NOADDRESS.
  */
-unsigned int mem_addr() {
+unsigned int mem_addr(const struct mregister *mreg) {
     unsigned int address = NOADDRESS;
 
     //set address to valE for these opcodes
-    switch (M.icode) {
+    switch (mreg->icode) {
         case RMMOVL:
         case PUSHL:
         case CALL:
         case MRMOVL:
-            address = M.valE;
+            address = mreg->valE;
             break;
 
         //set address to valA for these opcodes
         case POPL:
         case RET:
-            address = M.valA;
+            address = mreg->valA;
             break;
 
         default:
@@ -138,12 +140,12 @@ unsigned int mem_addr() {
 /**
  * Set write control signal
  */
-bool mem_write() {
+bool mem_write(const struct mregister *mreg) {
     bool write = FALSE;
 
     //if icode equals MRMOVL, PUSHL, CALL
     //set write to TRUE
-    switch (M.icode) {
+    switch (mreg->icode) {
         case RMMOVL:
         case PUSHL:
         case CALL:
@@ -160,12 +162,12 @@ bool mem_write() {
 /**
  * Set read control signal
  */
-bool mem_read() {
+bool mem_read(const struct mregister *mreg) {
     bool read = FALSE;
 
     //if icode equals MRMOVL, POPL, RET
     //set read to TRUE
-    switch (M.icode) {
+    switch (mreg->icode) {
         case MRMOVL:
         case POPL:
         case RET:
@@ -198,9 +200,8 @@ bool W_stall(statusType status) {
 
 /**
  * Determine if the W register should be bubbled. According to HCL,
- * W will never be bubled, therefore it returns false.
+ * W will never be bubbled, therefore it returns false.
  */
 bool W_bubble() {
     return FALSE;
 }
-
