@@ -76,12 +76,13 @@ decodeStage(forwardType forward, controlType * control)
     // Bubble E?
     if (bubbleE(control)) {
         // Insert a NOP
-        updateEregister(SAOK, NOP, 0, 0, 0, 0, RNONE, RNONE, RNONE, RNONE);
+		updateEregister(SAOK, NOP, 0, 0, 0, 0, RNONE, RNONE,
+		    RNONE, RNONE);
     }
     else {
         // Update E as normal
-        updateEregister(D.stat, D.icode, D.ifun, D.valC, valA, valB, dstE, dstM, srcA,
-                        srcB);
+		updateEregister(D.stat, D.icode, D.ifun, D.valC, valA, valB,
+		    dstE, dstM, srcA, srcB);
     }
 }
 

@@ -87,13 +87,13 @@ memoryStage(forwardType * forward, statusType * status, controlType * control)
     status->m_stat = stat;
     control->M_icode = M.icode;
 
-    // stall W?
-    if (!W_stall(*status)) {
-	/*
-	 * If stall is true, do nothing to keep current
-	 * values in the Writeback Stage.
-	 */
-        updateWRegister(stat, M.icode, M.valE, valM, M.dstE, M.dstM);
+	// stall W?
+	if (!W_stall(*status)) {
+		/*
+		 * If stall is true, do nothing to keep current values in the
+		 * Writeback Stage.
+		 */
+		updateWRegister(stat, M.icode, M.valE, valM, M.dstE, M.dstM);
     }
 }
 
