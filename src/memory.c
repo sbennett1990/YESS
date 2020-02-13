@@ -158,8 +158,10 @@ void putWord(int byteAddress, unsigned int value, bool * memError) {
 }
 
 /*
- * Set all memory locations to 0 (effectively "clearing" the memory).
+ * Set all memory locations to 0.
  */
-void clearMemory(void) {
-    clearBuffer((char *) &memory, MEMSIZE);
+void
+clearMemory(void)
+{
+	clearBuffer((char *) &memory, MEMSIZE);
 }
