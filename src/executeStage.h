@@ -10,8 +10,6 @@
 #include "control.h"
 #include "status.h"
 
-#define INSTR_COUNT     16   // Possible size of the instruction set
-
 /*
  * +----+---------------------------------------------------------------------+
  * | E  | icode | ifun  |      |  valC  |  valA  |  valB  |dstE|dstM|srcA|srcB|

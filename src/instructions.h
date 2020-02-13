@@ -1,9 +1,11 @@
 /*
- * File:	instructions.h
+ * instructions.h
  */
 
 #ifndef	INSTRUCTIONS_H
 #define	INSTRUCTIONS_H
+
+#define INSTR_COUNT	16	/* Possible size of the instruction set */
 
 // Instruction Codes (icode)
 #define HALT    0x0
