@@ -30,7 +30,7 @@ static unsigned int performCall(void);
 static unsigned int performRet(void);
 
 static void computeCC(int result, int a, int b);	// XXX: what was this?
-static int computeCnd(eregister);
+static int computeCnd(const eregister *);
 
 static bool M_stall(void);
 static bool M_bubble(statusType status);
@@ -82,7 +82,7 @@ executeStage(forwardType * forward, statusType status, controlType * control)
 
     // Execute the instruction and compute Cnd
     unsigned int valE = funcPtr[E.icode]();
-    int e_Cnd = computeCnd(E);
+    int e_Cnd = computeCnd(&E);
 
     if ((E.icode == RRMOVL) && !e_Cnd) {
         E.dstE = RNONE;
@@ -161,14 +161,14 @@ initFuncPtrArray()
  *
  * @return Computed value of e_Cnd
  */
-int computeCnd(eregister ereg) {
+int computeCnd(const eregister *ereg) {
     int e_Cnd = 0;
     int sf = getCC(SF);
     int zf = getCC(ZF);
     int of = getCC(OF);
 
-    if (ereg.icode == RRMOVL || ereg.icode == JXX) {
-        switch (ereg.ifun) {
+    if (ereg->icode == RRMOVL || ereg->icode == JXX) {
+        switch (ereg->ifun) {
             case RRMOVLF:
                 e_Cnd = 1;
                 break;
