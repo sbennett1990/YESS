@@ -13,7 +13,7 @@
 /*
  * E register holds the input from the decode stage.
  */
-static eregister E;
+static struct eregister E;
 
 static unsigned int (*funcPtr[INSTR_COUNT])(void);
 static unsigned int performZero(void);
@@ -30,7 +30,7 @@ static unsigned int performCall(void);
 static unsigned int performRet(void);
 
 static void computeCC(int result, int a, int b);	// XXX: what was this?
-static int computeCnd(const eregister *);
+static int computeCnd(const struct eregister *);
 
 static bool M_stall(void);
 static bool M_bubble(statusType status);
@@ -40,7 +40,7 @@ static bool changeCC;
 /*
  * Return a copy of the E register
  */
-eregister
+struct eregister
 getEregister()
 {
     return E;
@@ -161,7 +161,7 @@ initFuncPtrArray()
  *
  * @return Computed value of e_Cnd
  */
-int computeCnd(const eregister *ereg) {
+int computeCnd(const struct eregister *ereg) {
     int e_Cnd = 0;
     int sf = getCC(SF);
     int zf = getCC(ZF);
