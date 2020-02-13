@@ -14,12 +14,12 @@
 /*
  * W register holds the input from the memory stage.
  */
-static wregister W;
+static struct wregister W;
 
 /*
  * Return a copy of the W register.
  */
-wregister
+struct wregister
 getWregister()
 {
 	return W;

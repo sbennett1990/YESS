@@ -8,21 +8,12 @@
 #include "forwarding.h"
 #include "status.h"
 
-typedef struct {
-	unsigned int stat;
-	unsigned int icode;
-	unsigned int valE;
-	unsigned int valM;
-	unsigned int dstE;
-	unsigned int dstM;
-} wregister;
-
 /*
  * +----+---------------------------------------------------------------------+
  * | W  | icode |               |  valE  |  valM  |       |dstE|dstM|         |
  * +----+---------------------------------------------------------------------+
  */
-struct W {
+struct wregister {
 	unsigned int stat;
 	unsigned int icode;
 	unsigned int valE;
@@ -32,7 +23,7 @@ struct W {
 };
 
 int writebackStage(forwardType *, statusType *);
-wregister getWregister(void);
+struct wregister getWregister(void);
 void clearWregister(void);
 void updateWRegister(unsigned int stat, unsigned int icode, unsigned int valE,
 	unsigned int valM, unsigned int dstE, unsigned int dstM);

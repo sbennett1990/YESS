@@ -151,7 +151,7 @@ void dumpProcessorRegisters(void) {
     struct dregister D = getDregister();
     struct eregister E = getEregister();
     struct mregister M = getMregister();
-    wregister W = getWregister();
+    struct wregister W = getWregister();
 
     printf("CC - ZF: %01x SF: %01x OF: %01x\n", getCC(ZF), getCC(SF), getCC(OF));
     printf("F - predPC: %08x\n", F.predPC);
