@@ -15,7 +15,7 @@
  */
 static dregister D;
 
-static unsigned int getSrcA(dregister *);
+static unsigned int getSrcA(const dregister *);
 static unsigned int getSrcB(dregister);
 static unsigned int getDstE(dregister);
 static unsigned int getDstM(dregister);

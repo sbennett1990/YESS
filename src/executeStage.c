@@ -96,7 +96,7 @@ executeStage(forwardType * forward, statusType status, controlType * control)
     control->E_dstM = E.dstM;
 
     // Bubble M?
-    if (m_bubble) {}
+    if (m_bubble) {
         // Insert a NOP
         updateMRegister(SAOK, NOP, 0, 0, 0, RNONE, RNONE);
     }
