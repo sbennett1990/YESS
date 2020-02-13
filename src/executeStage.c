@@ -112,7 +112,7 @@ executeStage(forwardType * forward, statusType status, controlType * control)
 void
 updateEregister(unsigned int stat, unsigned int icode, unsigned int ifun,
     unsigned int valC, unsigned int valA, unsigned int valB, unsigned int dstE,
-	unsigned int dstM, unsigned int srcA, unsigned int srcB)
+    unsigned int dstM, unsigned int srcA, unsigned int srcB)
 {
     E.stat = stat;
     E.icode = icode;
