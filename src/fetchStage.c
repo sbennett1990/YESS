@@ -17,7 +17,7 @@
 static struct fregister F;
 
 // Prototypes for "private" functions
-static unsigned int selectPC(forwardType forward, unsigned int);
+static unsigned int selectPC(forwardType forward, const struct fregister *);
 static unsigned int predictPC(unsigned int icode, unsigned int valC,
     unsigned int valP);
 static unsigned int pcIncrement(unsigned int f_pc, unsigned int icode);
@@ -64,7 +64,7 @@ void
 fetchStage(forwardType forward, controlType control)
 {
     bool memError = FALSE;
-    unsigned int f_pc = selectPC(forward, F.predPC);
+    unsigned int f_pc = selectPC(forward, &F);
     unsigned int stat = SAOK;
     unsigned int icode;
     unsigned int ifun;
@@ -157,7 +157,7 @@ fetchStage(forwardType forward, controlType control)
  * Return source value for the PC
  */
 unsigned int
-selectPC(forwardType forward, unsigned int predPC)
+selectPC(forwardType forward, const struct fregister *freg)
 {
     // Uses forwarded M_valA, W_valM
     // Mispredicted branch. Fetch at incremented PC
@@ -171,7 +171,7 @@ selectPC(forwardType forward, unsigned int predPC)
     }
 
     // Default
-    return predPC;
+    return freg->predPC;
 }
 
 /*
