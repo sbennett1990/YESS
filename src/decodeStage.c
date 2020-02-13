@@ -98,15 +98,15 @@ updateDregister(unsigned int stat, unsigned int icode, unsigned int ifun,
  *
  * @return register id needed
  */
-unsigned int getSrcA(const dregister *d) {
+unsigned int getSrcA(const dregister *dreg) {
     unsigned int srcA = RNONE;
 
-    switch (d->icode) {
+    switch (dreg->icode) {
         case RRMOVL:
         case RMMOVL:
         case OPL:
         case PUSHL:
-            srcA = d->rA;
+            srcA = dreg->rA;
             break;
 
         case POPL:
@@ -127,14 +127,14 @@ unsigned int getSrcA(const dregister *d) {
  *
  * @return register id needed
  */
-unsigned int getSrcB(const dregister *d) {
+unsigned int getSrcB(const dregister *dreg) {
     unsigned int srcB = RNONE;
 
-    switch (d->icode) {
+    switch (dreg->icode) {
         case OPL:
         case RMMOVL:
         case MRMOVL:
-            srcB = d->rB;
+            srcB = dreg->rB;
             break;
 
         case POPL:
@@ -156,14 +156,14 @@ unsigned int getSrcB(const dregister *d) {
  *
  * @return Destination register id
  */
-unsigned int getDstE(const dregister *d) {
+unsigned int getDstE(const dregister *dreg) {
     unsigned int dstE = RNONE;
 
-    switch (d->icode) {
+    switch (dreg->icode) {
         case OPL:
         case RRMOVL:
         case IRMOVL:
-            dstE = d->rB;
+            dstE = dreg->rB;
             break;
 
         case POPL:
@@ -185,9 +185,9 @@ unsigned int getDstE(const dregister *d) {
  *
  * @return Destination register id
  */
-unsigned int getDstM(const dregister *d) {
-    if (d->icode == MRMOVL || d->icode == POPL) {
-        return d->rA;
+unsigned int getDstM(const dregister *dreg) {
+    if (dreg->icode == MRMOVL || dreg->icode == POPL) {
+        return dreg->rA;
     } else {
         return RNONE;
     }
@@ -202,10 +202,10 @@ unsigned int getDstM(const dregister *d) {
  * @return Value (valA) to send to E register
  */
 unsigned int
-selectFwdA(const dregister *d, unsigned int srcA, forwardType forward)
+selectFwdA(const dregister *dreg, unsigned int srcA, forwardType forward)
 {
-    if (d->icode == CALL || d->icode == JXX) {
-        return d->valP;
+    if (dreg->icode == CALL || dreg->icode == JXX) {
+        return dreg->valP;
     } else if (srcA == RNONE) {
         return 0;
     } else if (srcA == forward.e_dstE) {
