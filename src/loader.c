@@ -30,7 +30,7 @@ size_t strnlen(const char * s, size_t maxlen);
 
 static bool validateaddress(char * record, int prev_addr);
 static bool validatedata(char * record);
-static bool validline(char * record, int prevAddr);
+static bool validline(const char *line, int len, int prev_addr);
 static bool hashexdigits(char * record, int start, int end);
 static bool hasspaces(char * record, int start, int end);
 static int grabAddress(char * record);
@@ -90,7 +90,9 @@ load(const char * fileName)
         buf[sizeof(buf) - 1] = '\0';
 
         // Error checking...
-        if (!validline(buf, prevaddr)) {
+		// 1: check line format (ie, don't check address correctness yet)
+		// 2: if address line, then check that the address is > prevaddr
+        if (!validline(buf, sizeof(buf), prevaddr)) {
             /* Display the erroneous line */
             printf("Error on line %d\n", lineno);
 
@@ -374,54 +376,51 @@ validatedata(char * record)
 }
 
 /*
- * Determine if the record (one line from the file) is in the correct format.
+ * Determine if the record (one line from the file) is in the correct
+ * format (syntactically and semantically correct).
  *
  * Parameters:
- *     *record     one record to check
+ *     *line       the line to check
  *     prev_addr   the previously written-to memory address
  *
  * Return true if the line is correctly formatted; false otherwise
  */
 bool
-validline(char * record, int prev_addr)
+validline(const char *line, int len, int prev_addr)
 {
-    int len = strnlen(record, RECORDLEN);
-
     if (len < 23) {
-        return FALSE; /* EXIT */
+        return FALSE;
     }
 
     // the pipe character is supposed to be on every line
-    if (record[22] != '|') {
-        return FALSE; /* EXIT */
+    if (line[22] != '|') {
+        return FALSE;
     }
+	// columns 0, 1, 8, and 21 should always have a blank space
+	if (!(isblank(line[0]) && isblank(line[1]) && isblank(line[8])
+	    && isblank(line[21]))) {
+		return FALSE;
+	}
 
-    if (!isaddress(record)) {
-        // this should be a comment record
-        if (hasspaces(record, 0, 21)) {
-            return TRUE; /* EXIT */
-        }
-    }
+	if (iscommentrecord(line)) {
+		return TRUE;
+	}
 
-    bool b = FALSE;
+	/* this must be a data line */
 
-    /*
-     * this should be a data record - check all space character placements
-     */
-    if (hasspaces(record, 0, 1)
-        && hasspaces(record, 8, 8)
-        && hasspaces(record, 21, 21)) {
-        // check for address correctness
-        if (validateaddress(record, prev_addr)) {
-            b = TRUE;
+	if (!isdatarecord(line)) {
+		return FALSE;
+	}
 
-            if (isdata(record)) {
-                b = validatedata(record);
-            }
-        }
-    }
+	// check for address and data correctness
+	bool ret = FALSE;
+	if (validateaddress(line, prev_addr)) {
+		ret = TRUE;
 
-    return b;
+		if (hasdata(line)) {
+			ret = validatedata(line);
+		}
+	}
 }
 
 /*
