@@ -35,6 +35,8 @@ static bool hashexdigits(char * record, int start, int end);
 static bool hasspaces(char * record, int start, int end);
 static int grabAddress(char * record);
 static unsigned char grabDataByte(char * record, int start);
+static bool iscommentrecord(const char *line);
+static bool isdatarecord(const char *line);
 static bool isaddress(char * record);
 static bool isdata(char * record);
 static short numbytes(char * record);
@@ -86,7 +88,7 @@ load(const char * fileName)
             discardRest(fp);
         }
 
-        (void)strncpy(buf, record, sizeof(buf) - 1);
+        strncpy(buf, record, sizeof(buf) - 1);
         buf[sizeof(buf) - 1] = '\0';
 
         // Error checking...
@@ -424,6 +426,40 @@ validline(char * record, int prev_addr)
     }
 
     return b;
+}
+
+/*
+ * Determine if the line is a comment line.
+ */
+bool
+iscommentrecord(const char *line)
+{
+	if (hasspaces(line, 0, 21)) {
+		return TRUE;
+	}
+
+	return FALSE;
+}
+
+/*
+ * Determine if the line is a data line (i.e. has an address and data,
+ * if applicable).
+ */
+bool
+isdatarecord(const char *line)
+{
+	if (!(isblank(line[0]) && isblank(line[1]) && isblank(line[8])
+		&& isblank(line[21]))) {
+		return FALSE;
+	}
+
+	if (record[2] == '0'
+        && record[3] == 'x'
+        && record[7] == ':') {
+        return TRUE;
+    }
+
+    return FALSE;
 }
 
 /*
