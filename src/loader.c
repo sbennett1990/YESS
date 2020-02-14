@@ -37,8 +37,8 @@ static int grabAddress(char * record);
 static unsigned char grabDataByte(char * record, int start);
 static bool iscommentrecord(const char *line);
 static bool isdatarecord(const char *line);
-static bool isdata(char * record);
 static bool hasaddress(const char *line);
+static bool hasdata(const char *line);
 static short numbytes(char * record);
 static void discardRest(FILE * filePtr);
 
@@ -108,7 +108,7 @@ load(const char * fileName)
         if (hasaddress(buf)) {
             byteAddress = grabAddress(buf);
 
-            if (isdata(buf)) {
+            if (hasdata(buf)) {
                 numberOfBytes = numbytes(buf);
 
                 short byteNumber;
@@ -302,33 +302,27 @@ validateaddress(char * record, int prev_addr)
 }
 
 /*
- * Determine if the record contains data. No error
+ * Determine if the line contains data. No error
  * checking is performed. Data should be stored in
  * columns 9 through 20 as hex, with 0 to 6 bytes.
  *
  * Parameters:
- *     *record    one record to check
+ *     *line    the line to check
  *
  * Return true if the record contains data; false otherwise
  */
 bool
-isdata(char * record)
+hasdata(const char *line)
 {
-    int len = strnlen(record, RECORDLEN);
+	/*
+	 * since little error checking is performed, only examine
+	 * the first index where data should be
+	 */
+	if (isxdigit(line[9])) {
+		return TRUE;
+	}
 
-    if (len < 10) {
-        return FALSE;
-    }
-
-    /*
-     * since little error checking is performed, only examine
-     * the first index where data should be
-     */
-    if (isxdigit(record[9])) {
-        return TRUE;
-    } else {
-        return FALSE;
-    }
+	return FALSE;
 }
 
 /*
