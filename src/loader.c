@@ -100,8 +100,7 @@ load(const char * fileName)
 
             printf("\n");
 
-            fclose(fp);
-            return FALSE; /* EXIT */
+            goto error;
         }
 
         if (isaddress(buf)) {
@@ -119,8 +118,7 @@ load(const char * fileName)
 
                     // Check for a memory error
                     if (memError) {
-                        fclose(fp);
-                        return FALSE; /* EXIT */
+                        goto error;
                     }
 
                     byteAddress++;
@@ -135,6 +133,10 @@ load(const char * fileName)
 
     fclose(fp);
     return TRUE;
+
+error:
+	fclose(fp);
+	return FALSE;
 }
 
 /*
