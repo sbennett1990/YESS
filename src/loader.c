@@ -38,8 +38,7 @@ static unsigned char grabDataByte(char * record, int start);
 static bool iscommentrecord(const char *line);
 static bool isdatarecord(const char *line);
 static bool hasaddress(const char *line);
-static bool hasdata(const char *line);
-static short numbytes(char * record);
+static short hasdata(const char *line);
 static void discardRest(FILE * filePtr);
 
 /*
@@ -76,7 +75,6 @@ load(const char * fileName)
     int prevaddr = -1;
     int lineno = 1;
     int byteAddress;        // memory address of one byte [0..4095]
-    short numberOfBytes;
     unsigned char dataByte; // a byte to store in memory
 
     // Attempt to load each line in the file into memory
@@ -93,7 +91,7 @@ load(const char * fileName)
 
         // Error checking...
         if (!validline(buf, prevaddr)) {
-            // there was an error in the record
+            /* Display the erroneous line */
             printf("Error on line %d\n", lineno);
 
             for (int i = 0; i < len; i++) {
@@ -107,13 +105,11 @@ load(const char * fileName)
 
         if (hasaddress(buf)) {
             byteAddress = grabAddress(buf);
-
-            if (hasdata(buf)) {
-                numberOfBytes = numbytes(buf);
+			short numBytes;
+            if ((numBytes = hasdata(buf)) != 0) {
 
                 short byteNumber;
-
-                for (byteNumber = 1; byteNumber <= numberOfBytes; byteNumber++) {
+                for (byteNumber = 1; byteNumber <= numBytes; byteNumber++) {
                     dataByte = grabDataByte(buf, WHICH_BYTE(byteNumber));
 
                     putByte(byteAddress, dataByte, &memError);
@@ -309,20 +305,30 @@ validateaddress(char * record, int prev_addr)
  * Parameters:
  *     *line    the line to check
  *
- * Return true if the record contains data; false otherwise
+ * Return the number of data bytes the record contains (0 to 6)
  */
-bool
+short
 hasdata(const char *line)
 {
 	/*
 	 * since little error checking is performed, only examine
 	 * the first index where data should be
 	 */
-	if (isxdigit(line[9])) {
-		return TRUE;
+	if (!isxdigit(line[9])) {
+		return 0;
 	}
 
-	return FALSE;
+	short start = 9;
+	short end = 10;
+	short num = 0;
+
+	while (hashexdigits(record, start, end)) {
+		start += 2;
+		end += 2;
+		num += 1;
+	}
+
+	return num;
 }
 
 /*
@@ -472,38 +478,6 @@ grabDataByte(char * record, int start)
 
     // TODO: check for the error value -1
     return (unsigned char) strtoint(byte, HEX);
-}
-
-/*
- * Calculate the number of bytes of data that are in
- * the record (anywhere from 0 to 6 bytes).
- *
- * Parameters:
- *     *record    a record with data
- *
- * Return the number of bytes of data in the record
- */
-short
-numbytes(char * record)
-{
-    int len = strnlen(record, RECORDLEN);
-
-    // each line should only have 23 columns of valid information
-    if (len < 23) {
-        return 0; /* EXIT */
-    }
-
-    short start = 9;
-    short end = 10;
-    short num = 0;
-
-    while (hashexdigits(record, start, end)) {
-        start += 2;
-        end += 2;
-        num += 1;
-    }
-
-    return num;
 }
 
 /*
