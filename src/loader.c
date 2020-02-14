@@ -67,7 +67,6 @@ load(const char * fileName)
 
     if (fp == NULL) {
         log_warn("error opening the file");
-        (void)fclose(fp);
         return FALSE; /* EXIT */
     }
 
