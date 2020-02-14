@@ -37,8 +37,8 @@ static int grabAddress(char * record);
 static unsigned char grabDataByte(char * record, int start);
 static bool iscommentrecord(const char *line);
 static bool isdatarecord(const char *line);
-static bool isaddress(char * record);
 static bool isdata(char * record);
+static bool hasaddress(const char *line);
 static short numbytes(char * record);
 static void discardRest(FILE * filePtr);
 
@@ -105,7 +105,7 @@ load(const char * fileName)
             goto error;
         }
 
-        if (isaddress(buf)) {
+        if (hasaddress(buf)) {
             byteAddress = grabAddress(buf);
 
             if (isdata(buf)) {
@@ -142,31 +142,27 @@ error:
 }
 
 /*
- * Determine if the record contains an address. No
- * error checking is done on the address, but the syntax
- * of the address is checked.
+ * Determine if the line contains an address. No error
+ * checking is done on the address, but the syntax of
+ * the address is checked.
  *
  * Parameters:
- *     *record    one record to check
+ *     *line    the line to check
  *
  * Return true if the record has an address; false otherwise
  */
 bool
-isaddress(char * record)
+hasaddress(const char *line)
 {
-    int len = strnlen(record, RECORDLEN);
+	if (line[2] == '0'
+	    && line[3] == 'x'
+	    && line[7] == ':') {
+		if (isxdigit(line[4]) && isxdigit(line[5]) && isxdigit(line[6])) {
+			return TRUE;
+		}
+	}
 
-    if (len < 8) {
-        return FALSE;
-    }
-
-    if (record[2] == '0'
-        && record[3] == 'x'
-        && record[7] == ':') {
-        return TRUE;
-    }
-
-    return FALSE;
+	return FALSE;
 }
 
 /*
