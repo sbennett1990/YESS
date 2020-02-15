@@ -444,17 +444,17 @@ bool
 isdatarecord(const char *line)
 {
 	if (!(isblank(line[0]) && isblank(line[1]) && isblank(line[8])
-		&& isblank(line[21]))) {
+	    && isblank(line[21]))) {
 		return FALSE;
 	}
 
 	if (record[2] == '0'
-        && record[3] == 'x'
-        && record[7] == ':') {
-        return TRUE;
-    }
+	    && record[3] == 'x'
+	    && record[7] == ':') {
+		return TRUE;
+	}
 
-    return FALSE;
+	return FALSE;
 }
 
 /*
