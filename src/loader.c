@@ -388,14 +388,14 @@ validatedata(char * record)
 bool
 validline(const char *line, int len, int prev_addr)
 {
-    if (len < 23) {
-        return FALSE;
-    }
+	if (len < 23) {
+		return FALSE;
+	}
 
-    // the pipe character is supposed to be on every line
-    if (line[22] != '|') {
-        return FALSE;
-    }
+	// the pipe character is supposed to be on every line
+	if (line[22] != '|') {
+		return FALSE;
+	}
 	// columns 0, 1, 8, and 21 should always have a blank space
 	if (!(isblank(line[0]) && isblank(line[1]) && isblank(line[8])
 	    && isblank(line[21]))) {
@@ -421,6 +421,7 @@ validline(const char *line, int len, int prev_addr)
 			ret = validatedata(line);
 		}
 	}
+	return ret;
 }
 
 /*
@@ -448,9 +449,9 @@ isdatarecord(const char *line)
 		return FALSE;
 	}
 
-	if (record[2] == '0'
-	    && record[3] == 'x'
-	    && record[7] == ':') {
+	if (line[2] == '0'
+	    && line[3] == 'x'
+	    && line[7] == ':') {
 		return TRUE;
 	}
 
