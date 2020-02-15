@@ -28,12 +28,12 @@
 /* Prototype of strnlen(3), to get rid of compiler warning */
 size_t strnlen(const char * s, size_t maxlen);
 
-static bool validateaddress(char * record, int prev_addr);
+static bool validateaddress(const char *line, int prev_addr);
 static bool validatedata(char * record);
 static bool validline(const char *line, int len, int prev_addr);
-static bool hashexdigits(char * record, int start, int end);
-static bool hasspaces(char * record, int start, int end);
-static int grabAddress(char * record);
+static bool hashexdigits(const char * line, int start, int end);
+static bool hasspaces(const char * line, int start, int end);
+static int grabAddress(const char *line);
 static unsigned char grabDataByte(char * record, int start);
 static bool iscommentrecord(const char *line);
 static bool isdatarecord(const char *line);
@@ -168,30 +168,29 @@ hasaddress(const char *line)
  * through end index.
  *
  * Parameters:
- *     *record     one record to check
- *     start       starting index
- *     end         ending index
+ *	*line     the to check
+ *	start     starting index
+ *	end       ending index
  *
  * Return true if record contains spaces at indices;
  * false otherwise
  */
 bool
-hasspaces(char * record, int start, int end)
+hasspaces(const char * line, int start, int end)
 {
     if (start > end) {
         return FALSE;
     }
 
-    int len = strnlen(record, MAXLEN);
+    int len = strnlen(line, MAXLEN);
 
     if (len <= end) {
         return FALSE;
     }
 
     int i;
-
     for (i = start; i <= end; i++) {
-        if (record[i] != ' ') {
+        if (line[i] != ' ') {
             return FALSE;
         }
     }
@@ -211,7 +210,7 @@ hasspaces(char * record, int start, int end)
  * Return true if every digit is a hex digit; false otherwise
  */
 bool
-hashexdigits(char * record, int start, int end)
+hashexdigits(const char * record, int start, int end)
 {
     if (start > end) {
         return FALSE;
@@ -245,7 +244,7 @@ hashexdigits(char * record, int start, int end)
  * Return the address in base 10
  */
 int
-grabAddress(char * record)
+grabAddress(const char *record)
 {
     char hex_addr[8] = {
         record[0],
@@ -272,15 +271,15 @@ grabAddress(char * record)
  * the record being checked does contain an address.
  *
  * Parameters:
- *     *record     a record with an address
- *     prev_addr   the previously written-to memory address
+ *	*line       a line with an address
+ *	prev_addr   the previously written-to memory address
  *
  * Return true if the address is correct; false otherwise
  */
 bool
-validateaddress(char * record, int prev_addr)
+validateaddress(const char *line, int prev_addr)
 {
-    if (!hashexdigits(record, 4, 6)) {
+    if (!hashexdigits(line, 4, 6)) {
         // address not formatted correctly
         return FALSE;
     }
@@ -290,7 +289,7 @@ validateaddress(char * record, int prev_addr)
     }
 
     // current must be > prev_addr
-    int current_addr = grabAddress(record);
+    int current_addr = grabAddress(line);
 
     if (current_addr > prev_addr) {
         return TRUE;
@@ -324,7 +323,7 @@ hasdata(const char *line)
 	short end = 10;
 	short num = 0;
 
-	while (hashexdigits(record, start, end)) {
+	while (hashexdigits(line, start, end)) {
 		start += 2;
 		end += 2;
 		num += 1;
