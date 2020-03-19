@@ -30,6 +30,17 @@ and column 22 contains a pipe character
 Any characters beyond column 22 are considered part of a
 comment and are ignored.
 .Pp
+A
+.Sy data record
+is of the form:
+.Bd -literal -compact
+  0x042: 0f000000     |
+.Ed
+where columns 0, 1, 8, and 21 (at least) contain space characters, columns 2-7
+contain an address, columns 9 up to 20 contain zero to six bytes of data, and
+column 22 contains a pipe character
+.Pq Sq | .
+.Pp
 
 .Sh SEE ALSO
 .Xr yess 1
