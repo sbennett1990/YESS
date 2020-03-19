@@ -9,8 +9,30 @@
 .Nd y86 object code reference
 .Sh DESCRIPTION
 .Sy y86 object code
-is represented by normal ASCII text files ending in a
+is represented by ASCII text files ending in a
 .Em \.yo
 extension.
+Each line in the program file is either a
+.Sy comment record
+or a
+.Sy data record .
+.Pp
+A
+.Sy comment record
+is of the form:
+.Bd -literal -offset indent
+                    | comment here
+.Ed
+where columns 0-21 contain space characters
+(
+.Sq 
+)
+and column 22 contains a pipe character (
+.Sq |
+) .
+Any characters beyond column 22 are considered part of a
+comment and are ignored.
+.Pp
+
 .Sh SEE ALSO
 .Xr yess 1
