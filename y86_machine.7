@@ -15,6 +15,22 @@ The Y86 machine is a little endian machine consisting of three main components:
 memory, program registers, and processor registers.
 .Ss Memory
 The Y86 memory consists of 1024, 32-bit words.
+.Pp
+The relationship between word addresses and byte addresses can be seen below.
+.\" Table of memory addresses
+.TS
+allbox;
+cw14 cz s s s
+r    c  c c c.
+Word Address	Byte Address
+0	3	2	1	0
+1	7	6	5	4
+2	11	10	9	8
+3	15	14	13	12
+4	19	18	17	16
+\&.	\&.	\&.	\&.	\&.
+1023	4095	4094	4093	4092
+.TE
 .Sh SEE ALSO
 .Xr yess 1 ,
 .Xr y86_obj_code 7
