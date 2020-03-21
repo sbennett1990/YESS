@@ -62,16 +62,17 @@ where the data (in columns 9 up to 20) is to be stored.
 .Pp
 .Sh EXAMPLES
 .\" Add a few comment and data record examples.
+The beginning point of a program:
 .Bd -literal
   0x000:              |    .pos 0
 
 .Ed
-The beginning point of a program.
+.Pp
+Declare the beginning of an array:
 .Bd -literal
   0x014:              |    .align 4
   0x014: 0d000000     | array: .long 0xd
 
 .Ed
-Declare the beginning of an array.
 .Sh SEE ALSO
 .Xr yess 1
