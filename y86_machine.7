@@ -1,0 +1,20 @@
+.\"
+.\" Copyright (c) 2020 Scott Bennett <scottb@fastmail.com>
+.\"
+.Dd March 21, 2020
+.Dt Y86_MACHINE 7
+.Os
+.Sh NAME
+.Nm Y86 Machine Reference
+.Sh DESCRIPTION
+The Y86
+.Pq Dq YES
+machine is a theoretical processor based on a subset of x86 concepts.
+Being a teaching processor, Y86 embodies elements of both RISC and CISC architectures.
+The Y86 machine is a little endian machine consisting of three main components:
+memory, program registers, and processor registers.
+.Ss Memory
+The Y86 memory consists of 1024, 32-bit words.
+.Sh SEE ALSO
+.Xr yess 1 ,
+.Xr y86_obj_code 7
