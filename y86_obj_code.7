@@ -40,8 +40,8 @@ where columns 0\(en21 contain space characters
 .Pq Sq " "
 and column 22 contains a pipe character
 .Pq Sq | .
-Any characters beyond column 22 are considered part of a
-comment and are ignored.
+Any characters beyond column 22 are considered part of a comment and are
+ignored.
 .Pp
 A
 .Sy data record
@@ -55,8 +55,23 @@ contain an address, columns 9 up to 20 contain zero to six bytes of data, and
 column 22 contains a pipe character
 .Pq Sq | .
 Characters beyond column 22 are considered comment characters and are ignored.
+The address in columns 2\(en7 is a hex address.
+Both upper a lower case characters are accepted.
+This address indicates the starting byte address of the first byte in memory
+where the data (in columns 9 up to 20) is to be stored.
 .Pp
 .Sh EXAMPLES
 .\" Add a few comment and data record examples.
+.Bd -literal
+  0x000:              |    .pos 0
+
+.Ed
+The beginning point of a program.
+.Bd -literal
+  0x014:              |    .align 4
+  0x014: 0d000000     | array: .long 0xd
+
+.Ed
+Declare the beginning of an array.
 .Sh SEE ALSO
 .Xr yess 1
