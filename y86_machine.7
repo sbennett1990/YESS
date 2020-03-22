@@ -56,6 +56,29 @@ Word Address	Byte Address
 \&.	\&.	\&.	\&.	\&.
 1023	4095	4094	4093	4092
 .TE
+.Ss Program Registers
+The Y86 has 8 four-byte program registers.
+The names of those registers and their encodings can be seen in the table below.
+.\" Table of program registers
+.TS
+allbox;
+cw15 c
+r c.
+Register Name	Number
+%eax	0
+%ecx	1
+%edx	2
+%ebx	3
+%esp	4
+%edp	5
+%esi	6
+%edi	7
+.TE
+.Ss Processor Registers
+The simulated processor consists of 5 pipeline registers:
+freg, dreg, ereg, mreg, and wreg.
+These registers hold the output of one stage of the pipeline that then becomes the input to
+the next stage of the pipeline.
 .Sh SEE ALSO
 .Xr yess 1 ,
 .Xr y86_obj_code 7
