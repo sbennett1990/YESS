@@ -79,6 +79,83 @@ The simulated processor consists of 5 pipeline registers:
 freg, dreg, ereg, mreg, and wreg.
 These registers hold the output of one stage of the pipeline that then becomes the input to
 the next stage of the pipeline.
+.Bl -tag -width "xreg" -offset indent
+.It freg
+Holds the input to the "fetch" stage.
+.Bd -literal
+struct fregister {
+        unsigned int predPC;
+};
+.Ed
+.Pp
+The fields have the following meanings:
+.Bl -tag -width "predPC" -compact
+.It predPC
+The byte address for the predicted PC.
+.El
+.It dreg
+Holds the input to the "decode" stage.
+.Bd -literal
+struct dregister {
+        unsigned int stat;
+        unsigned int icode;
+        unsigned int ifun;
+        unsigned int rA;
+        unsigned int rB;
+        unsigned int valC;
+        unsigned int valP;
+};
+.Ed
+.Pp
+The fields have the following meanings:
+.Bl -tag -width "icode" -compact
+.It stat
+The "stat"?
+.It icode
+Instruction code.
+.El
+.It ereg
+Holds the input to the "execute" stage.
+.Bd -literal
+struct eregister {
+        unsigned int stat;
+        unsigned int icode;
+        unsigned int ifun;
+        unsigned int valC;
+        unsigned int valA;
+        unsigned int valB;
+        unsigned int dstE;
+        unsigned int dstM;
+        unsigned int srcA;
+        unsigned int srcB;
+};
+.Ed
+.It mreg
+Holds the input to the "memory" stage.
+.Bd -literal
+struct mregister {
+        unsigned int stat;
+        unsigned int icode;
+        unsigned int Cnd;
+        unsigned int valE;
+        unsigned int valA;
+        unsigned int dstE;
+        unsigned int dstM;
+};
+.Ed
+.It wreg
+Holds the input to the "writeback" stage.
+.Bd -literal
+struct wregister {
+        unsigned int stat;
+        unsigned int icode;
+        unsigned int valE;
+        unsigned int valM;
+        unsigned int dstE;
+        unsigned int dstM;
+};
+.Ed
+.El
 .Sh SEE ALSO
 .Xr yess 1 ,
 .Xr y86_obj_code 7
