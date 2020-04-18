@@ -1,0 +1,53 @@
+.\"
+.\" Copyright (c) 2020 Scott Bennett <scottb@fastmail.com>
+.\"
+.\" Permission to use, copy, modify, and distribute this software for any
+.\" purpose with or without fee is hereby granted, provided that the above
+.\" copyright notice and this permission notice appear in all copies.
+.\"
+.\" THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
+.\" WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
+.\" MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR
+.\" ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
+.\" WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
+.\" ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
+.\" OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+.\"
+.Dd April 17, 2020
+.Dt Y86_INSTRUCTIONS 7
+.Os
+.Sh NAME
+.Nm y86_instructions
+.Nd Y86 Instruction Set Reference
+
+.Sh DESCRIPTION
+The Y86 instruction set is a subset of the x86 instruction set.
+
+.Ss Instructions
+Instruction encodings follow:
+.Pp
+.TS
+allbox tab(:);
+c    c s s s s
+aw18 c c c c cw20.
+Instruction:Encoding
+halt:0:0:_:_:_
+nop:1:0:_:_:_
+rrmovl rA, rB:2:fn:rA:rB:_
+irmovl V, rB:3:0:8:rB:V
+rmmovl rA, D(rB):4:0:rA:rB:D
+mrmovl D(rB), rA:5:0:rA:rB:D
+OPl rA, rB:6:fn:rA:rB:_
+jXX Dest:7:fn:_:_:Dest
+call Dest:8:fn:_:_:Dest
+ret:9:0:_:_:_
+pushl rA:A:0:rA:8:_
+popl rA:B:0:rA:8:_
+.TE
+.Pp
+Instructions have a two-byte encoding.
+The first byte indicates the instruction type (pushl, popl, irmovl, etc.).
+The second byte gives the source and destination registers, and are
+denoted rA and rB, respectively.
+
+.Sh EXAMPLES
