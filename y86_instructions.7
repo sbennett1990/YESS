@@ -49,5 +49,34 @@ Instructions have a two-byte encoding.
 The first byte indicates the instruction type (pushl, popl, irmovl, etc.).
 The second byte gives the source and destination registers, and are
 denoted rA and rB, respectively.
+.Ss Arithmetic and Logical Operations
+.Pp
+Arithmetic and logical operations are collectively abbreviated as
+.Dq OPl .
+Encodings for these operations differ only by
+.Sy function code.
+These instructions set condition codes as a side effect.
+Each supported operation and its encoding is listed below:
+.Pp
+.TS
+allbox tab(:);
+c    c s s s
+aw18 c c c c.
+Instruction:Encoding
+addl rA, rB:6:0:rA:rB
+subl rA, rB:6:1:rA:rB
+andl rA, rB:6:2:rA:rB
+xorl rA, rB:6:3:rA:rB
+.TE
+.Ss Conditional Move Instructions
+The conditional move instructions are generically referred to as
+.Dq cmovXX .
+.TS
+allbox tab(:);
+c    c s s s
+aw18 c c c c.
+Instruction:Encoding
+cmovle rA, rB:2:1:rA:rB
+.TE
 
 .Sh EXAMPLES
