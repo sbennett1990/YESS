@@ -75,15 +75,60 @@ subl rA, rB:6:1:rA:rB
 andl rA, rB:6:2:rA:rB
 xorl rA, rB:6:3:rA:rB
 .TE
+
 .Ss Conditional Move Instructions
 The conditional move instructions are generically referred to as
 .Dq cmovXX .
+These instruction encodings differ from the unconditional move instruction
+.Pq Ql rrmovl
+only by
+.Sy function code .
+.Ql rrmovl
+unconditionally copies a value from source to destination register.
+The
+.Dq cmovXX
+instructions copy a value from source to destination register when some condition
+is met.
+.Dq cmovXX
+instruction encodings are shown below:
+.Pp
 .TS
 allbox tab(:);
 c    c s s s
 aw18 c c c c.
 Instruction:Encoding
 cmovle rA, rB:2:1:rA:rB
+cmovl  rA, rB:2:2:rA:rB
+cmove  rA, rB:2:3:rA:rB
+cmovne rA, rB:2:4:rA:rB
+cmovge rA, rB:2:5:rA:rB
+cmovg  rA, rB:2:6:rA:rB
+.TE
+
+.Ss Jump Instructions
+The set of jump instructions are generically referred to as
+.Dq jXX .
+Instruction encodings differ only by
+.Sy function code .
+The
+.Dq jXX
+instructions encode the full destination address in the instruction,
+as opposed to the PC-relative addressing in IA32.
+.Dq jXX
+encodings are shown below:
+.Pp
+.TS
+allbox tab(:);
+c    c s s
+aw18 c c cw20.
+Instruction:Encoding
+jmp Dest:7:0:Dest
+jle Dest:7:1:Dest
+jl  Dest:7:2:Dest
+je  Dest:7:3:Dest
+jne Dest:7:4:Dest
+jge Dest:7:5:Dest
+jg  Dest:7:6:Dest
 .TE
 
 .Sh EXAMPLES
