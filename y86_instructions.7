@@ -46,9 +46,16 @@ popl rA:B:0:rA:8:_
 .TE
 .Pp
 Instructions have a two-byte encoding.
-The first byte indicates the instruction type (pushl, popl, irmovl, etc.).
+The first byte indicates the instruction type
+.Po
+.Ql pushl ,
+.Ql popl ,
+.Ql irmovl ,
+etc.
+.Pc .
 The second byte gives the source and destination registers, and are
 denoted rA and rB, respectively.
+
 .Ss Arithmetic and Logical Operations
 .Pp
 Arithmetic and logical operations are collectively abbreviated as
