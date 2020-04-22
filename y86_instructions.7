@@ -24,6 +24,17 @@
 The Y86 instruction set is a subset of the x86 instruction set.
 
 .Ss Instructions
+Y86 instructions have a two-byte encoding.
+The first byte indicates the instruction type
+.Po
+.Ql pushl ,
+.Ql popl ,
+.Ql irmovl ,
+etc.
+.Pc .
+The second byte gives the source and destination registers
+.Pq if applicable ,
+and are denoted rA and rB, respectively.
 Instruction encodings follow:
 .Pp
 .TS
@@ -55,17 +66,6 @@ ret:9:0:
 pushl rA:A:0:rA:8:
 popl rA:B:0:rA:8:
 .TE
-.Pp
-Instructions have a two-byte encoding.
-The first byte indicates the instruction type
-.Po
-.Ql pushl ,
-.Ql popl ,
-.Ql irmovl ,
-etc.
-.Pc .
-The second byte gives the source and destination registers, and are
-denoted rA and rB, respectively.
 
 .Ss Arithmetic and Logical Operations
 .Pp
