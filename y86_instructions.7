@@ -41,6 +41,26 @@ etc.
 The second byte gives the source and destination registers
 .Pq if applicable ,
 and are denoted rA and rB, respectively.
+The high-order 4 bits of the first byte are the
+.Sy instruction code ,
+or
+.Dq icode .
+The low-order 4 bits of the first byte are the
+.Sy function code ,
+or
+.Dq ifun .
+The
+.Sy instruction code
+differentiates each instruction, whereas the
+.Sy function codes
+differentiate subsets of related instructions
+.Po
+e.g. the
+.Dq jXX
+and
+.Dq OPl
+families have the same icode, but a differing ifun
+.Pc .
 Instruction encodings follow:
 .Pp
 .TS
