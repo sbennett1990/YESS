@@ -71,10 +71,9 @@ load(const char * fileName)
 		return FALSE; /* EXIT */
 	}
 
-	// Open file as read-only
+	/* open file as read-only */
 	log_debug("opening file \'%s\'", fileName);
 	fp = fopen(fileName, "r");
-
 	if (fp == NULL) {
 		log_warn("error opening the file");
 		return FALSE; /* EXIT */
@@ -118,10 +117,8 @@ load(const char * fileName)
 				short byteNumber;
 				for (byteNumber = 1; byteNumber <= numBytes; byteNumber++) {
 					dataByte = grabDataByte(buf, WHICH_BYTE(byteNumber));
-
 					putByte(byteAddress, dataByte, &memError);
 
-					// Check for a memory error
 					if (memError) {
 						goto error;
 					}
