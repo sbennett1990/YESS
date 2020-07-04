@@ -64,86 +64,85 @@ static void discardRest(FILE * filePtr);
 bool
 load(const char * fileName)
 {
-    FILE * fp;
-    char record[MAXLEN];
-    char buf[RECORDLEN];
-    bool memError;
+	FILE * fp;
+	char record[MAXLEN];
+	char buf[RECORDLEN];
+	bool memError;
 
-    if (validatefilename(fileName) == -1) {
-        return FALSE; /* EXIT */
-    }
+	if (validatefilename(fileName) == -1) {
+		return FALSE; /* EXIT */
+	}
 
-    // Open file as read-only
-    log_debug("opening file \'%s\'", fileName);
-    fp = fopen(fileName, "r");
+	// Open file as read-only
+	log_debug("opening file \'%s\'", fileName);
+	fp = fopen(fileName, "r");
 
-    if (fp == NULL) {
-        log_warn("error opening the file");
-        return FALSE; /* EXIT */
-    }
+	if (fp == NULL) {
+		log_warn("error opening the file");
+		return FALSE; /* EXIT */
+	}
 
-    /* initial value since no address has been modified yet */
-    int prevaddr = -1;
-    int lineno = 1;
-    int byteAddress;        // memory address of one byte [0..4095]
-    unsigned char dataByte; // a byte to store in memory
+	/* initial value since no address has been modified yet */
+	int prevaddr = -1;
+	int lineno = 1;
+	int byteAddress;        // memory address of one byte [0..4095]
+	unsigned char dataByte; // a byte to store in memory
 
-    // Attempt to load each line in the file into memory
-    while (fgets(record, MAXLEN, fp) != NULL) {
-        // Check if line is <= 80 characters
-        int len = strnlen(record, MAXLEN);
+	// Attempt to load each line in the file into memory
+	while (fgets(record, MAXLEN, fp) != NULL) {
+		// Check if line is <= 80 characters
+		int len = strnlen(record, MAXLEN);
 
-        if (record[len - 1] != '\n') {
-            discardRest(fp);
-        }
+		if (record[len - 1] != '\n') {
+			discardRest(fp);
+		}
 
-        strncpy(buf, record, sizeof(buf) - 1);
-        buf[sizeof(buf) - 1] = '\0';
+		strncpy(buf, record, sizeof(buf) - 1);
+		buf[sizeof(buf) - 1] = '\0';
 
-        // Error checking...
+		// Error checking...
 		// 1: check line format (ie, don't check address correctness yet)
 		// 2: if address line, then check that the address is > prevaddr
-        if (!validline(buf, sizeof(buf), prevaddr)) {
-            /* Display the erroneous line */
-            printf("Error on line %d\n", lineno);
+		if (!validline(buf, sizeof(buf), prevaddr)) {
+			/* Display the erroneous line */
+			printf("Error on line %d\n", lineno);
 
-            for (int i = 0; i < len; i++) {
-                printf("%c", record[i]);
-            }
+			for (int i = 0; i < len; i++) {
+				printf("%c", record[i]);
+			}
 
-            printf("\n");
+			printf("\n");
 
-            goto error;
-        }
+			goto error;
+		}
 
-        if (hasaddress(buf)) {
-            byteAddress = grabAddress(buf);
+		if (hasaddress(buf)) {
+			byteAddress = grabAddress(buf);
 			short numBytes;
-            if ((numBytes = hasdata(buf)) != 0) {
+			if ((numBytes = hasdata(buf)) != 0) {
+				short byteNumber;
+				for (byteNumber = 1; byteNumber <= numBytes; byteNumber++) {
+					dataByte = grabDataByte(buf, WHICH_BYTE(byteNumber));
 
-                short byteNumber;
-                for (byteNumber = 1; byteNumber <= numBytes; byteNumber++) {
-                    dataByte = grabDataByte(buf, WHICH_BYTE(byteNumber));
+					putByte(byteAddress, dataByte, &memError);
 
-                    putByte(byteAddress, dataByte, &memError);
+					// Check for a memory error
+					if (memError) {
+						goto error;
+					}
 
-                    // Check for a memory error
-                    if (memError) {
-                        goto error;
-                    }
+					byteAddress++;
+				}
 
-                    byteAddress++;
-                }
+				prevaddr = byteAddress - 1;
+			}
+		}
 
-                prevaddr = byteAddress - 1;
-            }
-        }
+		lineno++;
+	}
 
-        lineno++;
-    }
-
-    fclose(fp);
-    return TRUE;
+	fclose(fp);
+	return TRUE;
 
 error:
 	fclose(fp);
