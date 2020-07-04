@@ -51,7 +51,6 @@ static bool iscommentrecord(const char *line);
 static bool isdatarecord(const char *line);
 static bool hasaddress(const char *line);
 static short hasdata(const char *line);
-static void discardRest(FILE * filePtr);
 
 /*
  * Driver function for the entire YESS program. Takes in a machine code (ASCII)
@@ -490,20 +489,4 @@ grabDataByte(char * record, int start)
 
     // TODO: check for the error value -1
     return (unsigned char) strtoint(byte, HEX);
-}
-
-/*
- * If fgets didn't read a newline, then the whole line wasn't read.
- * Read and discard characters until a newline is read.
- *
- * Parameters:
- *  *filePtr    pointer to the file
- */
-void
-discardRest(FILE * filePtr)
-{
-    // remove chars in file
-    while (fgetc(filePtr) != '\n' && !feof(filePtr)) {
-        // rest is discarded with no additional statements
-    }
 }
