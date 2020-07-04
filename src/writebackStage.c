@@ -53,7 +53,7 @@ clearWregister()
  * continue program execution.
  */
 int
-writebackStage(forwardType * forward, statusType * status)
+writebackStage(forwardType *forward, statusType *status)
 {
 	// if stat == SINS, SADR, SHLT; HALT program and dump
 	if (W.stat == SINS) {
@@ -115,7 +115,7 @@ writebackStage(forwardType * forward, statusType * status)
  */
 void
 updateWRegister(unsigned int stat, unsigned int icode, unsigned int valE,
-	unsigned int valM, unsigned int dstE, unsigned int dstM)
+    unsigned int valM, unsigned int dstE, unsigned int dstM)
 {
 	W.stat = stat;
 	W.icode = icode;

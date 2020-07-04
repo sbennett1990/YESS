@@ -35,7 +35,9 @@ getMregister()
  * Clear M register then initialize its icode to NOP and
  * its stat to SAOK.
  */
-void clearMregister() {
+void
+clearMregister()
+{
 	M.stat = SAOK;
 	M.icode = NOP;
 	M.Cnd = 0;
