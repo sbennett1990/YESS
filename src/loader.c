@@ -21,6 +21,7 @@
 
 #include <ctype.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 
 #include "loader.h"
@@ -65,8 +66,6 @@ bool
 load(const char * fileName)
 {
 	FILE * fp;
-	char record[MAXLEN];
-	char buf[RECORDLEN];
 	bool memError;
 
 	if (validatefilename(fileName) == -1) {
@@ -88,15 +87,12 @@ load(const char * fileName)
 	int byteAddress;        // memory address of one byte [0..4095]
 	unsigned char dataByte; // a byte to store in memory
 
-	// Attempt to load each line in the file into memory
-	while (fgets(record, MAXLEN, fp) != NULL) {
-		// Check if line is <= 80 characters
-		int len = strnlen(record, MAXLEN);
-
-		if (record[len - 1] != '\n') {
-			discardRest(fp);
-		}
-
+	char *record = NULL;
+	size_t recordsize = 0;
+	ssize_t linelen;
+	char buf[RECORDLEN];
+	/* attempt to load each line of the file into memory */
+	while ((linelen = getline(&record, &recordsize, fp)) != -1) {
 		strncpy(buf, record, sizeof(buf) - 1);
 		buf[sizeof(buf) - 1] = '\0';
 
@@ -107,7 +103,7 @@ load(const char * fileName)
 			/* Display the erroneous line */
 			printf("Error on line %d\n", lineno);
 
-			for (int i = 0; i < len; i++) {
+			for (int i = 0; i < linelen; i++) {
 				printf("%c", record[i]);
 			}
 
@@ -141,11 +137,16 @@ load(const char * fileName)
 		lineno++;
 	}
 
+	free(record);
+	if (ferror(fp)) {
+		fatal("getline");  // TODO: better diagnostic?
+	}
 	log_debug("closing file");
 	fclose(fp);
 	return TRUE;
 
 error:
+	free(record);
 	log_debug("closing file");
 	fclose(fp);
 	return FALSE;
