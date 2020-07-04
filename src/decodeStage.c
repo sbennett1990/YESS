@@ -104,13 +104,13 @@ void
 updateDregister(unsigned int stat, unsigned int icode, unsigned int ifun,
     unsigned int rA, unsigned int rB, unsigned int valC, unsigned int valP)
 {
-    D.stat = stat;
-    D.icode = icode;
-    D.ifun = ifun;
-    D.rA = rA;
-    D.rB = rB;
-    D.valC = valC;
-    D.valP = valP;
+	D.stat = stat;
+	D.icode = icode;
+	D.ifun = ifun;
+	D.rA = rA;
+	D.rB = rB;
+	D.valC = valC;
+	D.valP = valP;
 }
 
 /*
@@ -119,7 +119,9 @@ updateDregister(unsigned int stat, unsigned int icode, unsigned int ifun,
  *
  * @return register id needed
  */
-unsigned int getSrcA(const struct dregister *dreg) {
+unsigned int
+getSrcA(const struct dregister *dreg)
+{
     unsigned int srcA = RNONE;
 
     switch (dreg->icode) {
@@ -148,7 +150,9 @@ unsigned int getSrcA(const struct dregister *dreg) {
  *
  * @return register id needed
  */
-unsigned int getSrcB(const struct dregister *dreg) {
+unsigned int
+getSrcB(const struct dregister *dreg)
+{
     unsigned int srcB = RNONE;
 
     switch (dreg->icode) {
@@ -177,7 +181,9 @@ unsigned int getSrcB(const struct dregister *dreg) {
  *
  * @return Destination register id
  */
-unsigned int getDstE(const struct dregister *dreg) {
+unsigned int
+getDstE(const struct dregister *dreg)
+{
     unsigned int dstE = RNONE;
 
     switch (dreg->icode) {
@@ -206,12 +212,14 @@ unsigned int getDstE(const struct dregister *dreg) {
  *
  * @return Destination register id
  */
-unsigned int getDstM(const struct dregister *dreg) {
-    if (dreg->icode == MRMOVL || dreg->icode == POPL) {
-        return dreg->rA;
-    } else {
-        return RNONE;
-    }
+unsigned int
+getDstM(const struct dregister *dreg)
+{
+	if (dreg->icode == MRMOVL || dreg->icode == POPL) {
+		return dreg->rA;
+	} else {
+		return RNONE;
+	}
 }
 
 /*
@@ -223,7 +231,8 @@ unsigned int getDstM(const struct dregister *dreg) {
  * @return Value (valA) to send to E register
  */
 unsigned int
-selectFwdA(const struct dregister *dreg, unsigned int srcA, const forwardType *forward)
+selectFwdA(const struct dregister *dreg, unsigned int srcA,
+    const forwardType *forward)
 {
     if (dreg->icode == CALL || dreg->icode == JXX) {
         return dreg->valP;
@@ -245,13 +254,15 @@ selectFwdA(const struct dregister *dreg, unsigned int srcA, const forwardType *f
 }
 
 /*
- *  Selects which forwarded value to use for valB
+ * Selects which forwarded value to use for valB
  *
  * @param srcB    Register id used
  * @param forward Holds values forwarded from previous stages
  * @return Value (valB) to send to E register
  */
-unsigned int forwardB(unsigned int srcB, const forwardType *forward) {
+unsigned int
+forwardB(unsigned int srcB, const forwardType *forward)
+{
     if (srcB == RNONE) {
         return 0;
     } else if (srcB == forward->e_dstE) {
@@ -273,8 +284,10 @@ unsigned int forwardB(unsigned int srcB, const forwardType *forward) {
  * Determine if the E register should be stalled. According to HCL,
  * E will never be stalled, therefore it returns false.
  */
-bool stallE() {
-    return FALSE;
+bool
+stallE()
+{
+	return FALSE;
 }
 
 /*
@@ -284,14 +297,16 @@ bool stallE() {
  * @param control Holds values from later stages
  * @return True if E should be bubbled, false otherwise
  */
-bool bubbleE(const controlType *control) {
-    bool bubble = FALSE;
+bool
+bubbleE(const controlType *control)
+{
+	bool bubble = FALSE;
 
-    if ((control->E_icode == JXX && !control->e_Cnd) ||
-        (control->E_icode == MRMOVL || control->E_icode == POPL) &&
-        (control->E_dstM == control->d_srcA || control->E_dstM == control->d_srcB)) {
-        bubble = TRUE;
-    }
+	if ((control->E_icode == JXX && !control->e_Cnd) ||
+	    (control->E_icode == MRMOVL || control->E_icode == POPL) &&
+	    (control->E_dstM == control->d_srcA || control->E_dstM == control->d_srcB)) {
+		bubble = TRUE;
+	}
 
-    return bubble;
+	return bubble;
 }
