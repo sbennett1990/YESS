@@ -141,10 +141,12 @@ load(const char * fileName)
 		lineno++;
 	}
 
+	log_debug("closing file");
 	fclose(fp);
 	return TRUE;
 
 error:
+	log_debug("closing file");
 	fclose(fp);
 	return FALSE;
 }
