@@ -27,7 +27,6 @@
  */
 static struct fregister F;
 
-// Prototypes for "private" functions
 static unsigned int selectPC(forwardType forward, const struct fregister *);
 static unsigned int predictPC(unsigned int icode, unsigned int valC,
     unsigned int valP);
