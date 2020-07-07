@@ -12,7 +12,7 @@
 #include "writebackStage.h"
 
 /*
- * M register holds the input from the execute stage.
+ * M register holds the input to the memory stage.
  */
 static struct mregister M;
 
@@ -89,69 +89,70 @@ memoryStage(forwardType * forward, statusType * status, controlType * control)
     status->m_stat = stat;
     control->M_icode = M.icode;
 
-	// stall W?
 	if (!W_stall(*status)) {
 		/*
 		 * If stall is true, do nothing to keep current values in the
 		 * Writeback Stage.
 		 */
 		updateWRegister(stat, M.icode, M.valE, valM, M.dstE, M.dstM);
-    }
+	}
 }
 
-/**
- * Update values in the M register
+/*
+ * Update values in the M register.
  */
-void updateMRegister(unsigned int stat, unsigned int icode, unsigned int Cnd,
-                     unsigned int valE, unsigned int valA, unsigned int dstE,
-                     unsigned int dstM) {
-    M.stat = stat;
-    M.icode = icode;
-    M.Cnd = Cnd;
-    M.valE = valE;
-    M.valA = valA;
-    M.dstE = dstE;
-    M.dstM = dstM;
+void
+updateMRegister(unsigned int stat, unsigned int icode, unsigned int Cnd,
+    unsigned int valE, unsigned int valA, unsigned int dstE,
+    unsigned int dstM)
+{
+	M.stat = stat;
+	M.icode = icode;
+	M.Cnd = Cnd;
+	M.valE = valE;
+	M.valA = valA;
+	M.dstE = dstE;
+	M.dstM = dstM;
 }
 
-/**
- * Select memory address
+/*
+ * Select memory address to read from or write to.
  *
  * @return The memory address. Default is NOADDRESS.
  */
-unsigned int mem_addr(const struct mregister *mreg) {
-    unsigned int address = NOADDRESS;
+unsigned int
+mem_addr(const struct mregister *mreg)
+{
+	unsigned int address = NOADDRESS;
 
-    //set address to valE for these opcodes
-    switch (mreg->icode) {
-        case RMMOVL:
-        case PUSHL:
-        case CALL:
-        case MRMOVL:
-            address = mreg->valE;
-            break;
+	switch (mreg->icode) {
+	case RMMOVL:
+	case PUSHL:
+	case CALL:
+	case MRMOVL:
+		address = mreg->valE;
+		break;
 
-        //set address to valA for these opcodes
-        case POPL:
-        case RET:
-            address = mreg->valA;
-            break;
+	case POPL:
+	case RET:
+		address = mreg->valA;
+		break;
 
-        default:
-            address = NOADDRESS;
-    }
+	default:
+		address = NOADDRESS;
+	}
 
-    return address;
+	return address;
 }
 
-/**
+/*
  * Set write control signal
  */
-bool mem_write(const struct mregister *mreg) {
+bool
+mem_write(const struct mregister *mreg)
+{
     bool write = FALSE;
 
-    //if icode equals MRMOVL, PUSHL, CALL
-    //set write to TRUE
     switch (mreg->icode) {
         case RMMOVL:
         case PUSHL:
@@ -166,14 +167,14 @@ bool mem_write(const struct mregister *mreg) {
     return write;
 }
 
-/**
+/*
  * Set read control signal
  */
-bool mem_read(const struct mregister *mreg) {
+bool
+mem_read(const struct mregister *mreg)
+{
     bool read = FALSE;
 
-    //if icode equals MRMOVL, POPL, RET
-    //set read to TRUE
     switch (mreg->icode) {
         case MRMOVL:
         case POPL:
@@ -188,27 +189,31 @@ bool mem_read(const struct mregister *mreg) {
     return read;
 }
 
-/**
+/*
  * Returns true if the W register should be stalled
  *
  * @param status Holds values of statuses forwarded from later stages
  */
-bool W_stall(statusType status) {
-    bool stall = FALSE;
+bool
+W_stall(statusType status)
+{
+	bool stall = FALSE;
 
-    if (status.W_stat == SADR
-        || status.W_stat == SINS
-        || status.W_stat == SHLT) {
-        stall = TRUE;
-    }
+	if (status.W_stat == SADR
+	    || status.W_stat == SINS
+	    || status.W_stat == SHLT) {
+		stall = TRUE;
+	}
 
-    return stall;
+	return stall;
 }
 
-/**
+/*
  * Determine if the W register should be bubbled. According to HCL,
  * W will never be bubbled, therefore it returns false.
  */
-bool W_bubble() {
-    return FALSE;
+bool
+W_bubble()
+{
+	return FALSE;
 }
