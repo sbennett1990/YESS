@@ -38,7 +38,7 @@ static bool needRegids(unsigned int icode);
 static bool needValC(unsigned int icode);
 static unsigned int getValC(unsigned int f_pc, bool * memError);
 static bool bubbleF(void);
-static bool stallF(controlType control);
+static bool stallF(controlType *control);
 static bool bubbleD(controlType control);
 static bool stallD(controlType control);
 
@@ -138,7 +138,7 @@ fetchStage(forwardType forward, controlType control)
     valP = pcIncrement(f_pc, icode);
 
     // Stall F? keep previous value
-    if (stallF(control)) {
+    if (stallF(&control)) {
         F.predPC = f_pc;
     }
     else {
@@ -414,9 +414,9 @@ getValC(unsigned int f_pc, bool * memError)
 }
 
 /*
- * Determine whether F should be bubbled.
- * According to HCL, F will never be bubbled,
- * therefore it returns false.
+ * Determine if F should be bubbled.
+ * According to HCL, F will never be bubbled, therefore always
+ * return false.
  */
 bool
 bubbleF()
@@ -426,36 +426,36 @@ bubbleF()
 
 /*
  * Determine if F should be stalled based on input forwarded
- * by later stages.
+ * from later stages.
  *
  * Parameters:
  *  control     holds values from later stages
  *
- * Return true if F need to be stalled; false otherwise
+ * Return true if F needs to be stalled.
  */
 bool
-stallF(controlType control)
+stallF(controlType *control)
 {
-    bool stall = FALSE;
+	bool stall = FALSE;
 
-    if (((control.E_icode == MRMOVL || control.E_icode == POPL)
-         && (control.E_dstM == control.d_srcA || control.E_dstM == control.d_srcB))
-        || (control.D_icode == RET || control.E_icode == RET
-            || control.M_icode == RET)) {
-        stall = TRUE;
-    }
+	if (((control->E_icode == MRMOVL || control->E_icode == POPL) &&
+	    (control->E_dstM == control->d_srcA || control->E_dstM == control->d_srcB))
+	    ||
+	    (control->D_icode == RET || control->E_icode == RET || control->M_icode == RET)) {
+		stall = TRUE;
+	}
 
-    return stall;
+	return stall;
 }
 
 /*
- * Determine if D needs to be bubbled based on input forwarded
- * by later stages.
+ * Determine if D should be bubbled based on input forwarded
+ * from later stages.
  *
  * Parameters:
  *  control     holds values from later stages
  *
- * Return true if D should be bubbled; false otherwise
+ * Return true if D should be bubbled.
  */
 bool
 bubbleD(controlType control)
@@ -475,13 +475,13 @@ bubbleD(controlType control)
 }
 
 /*
- * Determine if D needs to be stalled based on input forwarded
- * by later stages.
+ * Determine if D should be stalled based on input forwarded
+ * from later stages.
  *
  * Parameters:
  *  control     holds values from later stages
  *
- * Return true if D should be stalled; false otherwise
+ * Return true if D should be stalled.
  */
 bool
 stallD(controlType control)
