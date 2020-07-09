@@ -465,9 +465,8 @@ bubbleD(controlType control)
 	// conditions for mispredicted branch
 	if ((control.E_icode == JXX && !control.e_Cnd)
 	    ||
-	    (!(stallD(&control)) && 
-	      (RET == control.D_icode || RET == control.E_icode
-	      || RET == control.M_icode))) {
+	    (!stallD(&control) && (RET == control.D_icode || RET == control.E_icode
+	     || RET == control.M_icode))) {
 		bubble = TRUE;
 	}
 
