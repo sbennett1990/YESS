@@ -40,7 +40,7 @@ static unsigned int getValC(unsigned int f_pc, bool * memError);
 static bool bubbleF(void);
 static bool stallF(controlType *control);
 static bool bubbleD(controlType control);
-static bool stallD(controlType control);
+static bool stallD(controlType *control);
 
 /*
  * Return a copy of the F register.
@@ -150,7 +150,7 @@ fetchStage(forwardType forward, controlType control)
         // Insert a NOP
         updateDregister(SAOK, NOP, 0, RNONE, RNONE, 0, valP);
     }
-    else if (!stallD(control)) {
+    else if (!stallD(&control)) {
         // Update D as normal (do not stall)
         updateDregister(stat, icode, ifun, rA, rB, valC, valP);
     }
@@ -460,18 +460,18 @@ stallF(controlType *control)
 bool
 bubbleD(controlType control)
 {
-    bool bubble = FALSE;
+	bool bubble = FALSE;
 
-    // conditions for mispredicted branch
-    if ((control.E_icode == JXX && !control.e_Cnd)
-        ||
-        (!(stallD(control))
-         && (RET == control.D_icode || RET == control.E_icode
-             || RET == control.M_icode))) {
-        bubble = TRUE;
-    }
+	// conditions for mispredicted branch
+	if ((control.E_icode == JXX && !control.e_Cnd)
+	    ||
+	    (!(stallD(&control)) && 
+	      (RET == control.D_icode || RET == control.E_icode
+	      || RET == control.M_icode))) {
+		bubble = TRUE;
+	}
 
-    return bubble;
+	return bubble;
 }
 
 /*
@@ -484,16 +484,16 @@ bubbleD(controlType control)
  * Return true if D should be stalled.
  */
 bool
-stallD(controlType control)
+stallD(controlType *control)
 {
-    bool stall = FALSE;
+	bool stall = FALSE;
 
-    // conditions for load/use hazard
-    if ((control.E_icode == MRMOVL || control.E_icode == POPL)
-        &&
-        (control.E_dstM == control.d_srcA || control.E_dstM == control.d_srcB)) {
-        stall = TRUE;
-    }
+	// conditions for load/use hazard
+	if ((control->E_icode == MRMOVL || control->E_icode == POPL)
+	    &&
+	    (control->E_dstM == control->d_srcA || control->E_dstM == control->d_srcB)) {
+		stall = TRUE;
+	}
 
-    return stall;
+	return stall;
 }
