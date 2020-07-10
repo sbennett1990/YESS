@@ -19,8 +19,8 @@ static struct mregister M;
 static unsigned int mem_addr(const struct mregister *);
 static bool mem_write(const struct mregister *);
 static bool mem_read(const struct mregister *);
-static bool W_stall(statusType status);
-static bool W_bubble(void);
+static bool stallW(statusType status);
+static bool bubbleW(void);
 
 /*
  * Return a copy of the M register
@@ -88,7 +88,7 @@ memoryStage(forwardType * forward, statusType * status, controlType * control)
 	status->m_stat = stat;
 	control->M_icode = M.icode;
 
-	if (!W_stall(*status)) {
+	if (!stallW(*status)) {
 		/*
 		 * If stall is true, do nothing to keep current values in the
 		 * Writeback Stage.
@@ -194,7 +194,7 @@ mem_read(const struct mregister *mreg)
  * @param status Holds values of statuses forwarded from later stages
  */
 bool
-W_stall(statusType status)
+stallW(statusType status)
 {
 	bool stall = FALSE;
 
@@ -212,7 +212,7 @@ W_stall(statusType status)
  * W will never be bubbled, therefore it returns false.
  */
 bool
-W_bubble()
+bubbleW()
 {
 	return FALSE;
 }
