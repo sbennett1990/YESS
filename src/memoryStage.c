@@ -12,7 +12,7 @@
 #include "writebackStage.h"
 
 /*
- * M register holds the input to the memory stage.
+ * M register holds the input for the memory stage.
  */
 static struct mregister M;
 
@@ -28,7 +28,7 @@ static bool W_bubble(void);
 struct mregister
 getMregister()
 {
-    return M;
+	return M;
 }
 
 /*
@@ -59,35 +59,34 @@ clearMregister()
 void
 memoryStage(forwardType * forward, statusType * status, controlType * control)
 {
-    unsigned int address = mem_addr(&M);
-    unsigned int stat = M.stat;
-    unsigned int valM = NOADDRESS;
-    bool memError = FALSE;
+	unsigned int address = mem_addr(&M);
+	unsigned int stat = M.stat;
+	unsigned int valM = NOADDRESS;
+	bool memError = FALSE;
 
-    // read data from memory?
-    if (mem_read(&M)) {
-        valM = getWord(address, &memError);
-    }
+	// read data from memory?
+	if (mem_read(&M)) {
+		valM = getWord(address, &memError);
+	}
 
-    // write data to memory?
-    if (mem_write(&M)) {
-        putWord(address, M.valA, &memError);
-    }
+	// write data to memory?
+	if (mem_write(&M)) {
+		putWord(address, M.valA, &memError);
+	}
 
-    if (memError) {
-        stat = SADR;
-    }
+	if (memError) {
+		stat = SADR;
+	}
 
-    // set values of forwarding, status, and control structs
-    forward->M_dstM = M.dstM;
-    forward->M_dstE = M.dstE;
-    forward->m_valM = valM;
-    forward->M_valE = M.valE;
-    forward->M_Cnd = M.Cnd;
-    forward->M_valA = M.valA;
-    forward->M_icode = M.icode;
-    status->m_stat = stat;
-    control->M_icode = M.icode;
+	forward->M_dstM = M.dstM;
+	forward->M_dstE = M.dstE;
+	forward->m_valM = valM;
+	forward->M_valE = M.valE;
+	forward->M_Cnd = M.Cnd;
+	forward->M_valA = M.valA;
+	forward->M_icode = M.icode;
+	status->m_stat = stat;
+	control->M_icode = M.icode;
 
 	if (!W_stall(*status)) {
 		/*
@@ -99,7 +98,7 @@ memoryStage(forwardType * forward, statusType * status, controlType * control)
 }
 
 /*
- * Update values in the M register.
+ * Update the values in the M register.
  */
 void
 updateMRegister(unsigned int stat, unsigned int icode, unsigned int Cnd,
