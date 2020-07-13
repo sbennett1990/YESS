@@ -26,13 +26,13 @@
  */
 static struct dregister D;
 
-static unsigned int getSrcA(const struct dregister *);
-static unsigned int getSrcB(const struct dregister *);
-static unsigned int getDstE(const struct dregister *);
-static unsigned int getDstM(const struct dregister *);
-static unsigned int selectFwdA(const struct dregister *, unsigned int srcA,
+static rregister getSrcA(const struct dregister *);
+static rregister getSrcB(const struct dregister *);
+static rregister getDstE(const struct dregister *);
+static rregister getDstM(const struct dregister *);
+static unsigned int selectFwdA(const struct dregister *, rregister srcA,
     const forwardType *);
-static unsigned int forwardB(unsigned int srcB, const forwardType *);
+static unsigned int forwardB(rregister srcB, const forwardType *);
 static bool stallE(void);
 static bool bubbleE(const controlType *);
 
@@ -72,29 +72,30 @@ clearDregister()
 void
 decodeStage(forwardType forward, controlType * control)
 {
-    unsigned int srcA = getSrcA(&D);
-    unsigned int srcB = getSrcB(&D);
-    unsigned int dstE = getDstE(&D);
-    unsigned int dstM = getDstM(&D);
-    unsigned int valA = selectFwdA(&D, srcA, &forward);
-    unsigned int valB = forwardB(srcB, &forward);
+	rregister srcA = getSrcA(&D);
+	rregister srcB = getSrcB(&D);
+	rregister dstE = getDstE(&D);
+	rregister dstM = getDstM(&D);
+	unsigned int valA = selectFwdA(&D, srcA, &forward);
+	unsigned int valB = forwardB(srcB, &forward);
 
-    // Update values that need to be forwarded
-    control->d_srcA = srcA;
-    control->d_srcB = srcB;
-    control->D_icode = D.icode;
+	// Update values that need to be forwarded
+	control->d_srcA = srcA.reg;
+	control->d_srcB = srcB.reg;
+	control->D_icode = D.icode;
 
-    // Bubble E?
-    if (bubbleE(control)) {
-        // Insert a NOP
-		updateEregister(SAOK, NOP, 0, 0, 0, 0, RNONE, RNONE,
-		    RNONE, RNONE);
-    }
-    else {
-        // Update E as normal
+	// Bubble E?
+	if (bubbleE(control)) {
+		// Insert a NOP
+		rregister rnone = { RNONE };
+		updateEregister(SAOK, NOP, 0, 0, 0, 0, rnone, rnone,
+		    rnone, rnone);
+	}
+	else {
+		// Update E as normal
 		updateEregister(D.stat, D.icode, D.ifun, D.valC, valA, valB,
 		    dstE, dstM, srcA, srcB);
-    }
+	}
 }
 
 /*
@@ -102,13 +103,13 @@ decodeStage(forwardType forward, controlType * control)
  */
 void
 updateDregister(unsigned int stat, unsigned int icode, unsigned int ifun,
-    unsigned int rA, unsigned int rB, unsigned int valC, unsigned int valP)
+    rregister rA, rregister rB, unsigned int valC, unsigned int valP)
 {
 	D.stat = stat;
 	D.icode = icode;
 	D.ifun = ifun;
-	D.rA = rA;
-	D.rB = rB;
+	D.rA = rA.reg;
+	D.rB = rB.reg;
 	D.valC = valC;
 	D.valP = valP;
 }
@@ -119,26 +120,26 @@ updateDregister(unsigned int stat, unsigned int icode, unsigned int ifun,
  *
  * @return register id needed
  */
-unsigned int
+rregister
 getSrcA(const struct dregister *dreg)
 {
-    unsigned int srcA = RNONE;
+    rregister srcA = { RNONE };
 
     switch (dreg->icode) {
         case RRMOVL:
         case RMMOVL:
         case OPL:
         case PUSHL:
-            srcA = dreg->rA;
+            srcA.reg = dreg->rA;
             break;
 
         case POPL:
         case RET:
-            srcA = ESP;
+            srcA.reg = ESP;
             break;
 
         default:
-            srcA = RNONE;
+            srcA.reg = RNONE;
     }
 
     return srcA;
@@ -150,30 +151,30 @@ getSrcA(const struct dregister *dreg)
  *
  * @return register id needed
  */
-unsigned int
+rregister
 getSrcB(const struct dregister *dreg)
 {
-    unsigned int srcB = RNONE;
+	rregister srcB = { RNONE };
 
-    switch (dreg->icode) {
-        case OPL:
-        case RMMOVL:
-        case MRMOVL:
-            srcB = dreg->rB;
-            break;
+	switch (dreg->icode) {
+	case OPL:
+	case RMMOVL:
+	case MRMOVL:
+		srcB.reg = dreg->rB;
+		break;
 
-        case POPL:
-        case RET:
-        case CALL:
-        case PUSHL:
-            srcB = ESP;
-            break;
+	case POPL:
+	case RET:
+	case CALL:
+	case PUSHL:
+		srcB.reg = ESP;
+		break;
 
-        default:
-            srcB = RNONE;
-    }
+	default:
+		srcB.reg = RNONE;
+	}
 
-    return srcB;
+	return srcB;
 }
 
 /*
@@ -181,30 +182,30 @@ getSrcB(const struct dregister *dreg)
  *
  * @return Destination register id
  */
-unsigned int
+rregister
 getDstE(const struct dregister *dreg)
 {
-    unsigned int dstE = RNONE;
+	rregister dstE = { RNONE };
 
     switch (dreg->icode) {
         case OPL:
         case RRMOVL:
         case IRMOVL:
-            dstE = dreg->rB;
+            dstE.reg = dreg->rB;
             break;
 
         case POPL:
         case RET:
         case CALL:
         case PUSHL:
-            dstE = ESP;
+            dstE.reg = ESP;
             break;
 
         default:
-            dstE = RNONE;
+            dstE.reg = RNONE;
     }
 
-    return dstE;
+	return dstE;
 }
 
 /*
@@ -212,14 +213,16 @@ getDstE(const struct dregister *dreg)
  *
  * @return Destination register id
  */
-unsigned int
+rregister
 getDstM(const struct dregister *dreg)
 {
+	rregister dstM = { RNONE };
+
 	if (dreg->icode == MRMOVL || dreg->icode == POPL) {
-		return dreg->rA;
-	} else {
-		return RNONE;
+		dstM.reg = dreg->rA;
 	}
+
+	return dstM;
 }
 
 /*
@@ -231,22 +234,22 @@ getDstM(const struct dregister *dreg)
  * @return Value (valA) to send to E register
  */
 unsigned int
-selectFwdA(const struct dregister *dreg, unsigned int srcA,
+selectFwdA(const struct dregister *dreg, rregister srcA,
     const forwardType *forward)
 {
     if (dreg->icode == CALL || dreg->icode == JXX) {
         return dreg->valP;
-    } else if (srcA == RNONE) {
+    } else if (srcA.reg == RNONE) {
         return 0;
-    } else if (srcA == forward->e_dstE) {
+    } else if (srcA.reg == forward->e_dstE) {
         return forward->e_valE;
-    } else if (srcA == forward->M_dstM) {
+    } else if (srcA.reg == forward->M_dstM) {
         return forward->m_valM;
-    } else if (srcA == forward->M_dstE) {
+    } else if (srcA.reg == forward->M_dstE) {
         return forward->M_valE;
-    } else if (srcA == forward->W_dstM) {
+    } else if (srcA.reg == forward->W_dstM) {
         return forward->W_valM;
-    } else if (srcA == forward->W_dstE) {
+    } else if (srcA.reg == forward->W_dstE) {
         return forward->W_valE;
     } else {
         return getRegister(srcA);
@@ -261,19 +264,19 @@ selectFwdA(const struct dregister *dreg, unsigned int srcA,
  * @return Value (valB) to send to E register
  */
 unsigned int
-forwardB(unsigned int srcB, const forwardType *forward)
+forwardB(rregister srcB, const forwardType *forward)
 {
-    if (srcB == RNONE) {
+    if (srcB.reg == RNONE) {
         return 0;
-    } else if (srcB == forward->e_dstE) {
+    } else if (srcB.reg == forward->e_dstE) {
         return forward->e_valE;
-    } else if (srcB == forward->M_dstM) {
+    } else if (srcB.reg == forward->M_dstM) {
         return forward->m_valM;
-    } else if (srcB == forward->M_dstE) {
+    } else if (srcB.reg == forward->M_dstE) {
         return forward->M_valE;
-    } else if (srcB == forward->W_dstM) {
+    } else if (srcB.reg == forward->W_dstM) {
         return forward->W_valM;
-    } else if (srcB == forward->W_dstE) {
+    } else if (srcB.reg == forward->W_dstE) {
         return forward->W_valE;
     } else {
         return getRegister(srcB);

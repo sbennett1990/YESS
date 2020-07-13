@@ -93,7 +93,9 @@ memoryStage(forwardType * forward, statusType * status, controlType * control)
 		 * If stall is true, do nothing to keep current values in the
 		 * Writeback Stage.
 		 */
-		updateWRegister(stat, M.icode, M.valE, valM, M.dstE, M.dstM);
+		rregister dstE = { M.dstE };
+		rregister dstM = { M.dstM };
+		updateWRegister(stat, M.icode, M.valE, valM, dstE, dstM);
 	}
 }
 
@@ -102,16 +104,15 @@ memoryStage(forwardType * forward, statusType * status, controlType * control)
  */
 void
 updateMRegister(unsigned int stat, unsigned int icode, unsigned int Cnd,
-    unsigned int valE, unsigned int valA, unsigned int dstE,
-    unsigned int dstM)
+    unsigned int valE, unsigned int valA, rregister dstE, rregister dstM)
 {
 	M.stat = stat;
 	M.icode = icode;
 	M.Cnd = Cnd;
 	M.valE = valE;
 	M.valA = valA;
-	M.dstE = dstE;
-	M.dstM = dstM;
+	M.dstE = dstE.reg;
+	M.dstM = dstM.reg;
 }
 
 /*

@@ -15,7 +15,12 @@
 #define EBP		0x5
 #define ESI		0x6
 #define EDI		0x7
-#define RNONE	0xf	/* i.e. - no register needed */
+#define RNONE		0xf
+
+/* Program Register type */
+typedef struct {
+	int reg;
+} rregister;
 
 /* Condition Codes (CC) */
 /*
@@ -31,8 +36,8 @@
 void clearCC(void);
 void clearRegisters(void);
 unsigned int getCC(unsigned int bitNumber);
-unsigned int getRegister(int regNum);
+unsigned int getRegister(rregister regNum);
 void setCC(unsigned int bitNumber, unsigned int value);
-void setRegister(int regNum, unsigned int regValue);
+void setRegister(rregister regNum, unsigned int regValue);
 
 #endif	/* REGISTERS_H */

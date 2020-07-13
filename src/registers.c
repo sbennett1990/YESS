@@ -31,13 +31,14 @@ static unsigned int CC = 0;
  * Return the value in the register, or 0 on error.
  */
 unsigned int
-getRegister(int reg)
+getRegister(rregister reg)
 {
-    if (reg >= 0 && reg < REGSIZE) {
-        return registers[reg];
-    } else {
-        return 0;
-    }
+	if (reg.reg >= 0 && reg.reg < REGSIZE) {
+		return registers[reg.reg];
+	}
+	else {
+		return 0;
+	}
 }
 
 /*
@@ -48,11 +49,11 @@ getRegister(int reg)
  *  val		the value to put in the register
  */
 void
-setRegister(int reg, unsigned int val)
+setRegister(rregister reg, unsigned int val)
 {
-    if (reg >= 0 || reg < REGSIZE) {
-        registers[reg] = val;
-    }
+	if (reg.reg >= 0 || reg.reg < REGSIZE) {
+		registers[reg.reg] = val;
+	}
 }
 
 /*
@@ -61,7 +62,7 @@ setRegister(int reg, unsigned int val)
 void
 clearRegisters()
 {
-	clearBuffer((char *) &registers, REGSIZE); // TODO: use recallocarray(3)?
+	clearBuffer((char *) &registers, REGSIZE);
 }
 
 /*

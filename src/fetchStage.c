@@ -35,6 +35,8 @@ static bool instructionValid(unsigned int icode);
 static unsigned int getIcode(unsigned int memByte, bool memError);
 static unsigned int getIfun(unsigned int memByte, bool memError);
 static bool needRegids(unsigned int icode);
+static rregister getRegA(unsigned int memByte);
+static rregister getRegB(unsigned int memByte);
 static bool needValC(unsigned int icode);
 static unsigned int getValC(unsigned int f_pc, bool * memError);
 static bool bubbleF(void);
@@ -78,8 +80,8 @@ fetchStage(forwardType forward, controlType control)
     unsigned int stat = SAOK;
     unsigned int icode;
     unsigned int ifun;
-    unsigned int rA = RNONE;
-    unsigned int rB = RNONE;
+    rregister rA = { RNONE };
+    rregister rB = { RNONE };
     unsigned int valC = 0;
     unsigned int valP = 0;
     unsigned int memByte;
@@ -110,8 +112,8 @@ fetchStage(forwardType forward, controlType control)
                 stat = SADR;
             }
 
-            rA = getBits(4, 7, memByte);
-            rB = getBits(0, 3, memByte);
+		rA = getRegA(memByte);
+		rB = getRegB(memByte);
         }
 
         // Get valC if necessary
@@ -148,7 +150,9 @@ fetchStage(forwardType forward, controlType control)
     // Stall or bubble D?
     if (bubbleD(control)) {
         // Insert a NOP
-        updateDregister(SAOK, NOP, 0, RNONE, RNONE, 0, valP);
+	rregister rnone = { RNONE };
+	// XXX: um wut... valP?
+        updateDregister(SAOK, NOP, 0, rnone, rnone, 0, valP);
     }
     else if (!stallD(&control)) {
         // Update D as normal (do not stall)
@@ -291,6 +295,34 @@ getIfun(unsigned int memByte, bool memError)
     } else {
         return getBits(0, 3, memByte);
     }
+}
+
+/*
+ * Decipher program register id A.
+ *
+ * Parameters:
+ *  memByte     a byte that should contain a program register id
+ */
+rregister
+getRegA(unsigned int memByte)
+{
+	unsigned int reg = getBits(4, 7, memByte);
+	rregister rA = { reg };
+	return rA;
+}
+
+/*
+ * Decipher program register id B.
+ *
+ * Parameters:
+ *  memByte     a byte that should contain a program register id
+ */
+rregister
+getRegB(unsigned int memByte)
+{
+	unsigned int reg = getBits(0, 3, memByte);
+	rregister rB = { reg };
+	return rB;
 }
 
 /*

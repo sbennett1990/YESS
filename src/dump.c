@@ -135,12 +135,20 @@ int isEqual(int prevLine[WORDSPERLINE], int currLine[WORDSPERLINE]) {
  * Output the contents of the YESS program registers to standard out.
  */
 void dumpProgramRegisters(void) {
+	rregister eax = { EAX };
+	rregister ecx = { ECX };
+	rregister edx = { EDX };
+	rregister ebx = { EBX };
+	rregister esp = { ESP };
+	rregister ebp = { EBP };
+	rregister esi = { ESI };
+	rregister edi = { EDI };
     printf("%%eax: %08x %%ecx: %08x %%edx: %08x %%ebx: %08x\n",
-           getRegister(EAX), getRegister(ECX), getRegister(EDX),
-           getRegister(EBX));
+           getRegister(eax), getRegister(ecx), getRegister(edx),
+           getRegister(ebx));
     printf("%%esp: %08x %%ebp: %08x %%esi: %08x %%edi: %08x\n\n",
-           getRegister(ESP), getRegister(EBP), getRegister(ESI),
-           getRegister(EDI));
+           getRegister(esp), getRegister(ebp), getRegister(esi),
+           getRegister(edi));
 }
 
 /*

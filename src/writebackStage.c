@@ -96,8 +96,10 @@ writebackStage(forwardType *forward, statusType *status)
 	status->W_stat = W.stat;
 
 	// write result to appropriate program register
-	setRegister(W.dstE, W.valE);
-	setRegister(W.dstM, W.valM);
+	rregister dstE = { W.dstE };
+	setRegister(dstE, W.valE);
+	rregister dstM = { W.dstM };
+	setRegister(dstM, W.valM);
 
 	return 1;
 }
@@ -115,12 +117,12 @@ writebackStage(forwardType *forward, statusType *status)
  */
 void
 updateWRegister(unsigned int stat, unsigned int icode, unsigned int valE,
-    unsigned int valM, unsigned int dstE, unsigned int dstM)
+    unsigned int valM, rregister dstE, rregister dstM)
 {
 	W.stat = stat;
 	W.icode = icode;
 	W.valE = valE;
 	W.valM = valM;
-	W.dstE = dstE;
-	W.dstM = dstM;
+	W.dstE = dstE.reg;
+	W.dstM = dstM.reg;
 }

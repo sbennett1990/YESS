@@ -22,10 +22,10 @@ struct eregister {
     unsigned int valC;
     unsigned int valA;
     unsigned int valB;
-    unsigned int dstE;
-    unsigned int dstM;
-    unsigned int srcA;
-    unsigned int srcB;
+    unsigned int dstE;	// Program Register
+    unsigned int dstM;	// Program Register
+    unsigned int srcA;	// Program Register
+    unsigned int srcB;	// Program Register
 };
 
 
@@ -35,8 +35,6 @@ void clearEregister(void);
 void executeStage(forwardType *, statusType, controlType *);
 void initFuncPtrArray(void);
 void updateEregister(unsigned int stat, unsigned int icode, unsigned int ifun,
-                     unsigned int valC, unsigned int valA, unsigned int valB,
-                     unsigned int dstE, unsigned int dstM, unsigned int srcA,
-                     unsigned int srcB);
+    unsigned int valC, unsigned int valA, unsigned int valB, rregister dstE,
+    rregister dstM, rregister srcA, rregister srcB);
 #endif	/* EXECUTESTAGE_H */
-

@@ -21,15 +21,14 @@ struct mregister {
     unsigned int Cnd;
     unsigned int valE;
     unsigned int valA;
-    unsigned int dstE;
-    unsigned int dstM;
+    unsigned int dstE;	// Program Register
+    unsigned int dstM;	// Program Register
 };
 
 struct mregister getMregister(void);
 void clearMregister(void);
 void memoryStage(forwardType *, statusType *, controlType *);
 void updateMRegister(unsigned int stat, unsigned int icode, unsigned int Cnd,
-                     unsigned int valE, unsigned int valA, unsigned int dstE,
-                     unsigned int dstM);
+    unsigned int valE, unsigned int valA, rregister dstE, rregister dstM);
 
 #endif	/* MEMORYSTAGE_H */

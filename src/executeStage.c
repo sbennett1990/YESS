@@ -11,7 +11,7 @@
 #include "memoryStage.h"
 
 /*
- * E register holds the input from the decode stage.
+ * E register holds the input for the execute stage.
  */
 static struct eregister E;
 
@@ -77,41 +77,43 @@ clearEregister()
 void
 executeStage(forwardType * forward, statusType status, controlType * control)
 {
-    bool m_bubble = M_bubble(status);
-    changeCC = TRUE;
+	bool m_bubble = M_bubble(status);
+	changeCC = TRUE;
+	rregister dstE = { E.dstE };
+	rregister dstM = { E.dstM };
 
-    // If either m_stat or W_stat are SINS, SADR, or SHLT, then do not modify CC's
-    if (status.m_stat == SINS || status.m_stat == SADR || status.m_stat == SHLT ||
-        status.W_stat == SINS || status.W_stat == SADR || status.W_stat == SHLT) {
-        changeCC = FALSE;
-        m_bubble = TRUE;
-    }
+	// If either m_stat or W_stat are SINS, SADR, or SHLT, then do not modify CC's
+	if (status.m_stat == SINS || status.m_stat == SADR || status.m_stat == SHLT ||
+	    status.W_stat == SINS || status.W_stat == SADR || status.W_stat == SHLT) {
+		changeCC = FALSE;
+		m_bubble = TRUE;
+	}
 
-    // Execute the instruction and compute Cnd
-    unsigned int valE = funcPtr[E.icode]();
-    int e_Cnd = computeCnd(&E);
+	// Execute the instruction and compute Cnd
+	unsigned int valE = funcPtr[E.icode]();
+	int e_Cnd = computeCnd(&E);
 
-    if ((E.icode == RRMOVL) && !e_Cnd) {
-        E.dstE = RNONE;
-    }
+	if ((E.icode == RRMOVL) && !e_Cnd) {
+		dstE.reg = RNONE;
+	}
 
-    forward->e_dstE = E.dstE;
-    forward->e_valE = valE;
+	forward->e_dstE = dstE.reg;
+	forward->e_valE = valE;
+	control->E_dstM = dstM.reg;
+	control->E_icode = E.icode;
+	control->e_Cnd = e_Cnd;
 
-    control->E_icode = E.icode;
-    control->e_Cnd = e_Cnd;
-    control->E_dstM = E.dstM;
-
-    // Bubble M?
-    if (m_bubble) {
-        // Insert a NOP
-		updateMRegister(SAOK, NOP, 0, 0, 0, RNONE, RNONE);
-    }
-    else {
-        // Update M register as normal
+	// Bubble M?
+	if (m_bubble) {
+		// Insert a NOP
+		rregister rnone = { RNONE };
+		updateMRegister(SAOK, NOP, 0, 0, 0, rnone, rnone);
+	}
+	else {
+		// Update M register as normal
 		updateMRegister(E.stat, E.icode, e_Cnd, valE, E.valA,
-		    E.dstE, E.dstM);
-    }
+		    dstE, dstM);
+	}
 }
 
 /*
@@ -119,8 +121,8 @@ executeStage(forwardType * forward, statusType status, controlType * control)
  */
 void
 updateEregister(unsigned int stat, unsigned int icode, unsigned int ifun,
-    unsigned int valC, unsigned int valA, unsigned int valB, unsigned int dstE,
-    unsigned int dstM, unsigned int srcA, unsigned int srcB)
+    unsigned int valC, unsigned int valA, unsigned int valB, rregister dstE,
+    rregister dstM, rregister srcA, rregister srcB)
 {
     E.stat = stat;
     E.icode = icode;
@@ -128,10 +130,10 @@ updateEregister(unsigned int stat, unsigned int icode, unsigned int ifun,
     E.valC = valC;
     E.valA = valA;
     E.valB = valB;
-    E.dstE = dstE;
-    E.dstM = dstM;
-    E.srcA = srcA;
-    E.srcB = srcB;
+    E.dstE = dstE.reg;
+    E.dstM = dstM.reg;
+    E.srcA = srcA.reg;
+    E.srcB = srcB.reg;
 }
 
 /*
