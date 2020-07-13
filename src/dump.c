@@ -17,7 +17,6 @@
 #define WORDSPERLINE 8
 #define LINELENGTH
 
-/* Prototypes for private Functions */
 static void dumpLine(int line[WORDSPERLINE], int address);
 static void buildLine(int line[WORDSPERLINE], int address);
 static int isEqual(int prevLine[WORDSPERLINE], int currLine[WORDSPERLINE]);
