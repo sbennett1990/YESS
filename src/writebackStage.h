@@ -7,6 +7,7 @@
 
 #include "forwarding.h"
 #include "status.h"
+#include "registers.h"
 
 /*
  * +----+---------------------------------------------------------------------+
@@ -18,8 +19,8 @@ struct wregister {
 	unsigned int icode;
 	unsigned int valE;
 	unsigned int valM;
-	unsigned int dstE;	// Program Register
-	unsigned int dstM;	// Program Register
+	rregister dstE;		// Program Register
+	rregister dstM;		// Program Register
 };
 
 int writebackStage(forwardType *, statusType *);

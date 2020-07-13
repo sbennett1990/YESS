@@ -32,12 +32,13 @@ getWregister()
 void
 clearWregister()
 {
+	rregister rnone = { RNONE };
 	W.stat = SAOK;
 	W.icode = NOP;
 	W.valE = 0;
 	W.valM = 0;
-	W.dstE = RNONE;
-	W.dstM = RNONE;
+	W.dstE = rnone;
+	W.dstM = rnone;
 }
 
 /*
@@ -88,18 +89,16 @@ writebackStage(forwardType *forward, statusType *status)
 	}
 
 	// set fields of forward and status struct to current values
-	forward->W_dstE = W.dstE;
+	forward->W_dstE = W.dstE.reg;
 	forward->W_valE = W.valE;
-	forward->W_dstM = W.dstM;
+	forward->W_dstM = W.dstM.reg;
 	forward->W_valM = W.valM;
 	forward->W_icode = W.icode;
 	status->W_stat = W.stat;
 
 	// write result to appropriate program register
-	rregister dstE = { W.dstE };
-	setRegister(dstE, W.valE);
-	rregister dstM = { W.dstM };
-	setRegister(dstM, W.valM);
+	setRegister(W.dstE, W.valE);
+	setRegister(W.dstM, W.valM);
 
 	return 1;
 }
@@ -123,6 +122,6 @@ updateWRegister(unsigned int stat, unsigned int icode, unsigned int valE,
 	W.icode = icode;
 	W.valE = valE;
 	W.valM = valM;
-	W.dstE = dstE.reg;
-	W.dstM = dstM.reg;
+	W.dstE = dstE;
+	W.dstM = dstM;
 }

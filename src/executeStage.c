@@ -52,16 +52,17 @@ getEregister()
 void
 clearEregister()
 {
+	rregister rnone = { RNONE };
 	E.stat = SAOK;
 	E.icode = NOP;
 	E.ifun = 0;
 	E.valC = 0;
 	E.valA = 0;
 	E.valB = 0;
-	E.dstE = RNONE;
-	E.dstM = RNONE;
-	E.srcA = RNONE;
-	E.srcB = RNONE;
+	E.dstE = rnone;
+	E.dstM = rnone;
+	E.srcA = rnone;
+	E.srcB = rnone;
 }
 
 /*
@@ -79,8 +80,8 @@ executeStage(forwardType * forward, statusType status, controlType * control)
 {
 	bool m_bubble = M_bubble(status);
 	changeCC = TRUE;
-	rregister dstE = { E.dstE };
-	rregister dstM = { E.dstM };
+	rregister dstE = E.dstE;
+	rregister dstM = E.dstM;
 
 	// If either m_stat or W_stat are SINS, SADR, or SHLT, then do not modify CC's
 	if (status.m_stat == SINS || status.m_stat == SADR || status.m_stat == SHLT ||
@@ -130,10 +131,10 @@ updateEregister(unsigned int stat, unsigned int icode, unsigned int ifun,
     E.valC = valC;
     E.valA = valA;
     E.valB = valB;
-    E.dstE = dstE.reg;
-    E.dstM = dstM.reg;
-    E.srcA = srcA.reg;
-    E.srcB = srcB.reg;
+    E.dstE = dstE;
+    E.dstM = dstM;
+    E.srcA = srcA;
+    E.srcB = srcB;
 }
 
 /*

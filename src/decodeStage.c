@@ -52,11 +52,12 @@ getDregister()
 void
 clearDregister()
 {
+	rregister rnone = { RNONE };
 	D.stat = SAOK;
 	D.icode = NOP;
 	D.ifun = 0;
-	D.rA = RNONE;
-	D.rB = RNONE;
+	D.rA = rnone;
+	D.rB = rnone;
 	D.valC = 0;
 	D.valP = 0;
 }
@@ -108,8 +109,8 @@ updateDregister(unsigned int stat, unsigned int icode, unsigned int ifun,
 	D.stat = stat;
 	D.icode = icode;
 	D.ifun = ifun;
-	D.rA = rA.reg;
-	D.rB = rB.reg;
+	D.rA = rA;
+	D.rB = rB;
 	D.valC = valC;
 	D.valP = valP;
 }
@@ -130,7 +131,7 @@ getSrcA(const struct dregister *dreg)
         case RMMOVL:
         case OPL:
         case PUSHL:
-            srcA.reg = dreg->rA;
+            srcA = dreg->rA;
             break;
 
         case POPL:
@@ -160,7 +161,7 @@ getSrcB(const struct dregister *dreg)
 	case OPL:
 	case RMMOVL:
 	case MRMOVL:
-		srcB.reg = dreg->rB;
+		srcB = dreg->rB;
 		break;
 
 	case POPL:
@@ -191,7 +192,7 @@ getDstE(const struct dregister *dreg)
         case OPL:
         case RRMOVL:
         case IRMOVL:
-            dstE.reg = dreg->rB;
+            dstE = dreg->rB;
             break;
 
         case POPL:
@@ -219,7 +220,7 @@ getDstM(const struct dregister *dreg)
 	rregister dstM = { RNONE };
 
 	if (dreg->icode == MRMOVL || dreg->icode == POPL) {
-		dstM.reg = dreg->rA;
+		dstM = dreg->rA;
 	}
 
 	return dstM;

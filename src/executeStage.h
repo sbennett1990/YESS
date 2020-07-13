@@ -9,6 +9,7 @@
 #include "forwarding.h"
 #include "control.h"
 #include "status.h"
+#include "registers.h"
 
 /*
  * +----+---------------------------------------------------------------------+
@@ -16,16 +17,16 @@
  * +----+---------------------------------------------------------------------+
  */
 struct eregister {
-    unsigned int stat;
-    unsigned int icode;
-    unsigned int ifun;
-    unsigned int valC;
-    unsigned int valA;
-    unsigned int valB;
-    unsigned int dstE;	// Program Register
-    unsigned int dstM;	// Program Register
-    unsigned int srcA;	// Program Register
-    unsigned int srcB;	// Program Register
+	unsigned int stat;
+	unsigned int icode;
+	unsigned int ifun;
+	unsigned int valC;
+	unsigned int valA;
+	unsigned int valB;
+	rregister dstE;		// Program Register
+	rregister dstM;		// Program Register
+	rregister srcA;		// Program Register
+	rregister srcB;		// Program Register
 };
 
 

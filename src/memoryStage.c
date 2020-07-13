@@ -38,13 +38,14 @@ getMregister()
 void
 clearMregister()
 {
+	rregister rnone = { RNONE };
 	M.stat = SAOK;
 	M.icode = NOP;
 	M.Cnd = 0;
 	M.valE = 0;
 	M.valA = 0;
-	M.dstE = RNONE;
-	M.dstM = RNONE;
+	M.dstE = rnone;
+	M.dstM = rnone;
 }
 
 /*
@@ -78,8 +79,8 @@ memoryStage(forwardType * forward, statusType * status, controlType * control)
 		stat = SADR;
 	}
 
-	forward->M_dstM = M.dstM;
-	forward->M_dstE = M.dstE;
+	forward->M_dstM = M.dstM.reg;
+	forward->M_dstE = M.dstE.reg;
 	forward->m_valM = valM;
 	forward->M_valE = M.valE;
 	forward->M_Cnd = M.Cnd;
@@ -93,9 +94,7 @@ memoryStage(forwardType * forward, statusType * status, controlType * control)
 		 * If stall is true, do nothing to keep current values in the
 		 * Writeback Stage.
 		 */
-		rregister dstE = { M.dstE };
-		rregister dstM = { M.dstM };
-		updateWRegister(stat, M.icode, M.valE, valM, dstE, dstM);
+		updateWRegister(stat, M.icode, M.valE, valM, M.dstE, M.dstM);
 	}
 }
 
@@ -111,8 +110,8 @@ updateMRegister(unsigned int stat, unsigned int icode, unsigned int Cnd,
 	M.Cnd = Cnd;
 	M.valE = valE;
 	M.valA = valA;
-	M.dstE = dstE.reg;
-	M.dstM = dstM.reg;
+	M.dstE = dstE;
+	M.dstM = dstM;
 }
 
 /*

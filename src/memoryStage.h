@@ -9,6 +9,7 @@
 #include "forwarding.h"
 #include "control.h"
 #include "status.h"
+#include "registers.h"
 
 /*
  * +----+---------------------------------------------------------------------+
@@ -16,13 +17,13 @@
  * +----+---------------------------------------------------------------------+
  */
 struct mregister {
-    unsigned int stat;
-    unsigned int icode;
-    unsigned int Cnd;
-    unsigned int valE;
-    unsigned int valA;
-    unsigned int dstE;	// Program Register
-    unsigned int dstM;	// Program Register
+	unsigned int stat;
+	unsigned int icode;
+	unsigned int Cnd;
+	unsigned int valE;
+	unsigned int valA;
+	rregister dstE;		// Program Register
+	rregister dstM;		// Program Register
 };
 
 struct mregister getMregister(void);
