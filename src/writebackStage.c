@@ -11,6 +11,8 @@
 #include "instructions.h"
 #include "writebackStage.h"
 
+#include "logger.h"
+
 /*
  * W register holds the input from the memory stage.
  */
@@ -72,6 +74,7 @@ writebackStage(forwardType *forward, statusType *status)
 		return -1;
 	}
 	else if (W.stat == SHLT) {
+		log_debug("halting program");
 		return -1; // XXX: maybe return a different code to differentiate?
 	}
 
