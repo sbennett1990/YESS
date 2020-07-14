@@ -307,8 +307,8 @@ bubbleE(const controlType *control)
 	bool bubble = FALSE;
 
 	if ((control->E_icode == JXX && !control->e_Cnd) ||
-	    (control->E_icode == MRMOVL || control->E_icode == POPL) &&
-	    (control->E_dstM == control->d_srcA || control->E_dstM == control->d_srcB)) {
+	    ((control->E_icode == MRMOVL || control->E_icode == POPL) &&
+	    (control->E_dstM == control->d_srcA || control->E_dstM == control->d_srcB))) {
 		bubble = TRUE;
 	}
 
