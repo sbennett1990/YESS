@@ -11,6 +11,7 @@ src/yess.exe
 *.ko
 *.obj
 *.elf
+obj/
 
 # Precompiled Headers
 *.gch
