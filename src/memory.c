@@ -14,8 +14,9 @@
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-#include "tools.h"
 #include "memory.h"
+#include "tools.h"
+
 #include "logger.h"
 
 /* System Memory */
@@ -162,6 +163,8 @@ getWord(int byteAddress, bool * memError)
 
 	/* ensure byteAddress is a multiple of WORDSIZE */
 	if (byteAddress % WORDSIZE) {
+		log_debug("can't get word: %d is not a multiple of 4",
+		    byteAddress);
 		*memError = TRUE;
 		return 0;
 	}
@@ -196,6 +199,8 @@ putWord(int byteAddress, unsigned int value, bool * memError)
 
 	/* ensure byteAddress is a multiple of WORDSIZE */
 	if (byteAddress % WORDSIZE) {
+		log_debug("can't put word: %d is not a multiple of 4",
+		    byteAddress);
 		*memError = TRUE;
 		return;
 	}

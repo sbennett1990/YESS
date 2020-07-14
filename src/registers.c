@@ -17,6 +17,8 @@
 #include "registers.h"
 #include "tools.h"
 
+#include "logger.h"
+
 /* Program Registers */
 static unsigned int registers[REGSIZE];
 /* Condition Codes */
@@ -37,6 +39,8 @@ getRegister(rregister reg)
 		return registers[reg.reg];
 	}
 	else {
+		log_debug("can't get register value: invalid register id %d",
+		    reg.reg);
 		return 0;
 	}
 }
@@ -53,6 +57,10 @@ setRegister(rregister reg, unsigned int val)
 {
 	if (reg.reg >= 0 || reg.reg < REGSIZE) {
 		registers[reg.reg] = val;
+	}
+	else {
+		log_debug("can't set register value: invalid register id %d",
+		    reg.reg);
 	}
 }
 
