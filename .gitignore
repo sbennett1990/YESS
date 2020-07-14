@@ -1,6 +1,10 @@
 # YESS executable
 /yess
 /yess.exe
+src/yess
+src/yess.exe
+
+*.d
 
 # Object files
 *.o
