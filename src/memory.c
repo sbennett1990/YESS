@@ -5,7 +5,8 @@
 #include "tools.h"
 #include "memory.h"
 
-static unsigned int memory[MEMSIZE]; // XXX: should MEMSIZE be 1023?
+/* System Memory */
+static unsigned int memory[MEMSIZE];
 
 static unsigned int fetch(int address, bool * memError);
 static void store(int address, unsigned int value, bool * memError);
@@ -20,7 +21,7 @@ static void store(int address, unsigned int value, bool * memError);
  *
  * Return the contents of memory at address, or 0 on error.
  */
-static unsigned int
+unsigned int
 fetch(int address, bool * memError)
 {
     if (address < 0 || address >= MEMSIZE) {
@@ -42,7 +43,7 @@ fetch(int address, bool * memError)
  *	value       the value to store in memory at address
  *	*memError   indicates memory write error
  */
-static void
+void
 store(int address, unsigned int value, bool * memError)
 {
     if (address < 0 || address >= MEMSIZE) {
@@ -64,7 +65,9 @@ store(int address, unsigned int value, bool * memError)
  *
  * Return the contents of memory at the byte address, or 0 for error
  */
-unsigned char getByte(int byteAddress, bool * memError) {
+unsigned char
+getByte(int byteAddress, bool * memError)
+{
     if (byteAddress < 0 || byteAddress > HIGHBYTE) {
         *memError = TRUE;
         return 0;
@@ -91,7 +94,9 @@ unsigned char getByte(int byteAddress, bool * memError) {
  *  value           the value to store in memory at the address
  *  *memError       pointer to the memory error indicator
  */
-void putByte(int byteAddress, unsigned char value, bool * memError) {
+void
+putByte(int byteAddress, unsigned char value, bool * memError)
+{
     if (byteAddress < 0 || byteAddress > HIGHBYTE) {
         *memError = TRUE;
         return;
@@ -142,9 +147,9 @@ getWord(int byteAddress, bool * memError)
         return 0;
     }
 
-    *memError = FALSE;
+	*memError = FALSE;
 	// How does this work if byteAddress is 1 or 0?
-    return fetch((byteAddress / WORDSIZE), memError);
+	return fetch((byteAddress / WORDSIZE), memError);
 }
 
 /*

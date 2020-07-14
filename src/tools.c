@@ -151,7 +151,7 @@ unsigned int assignOneBit(int bitNumber, int bitValue, unsigned int source) {
 }
 
 /*
- * Return the data in a specified byte number (o-3) of a source int.
+ * Return the data in a specified byte number (0-3) of a source int.
  *
  * Parameters:
  *      byteNo  the byte of data to grab
