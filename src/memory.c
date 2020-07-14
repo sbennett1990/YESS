@@ -16,6 +16,7 @@
 
 #include "tools.h"
 #include "memory.h"
+#include "logger.h"
 
 /* System Memory */
 static unsigned int memory[MEMSIZE];
@@ -81,6 +82,8 @@ unsigned char
 getByte(int byteAddress, bool * memError)
 {
     if (byteAddress < 0 || byteAddress > HIGHBYTE) {
+		log_debug("can't get byte: invalid memory address %d",
+		    byteAddress);
         *memError = TRUE;
         return 0;
     }
@@ -110,6 +113,8 @@ void
 putByte(int byteAddress, unsigned char value, bool * memError)
 {
     if (byteAddress < 0 || byteAddress > HIGHBYTE) {
+		log_debug("can't put byte: invalid memory address %d",
+		    byteAddress);
         *memError = TRUE;
         return;
     }
@@ -145,6 +150,8 @@ getWord(int byteAddress, bool * memError)
 {
 	// TODO: test this function!
 	if (byteAddress < 0 || byteAddress > HIGHBYTE) {
+		log_debug("can't get word: invalid memory address %d",
+		    byteAddress);
 		*memError = TRUE;
 		return 0;
 	}
@@ -153,11 +160,11 @@ getWord(int byteAddress, bool * memError)
 		return fetch(0, memError);
 	}
 
-    /* ensure byteAddress is a multiple of WORDSIZE */
-    if (byteAddress % WORDSIZE) {
-        *memError = TRUE;
-        return 0;
-    }
+	/* ensure byteAddress is a multiple of WORDSIZE */
+	if (byteAddress % WORDSIZE) {
+		*memError = TRUE;
+		return 0;
+	}
 
 	*memError = FALSE;
 	// How does this work if byteAddress is 1 or 0?
@@ -181,6 +188,8 @@ putWord(int byteAddress, unsigned int value, bool * memError)
 {
 	// TODO: test this function!
 	if (byteAddress < 0 || byteAddress > HIGHBYTE) {
+		log_debug("can't put word: invalid memory address %d",
+		    byteAddress);
 		*memError = TRUE;
 		return;
 	}
