@@ -61,9 +61,6 @@ setupyess(void)
 	clearWregister();
 }
 
-/*
- * Main
- */
 int
 main(int argc, char **argv)
 {
@@ -109,7 +106,7 @@ main(int argc, char **argv)
 
 	/* done with option parsing, initialize the program */
 	log_init(verbosity, 0);
-	log_debug("initializing YESS...");
+	log_debug("initializing yess...");
 	initialpledge();
 
 	/* initialize the 'processor' */

@@ -14,11 +14,6 @@
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-/*
- * Loads machine source code (in ASCII form) into YESS memory. Also performs
- * error checking on the source file.
- */
-
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -53,18 +48,18 @@ static bool hasaddress(const char *line);
 static short hasdata(const char *line);
 
 /*
- * Driver function for the entire YESS program. Takes in a machine code (ASCII)
- * source file and loads the instructions and data into memory.
+ * Loads machine source code (instructions and data) into yess
+ * memory. Also performs error checking on the source file.
  *
  * Parameters:
- *     *fileName    name of the file to load
+ *  *fileName	name of the file to load
  *
  * Return true if load was successful; false if error occurred
  */
 bool
 load(const char * fileName)
 {
-	FILE * fp;
+	FILE *fp;
 	bool memError;
 
 	if (validatefilename(fileName) == -1) {
@@ -78,6 +73,8 @@ load(const char * fileName)
 		log_warn("error opening the file");
 		return FALSE; /* EXIT */
 	}
+
+	log_info("reading program into memory");
 
 	/* initial value since no address has been modified yet */
 	int prevaddr = -1;
