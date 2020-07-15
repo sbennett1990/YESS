@@ -150,20 +150,20 @@ mem_addr(const struct mregister *mreg)
 bool
 mem_read(const struct mregister *mreg)
 {
-    bool read = FALSE;
+	bool read = FALSE;
 
-    switch (mreg->icode) {
-        case MRMOVL:
-        case POPL:
-        case RET:
-            read = TRUE;
-            break;
+	switch (mreg->icode) {
+	case MRMOVL:
+	case POPL:
+	case RET:
+		read = TRUE;
+		break;
 
-        default:
-            read = FALSE;
-    }
+	default:
+		read = FALSE;
+	}
 
-    return read;
+	return read;
 }
 
 /*
@@ -172,20 +172,20 @@ mem_read(const struct mregister *mreg)
 bool
 mem_write(const struct mregister *mreg)
 {
-    bool write = FALSE;
+	bool write = FALSE;
 
-    switch (mreg->icode) {
-        case RMMOVL:
-        case PUSHL:
-        case CALL:
-            write = TRUE;
-            break;
+	switch (mreg->icode) {
+	case RMMOVL:
+	case PUSHL:
+	case CALL:
+		write = TRUE;
+		break;
 
-        default:
-            write = FALSE;
-    }
+	default:
+		write = FALSE;
+	}
 
-    return write;
+	return write;
 }
 
 /*
