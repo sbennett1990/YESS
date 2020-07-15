@@ -32,8 +32,8 @@ static unsigned int performRet(void);
 static void computeCC(int result, int a, int b);	// XXX: what was this?
 static int computeCnd(const struct eregister *);
 
-static bool M_stall(void);
-static bool M_bubble(statusType status);
+static bool stallM(void);
+static bool bubbleM(statusType status);
 
 static bool changeCC;
 
@@ -78,7 +78,7 @@ clearEregister()
 void
 executeStage(forwardType * forward, statusType status, controlType * control)
 {
-	bool m_bubble = M_bubble(status);
+	bool m_bubble = bubbleM(status);
 	changeCC = TRUE;
 	rregister dstE = E.dstE;
 	rregister dstM = E.dstM;
@@ -420,8 +420,10 @@ unsigned int performRet() {
  * Determine if the M register should be stalled. According to HCL,
  * M will never be stalled, therefore it returns false.
  */
-bool M_stall() {
-    return FALSE;
+bool
+stallM()
+{
+	return FALSE;
 }
 
 /**
@@ -431,13 +433,15 @@ bool M_stall() {
  * @param status Holds status values from later stages
  * @return True if M should be bubbled, false otherwise
  */
-bool M_bubble(statusType status) {
-    bool bubble = FALSE;
+bool
+bubbleM(statusType status)
+{
+	bool bubble = FALSE;
 
-    if ((status.m_stat == SADR || status.m_stat == SINS || status.m_stat == SHLT) ||
-        (status.W_stat == SADR || status.W_stat == SINS || status.W_stat == SHLT)) {
-        bubble = TRUE;
-    }
+	if ((status.m_stat == SADR || status.m_stat == SINS || status.m_stat == SHLT) ||
+	    (status.W_stat == SADR || status.W_stat == SINS || status.W_stat == SHLT)) {
+		bubble = TRUE;
+	}
 
-    return bubble;
+	return bubble;
 }
