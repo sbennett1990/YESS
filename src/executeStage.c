@@ -3,11 +3,12 @@
  * Author: Alex Savarda
  */
 
+#include <limits.h>
+
+#include "executeStage.h"
 #include "bool.h"
 #include "tools.h"
-#include "registers.h"
 #include "instructions.h"
-#include "executeStage.h"
 #include "memoryStage.h"
 
 /*
@@ -144,25 +145,25 @@ updateEregister(unsigned int stat, unsigned int icode, unsigned int ifun,
 void
 initFuncPtrArray()
 {
-    // First initialize array to 0's
-    int i;
-    for (i = 0; i < INSTR_COUNT; i++) {
-        funcPtr[i] = performZero;
-    }
+	// First initialize array to 0's
+	int i;
+	for (i = 0; i < INSTR_COUNT; i++) {
+		funcPtr[i] = performZero;
+	}
 
-    funcPtr[HALT] = performZero;
-    funcPtr[NOP] = performZero;
-    funcPtr[RRMOVL] = performRrmovl;
-    funcPtr[IRMOVL] = performIrmovl;
-    funcPtr[RMMOVL] = performRmmovl;
-    funcPtr[MRMOVL] = performMrmovl;
-    funcPtr[OPL] = performOpl;
-    funcPtr[JXX] = performJXX;
-    funcPtr[CALL] = performCall;
-    funcPtr[RET] = performRet;
-    funcPtr[PUSHL] = performPushl;
-    funcPtr[POPL] = performPopl;
-    funcPtr[DUMP] = performDUMP;
+	funcPtr[HALT] = performZero;
+	funcPtr[NOP] = performZero;
+	funcPtr[RRMOVL] = performRrmovl;
+	funcPtr[IRMOVL] = performIrmovl;
+	funcPtr[RMMOVL] = performRmmovl;
+	funcPtr[MRMOVL] = performMrmovl;
+	funcPtr[OPL] = performOpl;
+	funcPtr[JXX] = performJXX;
+	funcPtr[CALL] = performCall;
+	funcPtr[RET] = performRet;
+	funcPtr[PUSHL] = performPushl;
+	funcPtr[POPL] = performPopl;
+	funcPtr[DUMP] = performDUMP;
 }
 
 /**
@@ -292,83 +293,83 @@ unsigned int performIrmovl() {
     return E.valC;
 }
 
-/**
- * Perform either an ADD, SUB, AND, or XOR operation
+/*
+ * Perform an ADD, SUB, AND, or XOR operation
  * and set the CC accordingly.
  *
- * @return Result of valB <OPL> valA
+ * @return Result of: valB <OPL> valA
  */
-unsigned int performOpl() {
-    int a = (int) E.valA;	// XXX: should these be cast?
-    int b = (int) E.valB;
-    int result = 0;
+unsigned int
+performOpl()
+{
+	int a = (int) E.valA;
+	int b = (int) E.valB;
+	int result = 0;
 
-    if (changeCC) {
-        // The CC register is cleared before every OPL
-        clearCC();
+	if (!changeCC) {
+		return result;
+	}
 
-        // perform addl
-        if (E.ifun == ADDL) {
-            result = b + a;
+	// The CC register is cleared before every OPL
+	clearCC();
 
-            if (result == 0) {
-                setCC(ZF, 1);
-            }
+	switch (E.ifun) {
+	case ADDL:
+		result = b + a;
+		if (result == 0) {
+			setCC(ZF, 1);
+		}
+		if (result < 0) {
+			setCC(SF, 1);
+		}
+		/* check for integer overflow */
+		if (a > 0 && b > 0 && (a > INT_MAX - b)) {
+			setCC(OF, 1);
+		}
+		else if (a < 0 && b < 0 && (a < INT_MIN - b)) {
+			setCC(OF, 1);
+		}
+		break;
 
-            if (result < 0) {
-                setCC(SF, 1);
-            }
+	case SUBL:
+		result = b - a;
+		if (result == 0) {
+			setCC(ZF, 1);
+		}
+		if (result < 0) {
+			setCC(SF, 1);
+		}
+		/* check for integer overflow */
+		if (b < 0 && a > 0 && (b < INT_MIN + a)) {
+			setCC(OF, 1);
+		}
+		else if (b > 0 && a < 0 && (b > INT_MAX + a)) {
+			setCC(OF, 1);
+		}
+		break;
 
-            if ((a < 0 == b < 0) && (result < 0 != a < 0)) {
-                setCC(OF, 1);
-            }
-        }
+	case ANDL:
+		result = b & a;
+		if (result == 0) {
+			setCC(ZF, 1);
+		}
+		if (result < 0) {
+			setCC(SF, 1);
+		}
+		break;
 
-        // perform subl
-        if (E.ifun == SUBL) {
-            result = b - a;
+	case XORL:
+		result = b ^ a;
+		if (result == 0) {
+			setCC(ZF, 1);
+		}
+		if (result < 0) {
+			setCC(SF, 1);
+		}
+		break;
+	}
 
-            if (result == 0) {
-                setCC(ZF, 1);
-            }
-
-            if (result < 0) {
-                setCC(SF, 1);
-            }
-
-            if ((a > 0 != b > 0) && (result > 0 == a > 0)) {
-                setCC(OF, 1);
-            }
-        }
-
-        // perform andl
-        if (E.ifun == ANDL) {
-            result = b & a;
-
-            if (result == 0) {
-                setCC(ZF, 1);
-            }
-
-            if (result < 0) {
-                setCC(SF, 1);
-            }
-        }
-
-        // perform xorl
-        if (E.ifun == XORL) {
-            result = b ^ a;
-
-            if (result == 0) {
-                setCC(ZF, 1);
-            }
-
-            if (result < 0) {
-                setCC(SF, 1);
-            }
-        }
-    }
-
-    return result;
+	return result;
 }
 
 /**

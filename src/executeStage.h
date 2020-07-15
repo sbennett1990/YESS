@@ -30,7 +30,6 @@ struct eregister {
 };
 
 
-// Function prototypes
 struct eregister getEregister(void);
 void clearEregister(void);
 void executeStage(forwardType *, statusType, controlType *);
