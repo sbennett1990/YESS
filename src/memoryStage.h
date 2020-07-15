@@ -21,7 +21,7 @@ struct mregister {
 	unsigned int icode;
 	unsigned int Cnd;
 	unsigned int valE;	// Result from Execute Stage (ALU)
-	unsigned int valA;	// Data to be written to memory
+	unsigned int valA;	// Data to be written to memory (except POPL & RET)
 	rregister dstE;		// Program Register: destination for valE
 	rregister dstM;		// Program Register: destination for valM
 };
