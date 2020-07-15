@@ -151,8 +151,7 @@ fetchStage(forwardType forward, controlType control)
     if (bubbleD(control)) {
         // Insert a NOP
 	rregister rnone = { RNONE };
-	// XXX: um wut... valP?
-        updateDregister(SAOK, NOP, 0, rnone, rnone, 0, valP);
+        updateDregister(SAOK, NOP, 0, rnone, rnone, 0, 0);
     }
     else if (!stallD(&control)) {
         // Update D as normal (do not stall)
