@@ -145,28 +145,6 @@ mem_addr(const struct mregister *mreg)
 }
 
 /*
- * Should data (valA) be written to memory?
- */
-bool
-mem_write(const struct mregister *mreg)
-{
-    bool write = FALSE;
-
-    switch (mreg->icode) {
-        case RMMOVL:
-        case PUSHL:
-        case CALL:
-            write = TRUE;
-            break;
-
-        default:
-            write = FALSE;
-    }
-
-    return write;
-}
-
-/*
  * Should data be read from memory?
  */
 bool
@@ -186,6 +164,28 @@ mem_read(const struct mregister *mreg)
     }
 
     return read;
+}
+
+/*
+ * Should data (valA) be written to memory?
+ */
+bool
+mem_write(const struct mregister *mreg)
+{
+    bool write = FALSE;
+
+    switch (mreg->icode) {
+        case RMMOVL:
+        case PUSHL:
+        case CALL:
+            write = TRUE;
+            break;
+
+        default:
+            write = FALSE;
+    }
+
+    return write;
 }
 
 /*
