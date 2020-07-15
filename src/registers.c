@@ -86,8 +86,15 @@ clearRegisters()
  *  value       the value to set the condition code
  */
 void
-setCC(unsigned int bitNumber, unsigned int value)
+setCC(short bitNumber, unsigned int value)
 {
+	if (bitNumber != ZF && bitNumber != SF && bitNumber != OF) {
+		log_warn("can't set CC: invalid bit number %d", bitNumber);
+	}
+	if (value != 0 && value != 1) {
+		log_warn("can't set CC: bad value %d", value);
+	}
+
 	// TODO: error check the value param
 	if (bitNumber == ZF || bitNumber == SF || bitNumber == OF) {
 		CC = assignOneBit(bitNumber, value, CC);
@@ -104,9 +111,13 @@ setCC(unsigned int bitNumber, unsigned int value)
  *
  * Return the value of the bitNumber bit in CC, or 0 on error
  */
-unsigned int
-getCC(unsigned int bitNumber)
+int
+getCC(short bitNumber)
 {
+	if (bitNumber != ZF && bitNumber != SF && bitNumber != OF) {
+		log_warn("can't get real CC: invalid bit number %d", bitNumber);
+	}
+
 	if (bitNumber == ZF || bitNumber == SF || bitNumber == OF) {
 		return getBits(bitNumber, bitNumber, CC);
 	}

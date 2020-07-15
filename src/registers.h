@@ -6,6 +6,7 @@
 #define	REGISTERS_H
 
 #define REGSIZE	8	/* number of registers */
+
 /* Program Registers */
 #define EAX		0x0
 #define ECX		0x1
@@ -29,15 +30,18 @@ typedef struct {
  * SF: was the result < 0?
  * OF: did the result overflow? (2's complement)
  */
-#define ZF		0x2		/* zero flag     - bit 2 of the CC */
-#define SF		0x1		/* sign flag     - bit 1 of the CC */
-#define OF		0x0		/* overflow flag - bit 0 of the CC */
+#define ZF	0x2	/* zero flag     - bit 2 of the CC */
+#define SF	0x1	/* sign flag     - bit 1 of the CC */
+#define OF	0x0	/* overflow flag - bit 0 of the CC */
+
+
+void clearRegisters(void);
+unsigned int getRegister(rregister regNum);
+void setRegister(rregister regNum, unsigned int regValue);
 
 void clearCC(void);
-void clearRegisters(void);
-unsigned int getCC(unsigned int bitNumber);
-unsigned int getRegister(rregister regNum);
-void setCC(unsigned int bitNumber, unsigned int value);
-void setRegister(rregister regNum, unsigned int regValue);
+int getCC(short bitNumber);
+void setCC(short bitNumber, unsigned int value);
+
 
 #endif	/* REGISTERS_H */
