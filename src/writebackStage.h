@@ -17,10 +17,10 @@
 struct wregister {
 	unsigned int stat;
 	unsigned int icode;
-	unsigned int valE;
-	unsigned int valM;
-	rregister dstE;		// Program Register
-	rregister dstM;		// Program Register
+	unsigned int valE;	// Result from Execute Stage (ALU)
+	unsigned int valM;	// Data read from memory
+	rregister dstE;		// Program Register: destination for valE
+	rregister dstM;		// Program Register: destination for valM
 };
 
 int writebackStage(forwardType *, statusType *);

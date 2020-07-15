@@ -21,9 +21,9 @@ struct eregister {
 	unsigned int icode;
 	unsigned int ifun;
 	unsigned int valC;
-	unsigned int valA;
+	unsigned int valA;	// Data read from srcA
 	unsigned int valB;
-	rregister dstE;		// Program Register
+	rregister dstE;		// Program Register: destination for valE
 	rregister dstM;		// Program Register
 	rregister srcA;		// Program Register
 	rregister srcB;		// Program Register

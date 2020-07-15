@@ -62,7 +62,7 @@ memoryStage(forwardType * forward, statusType * status, controlType * control)
 {
 	unsigned int address = mem_addr(&M);
 	unsigned int stat = M.stat;
-	unsigned int valM = NOADDRESS;
+	unsigned int valM = NOADDRESS;	/* value read from memory */
 	bool memError = FALSE;
 
 	// read data from memory?
@@ -145,7 +145,7 @@ mem_addr(const struct mregister *mreg)
 }
 
 /*
- * Set write control signal
+ * Should data (valA) be written to memory?
  */
 bool
 mem_write(const struct mregister *mreg)
@@ -167,7 +167,7 @@ mem_write(const struct mregister *mreg)
 }
 
 /*
- * Set read control signal
+ * Should data be read from memory?
  */
 bool
 mem_read(const struct mregister *mreg)

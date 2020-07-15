@@ -20,10 +20,10 @@ struct mregister {
 	unsigned int stat;
 	unsigned int icode;
 	unsigned int Cnd;
-	unsigned int valE;
-	unsigned int valA;
-	rregister dstE;		// Program Register
-	rregister dstM;		// Program Register
+	unsigned int valE;	// Result from Execute Stage (ALU)
+	unsigned int valA;	// Data to be written to memory
+	rregister dstE;		// Program Register: destination for valE
+	rregister dstM;		// Program Register: destination for valM
 };
 
 struct mregister getMregister(void);

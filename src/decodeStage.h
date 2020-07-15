@@ -32,8 +32,8 @@ struct dregister {
 	unsigned int ifun;
 	rregister rA;		// Program Register
 	rregister rB;		// Program Register
-	unsigned int valC;
-	unsigned int valP;
+	unsigned int valC;	// Instruction constant
+	unsigned int valP;	// Incremented PC
 };
 
 struct dregister getDregister(void);
