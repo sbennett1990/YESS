@@ -16,7 +16,7 @@
  */
 static struct mregister M;
 
-static unsigned int mem_addr(const struct mregister *);
+static unsigned int memory_addr(const struct mregister *);
 static bool mem_write(const struct mregister *);
 static bool mem_read(const struct mregister *);
 static bool stallW(statusType status);
@@ -60,19 +60,20 @@ clearMregister()
 void
 memoryStage(forwardType * forward, statusType * status, controlType * control)
 {
-	unsigned int address = mem_addr(&M);
 	unsigned int stat = M.stat;
 	unsigned int valM = NOADDRESS;	/* value read from memory */
 	bool memError = FALSE;
 
-	// read data from memory?
-	if (mem_read(&M)) {
-		valM = getWord(address, &memError);
-	}
-
-	// write data to memory?
-	if (mem_write(&M)) {
-		putWord(address, M.valA, &memError);
+	{
+		unsigned int memaddress = memory_addr(&M);
+		// read data from memory?
+		if (mem_read(&M)) {
+			valM = getWord(memaddress, &memError);
+		}
+		// write data to memory?
+		if (mem_write(&M)) {
+			putWord(memaddress, M.valA, &memError);
+		}
 	}
 
 	if (memError) {
@@ -120,7 +121,7 @@ updateMRegister(unsigned int stat, unsigned int icode, unsigned int Cnd,
  * @return The memory address. Default is NOADDRESS.
  */
 unsigned int
-mem_addr(const struct mregister *mreg)
+memory_addr(const struct mregister *mreg)
 {
 	unsigned int address = NOADDRESS;
 
