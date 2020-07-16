@@ -66,6 +66,7 @@ main(int argc, char **argv)
 {
 	int ch;
 	int dflag = 0;	/* debug */
+	int fflag = 0;	/* was file given? */
 	int vflag = 0;	/* verbose */
 	int verbosity = 0;
 	const char *sourcefile;
@@ -77,6 +78,7 @@ main(int argc, char **argv)
 			break;
 		case 'f':
 			sourcefile = optarg;
+			fflag = 1;
 			break;
 		case 'u':
 			usage(); /* EXIT */
@@ -91,7 +93,7 @@ main(int argc, char **argv)
 	argc -= optind;
 	argv += optind;
 
-	if (argc > 0 || sourcefile == NULL) {
+	if (argc > 0 || sourcefile == NULL || !fflag) {
 		usage(); /* EXIT */
 	}
 
@@ -114,7 +116,6 @@ main(int argc, char **argv)
 
 	/* load 'program' file into 'memory'; terminate if there is a problem */
 	if (!load(sourcefile)) {
-		dumpMemory();
 		log_warn("error loading the file");
 		log_debug("exiting");
 		return 1; /* EXIT */
