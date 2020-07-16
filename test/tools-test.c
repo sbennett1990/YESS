@@ -12,10 +12,10 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "../src/bool.h"
-#include "../src/tools.h"
+#include "bool.h"
+#include "tools.h"
 
-static void printbuff(int * buff);
+static void printbuff(int * buff, size_t length);
 static int test_clearBuffer(void);
 static int test_getBits(int low, int high, unsigned int source, unsigned int expected);
 
@@ -46,22 +46,10 @@ static void initialize(void) {
 }
 
 /*
- * Validate that the correct number of arguments are provided and that the
- * second argument is a valid file name. If the arguments are invalid,
- * usage info will be printed and the program will exit.
- */
-static void validate_args(int argc, char * argv[]) {
-    if (argc != 2) {
-        usage(); /* EXIT */
-    }
-}
-
-/*
  * Main
  */
 int main(int argc, char * argv[]) {
     (void)initialize();
-    //(void)validate_args(argc, argv);
 
     test_getBits(0, 2, 5, 5);
     test_getBits(31, 31, 0, 0);
@@ -72,9 +60,7 @@ int main(int argc, char * argv[]) {
     return 0;
 }
 
-void printbuff(int * buff) {
-    size_t length = sizeof(buff);
-
+void printbuff(int * buff, size_t length) {
     for (size_t i = 0; i < length; i++) {
         printf("[%d] ", buff[i]);
     }
@@ -100,11 +86,11 @@ int test_clearBuffer() {
     size_t length = sizeof(buff);
 
     printf("\nTest Buffer:    ");
-    printbuff(buff);
+    printbuff(buff, length);
     clearBuffer((char *) buff, length);
     //printf("\nExpected: %5d\nResult: %7d", expected, result);
     printf("\nCleared Buffer: ");
-    printbuff(buff);
+    printbuff(buff, length);
     printf("\n");
     clearBuffer((char *) buff, length);
 
