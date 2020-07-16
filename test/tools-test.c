@@ -19,18 +19,7 @@ static void printbuff(int * buff, size_t length);
 static int test_clearBuffer(void);
 static int test_getBits(int low, int high, unsigned int source, unsigned int expected);
 
-/*
- * Print usage information and exit program
- */
-static void usage(void) {
-    fprintf(stderr, "usage: tools_test\n");
-    printf("\nTools Test Failed\n");
-    exit(EXIT_FAILURE);
-}
 
-/*
- *
- */
 static void initialize(void) {
 #ifdef __OpenBSD__
     /* pledge(2) only works on 5.9 or higher */
@@ -62,7 +51,7 @@ int main(int argc, char * argv[]) {
 
 void printbuff(int * buff, size_t length) {
     for (size_t i = 0; i < length; i++) {
-        printf("[%d] ", buff[i]);
+        printf("[%2d] ", buff[i]);
     }
 }
 
@@ -82,20 +71,19 @@ int test_getBits(int low, int high, unsigned int source, unsigned int expected) 
 
 int test_clearBuffer() {
     printf("\nTesting clearBuffer()");
-    int buff[5] = { 1, 2, 3, 4, 5 };
-    size_t length = sizeof(buff);
+    int buff[5] = { 13, 2, 43, 4, 75 };
+    size_t length = sizeof(buff) / sizeof(int);
 
     printf("\nTest Buffer:    ");
     printbuff(buff, length);
-    clearBuffer((char *) buff, length);
+    clearBuffer((char *) buff, sizeof(buff));
     //printf("\nExpected: %5d\nResult: %7d", expected, result);
     printf("\nCleared Buffer: ");
     printbuff(buff, length);
     printf("\n");
-    clearBuffer((char *) buff, length);
 
     if (length > 0) {
-        if (buff[0] != 0) {
+        if (buff[4] != 0) {
             printf("\nclearBuffer() Test Failed\n");
             return 0;
         } else {
