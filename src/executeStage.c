@@ -166,61 +166,63 @@ initFuncPtrArray()
 	funcPtr[DUMP] = performDUMP;
 }
 
-/**
+/*
  * Calculate the e_Cnd based on CC and ifun.
  * e_Cnd is 0 for every opcode except RRMOVL
  * and JXX.
  *
  * @return Computed value of e_Cnd
  */
-int computeCnd(const struct eregister *ereg) {
-    int e_Cnd = 0;
-    int sf = getCC(SF);
-    int zf = getCC(ZF);
-    int of = getCC(OF);
+int
+computeCnd(const struct eregister *ereg)
+{
+	int e_Cnd = 0;
+	int sf = getCC(SF);
+	int zf = getCC(ZF);
+	int of = getCC(OF);
 
     if (ereg->icode == RRMOVL || ereg->icode == JXX) {
         switch (ereg->ifun) {
-            case RRMOVLF:
+            case RRMOVLF /* JMP */:
                 e_Cnd = 1;
                 break;
 
-            case CMOVLE:
+            case CMOVLE /* JLE */:
                 if ((sf ^ of) | zf) {
                     e_Cnd = 1;
                 }
 
                 break;
 
-            case CMOVL:
+            case CMOVL /* JL */:
                 if (sf ^ of) {
                     e_Cnd = 1;
                 }
 
                 break;
 
-            case CMOVE:
+            case CMOVE /* JE */:
                 if (zf) {
                     e_Cnd = 1;
                 }
 
                 break;
 
-            case CMOVNE:
+            case CMOVNE /* JNE */:
                 if (!zf) {
                     e_Cnd = 1;
                 }
 
                 break;
 
-            case CMOVGE:
+            case CMOVGE /* JGE */:
                 if (!(sf ^ of)) {
                     e_Cnd = 1;
                 }
 
                 break;
 
-            case CMOVG:
+            case CMOVG /* JG */:
                 if (!(sf ^ of) & !zf) {
                     e_Cnd = 1;
                 }
@@ -232,7 +234,7 @@ int computeCnd(const struct eregister *ereg) {
         }
     }
 
-    return e_Cnd;
+	return e_Cnd;
 }
 
 
