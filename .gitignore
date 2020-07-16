@@ -1,8 +1,11 @@
-# YESS executable
+# yess executable
 /yess
 /yess.exe
 src/yess
 src/yess.exe
+
+# test executables
+test/memory-test
 
 *.d
 
