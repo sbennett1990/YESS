@@ -177,62 +177,57 @@ int
 computeCnd(const struct eregister *ereg)
 {
 	int e_Cnd = 0;
-	int sf = getCC(SF);
-	int zf = getCC(ZF);
-	int of = getCC(OF);
 
-    if (ereg->icode == RRMOVL || ereg->icode == JXX) {
-        switch (ereg->ifun) {
-            case RRMOVLF /* JMP */:
-                e_Cnd = 1;
-                break;
+	if (ereg->icode == RRMOVL || ereg->icode == JXX) {
+		int sf = getCC(SF);
+		int zf = getCC(ZF);
+		int of = getCC(OF);
 
-            case CMOVLE /* JLE */:
-                if ((sf ^ of) | zf) {
-                    e_Cnd = 1;
-                }
+		switch (ereg->ifun) {
+		case RRMOVLF /* JMP */:
+			e_Cnd = 1;
+			break;
 
-                break;
+		case CMOVLE /* JLE */:
+			if ((sf ^ of) | zf) {
+				e_Cnd = 1;
+			}
+			break;
 
-            case CMOVL /* JL */:
-                if (sf ^ of) {
-                    e_Cnd = 1;
-                }
+		case CMOVL /* JL */:
+			if (sf ^ of) {
+				e_Cnd = 1;
+			}
+			break;
 
-                break;
+		case CMOVE /* JE */:
+			if (zf) {
+				e_Cnd = 1;
+			}
+			break;
 
-            case CMOVE /* JE */:
-                if (zf) {
-                    e_Cnd = 1;
-                }
+		case CMOVNE /* JNE */:
+			if (!zf) {
+				e_Cnd = 1;
+			}
+			break;
 
-                break;
+		case CMOVGE /* JGE */:
+			if (!(sf ^ of)) {
+				e_Cnd = 1;
+			}
+			break;
 
-            case CMOVNE /* JNE */:
-                if (!zf) {
-                    e_Cnd = 1;
-                }
+		case CMOVG /* JG */:
+			if (!(sf ^ of) & !zf) {
+				e_Cnd = 1;
+			}
+			break;
 
-                break;
-
-            case CMOVGE /* JGE */:
-                if (!(sf ^ of)) {
-                    e_Cnd = 1;
-                }
-
-                break;
-
-            case CMOVG /* JG */:
-                if (!(sf ^ of) & !zf) {
-                    e_Cnd = 1;
-                }
-
-                break;
-
-            default:
-                e_Cnd = 0;
-        }
-    }
+		default:
+			e_Cnd = 0;
+		}
+	}
 
 	return e_Cnd;
 }
