@@ -14,7 +14,7 @@
 #include "logger.h"
 
 /*
- * W register holds the input from the memory stage.
+ * W register holds the input for the write back stage.
  */
 static struct wregister W;
 
