@@ -79,16 +79,16 @@ writebackStage(forwardType *forward, statusType *status)
 	}
 
 	// if icode = DUMP, dump appropriate information
-	if (W.icode == DUMP && getBits(0, 0, W.valE)) {
-		dumpProgramRegisters();
-	}
-
-	if (W.icode == DUMP && getBits(1, 1, W.valE)) {
-		dumpProcessorRegisters();
-	}
-
-	if (W.icode == DUMP && getBits(2, 2, W.valE)) {
-		dumpMemory();
+	if (W.icode == DUMP) {
+		if (getBits(0, 0, W.valE)) {
+			dumpProgramRegisters();
+		}
+		if (getBits(1, 1, W.valE)) {
+			dumpProcessorRegisters();
+		}
+		if (getBits(2, 2, W.valE)) {
+			dumpMemory();
+		}
 	}
 
 	// set fields of forward and status struct to current values
