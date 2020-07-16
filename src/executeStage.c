@@ -236,61 +236,71 @@ int computeCnd(const struct eregister *ereg) {
 }
 
 
-/**
- * Just returns 0 for HALT and NOP instructions.
- *
- * @return 0
+/*
+ * Does nothing. Just returns 0 for HALT and NOP instructions.
  */
-unsigned int performZero() {
-    return 0;
+unsigned int
+performZero()
+{
+	return 0;
 }
 
-/**
+/*
  * Compute memory location and execute the register
  * to memory move instruction.
  *
  * @return The memory location
  */
-unsigned int performRmmovl() {
-    return E.valB + E.valC;
+unsigned int
+performRmmovl()
+{
+	return E.valB + E.valC;
 }
 
-/**
+/*
  * Compute memory location and execute the memory
  * to register move instruction.
  *
  * @return The memory location
  */
-unsigned int performMrmovl() {
-    return E.valB + E.valC;
+unsigned int
+performMrmovl()
+{
+	return E.valB + E.valC;
 }
 
-/**
+/*
  * Performs rrmovl and cmovxx instructions.
  *
  * @return The value from rA
  */
-unsigned int performRrmovl() {
-    return E.valA;
+unsigned int
+performRrmovl()
+{
+	return E.valA;
 }
 
-/**
+/*
  * Perform dump instruction.
  *
  * @return Constant word, part of the instruction
  */
-unsigned int performDUMP() {
-    return E.valC;
+unsigned int
+performDUMP()
+{
+	return E.valC;
 }
 
-/**
+/*
  * Perform the immediate to register move
  * instruction.
  *
  * @return Constant word, part of the instruction
  */
-unsigned int performIrmovl() {
-    return E.valC;
+unsigned int
+performIrmovl()
+{
+	return E.valC;
 }
 
 /*
@@ -417,7 +427,7 @@ unsigned int performRet() {
     return E.valB + 4;
 }
 
-/**
+/*
  * Determine if the M register should be stalled. According to HCL,
  * M will never be stalled, therefore it returns false.
  */
@@ -427,7 +437,7 @@ stallM()
 	return FALSE;
 }
 
-/**
+/*
  * Determine if M needs to be bubbled based on status forwarded
  * from memory and writeback stages.
  *
