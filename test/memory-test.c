@@ -24,7 +24,7 @@
 void
 clearMemory_setsallzeros(int spotcheckaddr)
 {
-	printf("addr:\t%08x\n", spotcheckaddr);
+	printf("addr:\t%03x\n", spotcheckaddr);
 
 	unsigned int result;
 	bool memError;
