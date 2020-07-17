@@ -127,6 +127,10 @@ putByte(int byteAddress, unsigned char value, bool * memError)
      * division
      */
     unsigned int word = fetch((byteAddress / WORDSIZE), memError);
+	if (*memError) {
+		log_debug("can't put byte: error fetching containing word");
+		return;
+	}
 
     // Modify the byte address of the word, store in newWord
     unsigned int newWord = putByteNumber((byteAddress % WORDSIZE), value, word);
