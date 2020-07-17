@@ -90,27 +90,35 @@ main()
 	clearMemory();
 	clearMemory_setsallzeros(0);
 	clearMemory_setsallzeros(4092);
-	
-	const int basz = 4;
-	int badaddresses[4] = { -1, 4096, INT_MAX, INT_MIN };
+
+#define BASZ	4
+	int badaddresses[BASZ] = { -1, 4096, INT_MAX, INT_MIN };
 	int i;
 
 	printf("\n");
+	printf("Test: putByte_badaddress_setsmemerror\n\n");
+	for (i = 0; i < BASZ; i++) {
+		putByte_badaddress_setsmemerror(badaddresses[i]);
+	}
+
+	printf("\n");
+	printf("Test: putByte_validinput_storesvalue\n\n");
+	putByte_validinput_storesvalue(0, 5);
+	putByte_validinput_storesvalue(100, 127);
+	putByte_validinput_storesvalue(4095, 16);
+	putByte_validinput_storesvalue(1001, 200);
+	putByte_validinput_storesvalue(2048, 255);
+
+	printf("\n");
 	printf("Test: getByte_badaddress_setsmemerror\n\n");
-	for (i = 0; i < basz; i++) {
+	for (i = 0; i < BASZ; i++) {
 		getByte_badaddress_setsmemerror(badaddresses[i]);
 	}
 
 	printf("\n");
 	printf("Test: getByte_badaddress_returnszero\n\n");
-	for (i = 0; i < basz; i++) {
+	for (i = 0; i < BASZ; i++) {
 		getByte_badaddress_returnszero(badaddresses[i]);
-	}
-
-	printf("\n");
-	printf("Test: putByte_badaddress_setsmemerror\n\n");
-	for (i = 0; i < basz; i++) {
-		putByte_badaddress_setsmemerror(badaddresses[i]);
 	}
 
 	return 0;
