@@ -16,10 +16,11 @@
 
 #include <limits.h>
 #include <stdio.h>
+#include <unistd.h>
 
 #include "bool.h"
 #include "memory.h"
-
+#include "logger.h"
 
 void
 clearMemory_setsallzeros(int spotcheckaddr)
@@ -106,8 +107,28 @@ putByte_validinput_storesvalue(int byteAddr, unsigned char val)
 }
 
 int
-main()
+main(int argc, char **argv)
 {
+	int ch;
+	while ((ch = getopt(argc, argv, "d")) != -1) {
+		switch (ch) {
+		case 'd':
+			/* show debug log output */
+			log_init(2, 0);
+			break;
+		default:
+			printf("bad option... exiting\n");
+			return 1;
+		}
+	}
+	argc -= optind;
+	argv += optind;
+
+	if (argc > 0) {
+		printf("too many args... exiting\n");
+		return 1;
+	}
+
 	printf("Test: clearMemory_setsallzeros\n\n");
 	clearMemory();
 	clearMemory_setsallzeros(0);
