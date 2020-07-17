@@ -83,6 +83,28 @@ putByte_badaddress_setsmemerror(int byteAddr)
 	}
 }
 
+void
+putByte_validinput_storesvalue(int byteAddr, unsigned char val)
+{
+	printf("addr:\t%03x\n", byteAddr);
+	printf("val:\t %02x\n", val);
+
+	bool memError;
+	putByte(byteAddr, val, &memError);
+	if (memError) {
+		printf("===> memError on putByte()! that's a problem...\n");
+	}
+
+	unsigned char result = getByte(byteAddr, &memError);
+	printf("result:\tAddr 0x%03x: %02x\n", byteAddr, result);
+	if (result != val) {
+		printf("===> test failed!\n");
+	}
+	if (memError) {
+		printf("===> memError! that's a problem...\n");
+	}
+}
+
 int
 main()
 {
