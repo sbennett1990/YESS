@@ -96,6 +96,10 @@ getByte(int byteAddress, bool * memError)
      * division
      */
     unsigned int word = fetch((byteAddress / WORDSIZE), memError);
+	if (*memError) {
+		log_debug("can't get byte: error fetching containing word");
+		return 0;
+	}
 
     return getByteNumber((byteAddress % WORDSIZE), word);
 }
@@ -167,7 +171,7 @@ getWord(int byteAddress, bool * memError)
 
 	/* ensure byteAddress is a multiple of WORDSIZE */
 	if (byteAddress % WORDSIZE) {
-		log_debug("can't get word: %08x is not a multiple of 4",
+		log_debug("can't get word: %03x is not a multiple of 4",
 		    byteAddress);
 		*memError = TRUE;
 		return 0;
@@ -203,7 +207,7 @@ putWord(int byteAddress, unsigned int value, bool * memError)
 
 	/* ensure byteAddress is a multiple of WORDSIZE */
 	if (byteAddress % WORDSIZE) {
-		log_debug("can't put word: %08x is not a multiple of 4",
+		log_debug("can't put word: %03x is not a multiple of 4",
 		    byteAddress);
 		*memError = TRUE;
 		return;
