@@ -14,6 +14,8 @@
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
+#include <string.h>
+
 #include "registers.h"
 #include "tools.h"
 
@@ -70,7 +72,7 @@ setRegister(rregister reg, unsigned int val)
 void
 clearRegisters()
 {
-	clearBuffer((char *) &registers, REGSIZE);
+	memset(registers, 0, sizeof(registers));
 }
 
 /*

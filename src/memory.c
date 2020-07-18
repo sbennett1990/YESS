@@ -14,6 +14,8 @@
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
+#include <string.h>
+
 #include "memory.h"
 #include "tools.h"
 
@@ -223,5 +225,5 @@ putWord(int byteAddress, unsigned int value, bool * memError)
 void
 clearMemory(void)
 {
-	clearBuffer((char *) &memory, MEMSIZE);
+	memset(memory, 0, sizeof(memory));
 }
