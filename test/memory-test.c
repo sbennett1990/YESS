@@ -25,13 +25,14 @@
 void
 clearMemory_setsallzeros(int spotcheckaddr)
 {
+	clearMemory();
 	printf("addr:\t%03x\n", spotcheckaddr);
 
 	unsigned int result;
 	bool memError;
 	result = getWord(spotcheckaddr, &memError);
 
-	printf("output:\t%d\n", result);
+	printf("output:\t%08x\n", result);
 	if (result != 0) {
 		printf("===> test failed!\n");
 	}
@@ -184,7 +185,6 @@ main(int argc, char **argv)
 
 	/* begin tests */
 	printf("Test: clearMemory_setsallzeros\n\n");
-	clearMemory();
 	clearMemory_setsallzeros(0);
 	clearMemory_setsallzeros(4092);
 
@@ -244,6 +244,12 @@ main(int argc, char **argv)
 	getWord_badaddress_returnszero(1);
 	getWord_badaddress_returnszero(5);
 	getWord_badaddress_returnszero(4095);
+
+	/* test clearing memory again for good measure */
+	printf("\n");
+	printf("Test: clearMemory_setsallzeros\n\n");
+	clearMemory_setsallzeros(0);
+	clearMemory_setsallzeros(4092);
 
 	return 0;
 }
