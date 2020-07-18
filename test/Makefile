@@ -13,9 +13,6 @@ SRCS_tools-test+=    ${FILES}
 
 NOMAN=     noman
 
-CC=        gcc
-
-CFLAGS=    -O1 ${PIPE}
 CFLAGS+=   -std=c99 -Wall
 
 SRCDIR=    ../src
