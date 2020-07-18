@@ -71,6 +71,29 @@ getByte_badaddress_returnszero(int byteAddr)
 }
 
 void
+getByte_validinput_returnsval(int byteAddr, unsigned char val)
+{
+	printf("addr:\t%03x\n", byteAddr);
+
+	unsigned char result;
+	bool memError;
+
+	putByte(byteAddr, val, &memError);
+	if (memError) {
+		printf("===> memError! that's a problem...\n");
+	}
+	result = getByte(byteAddr, &memError);
+
+	printf("result:\t %02x\n", result);
+	if (result != val) {
+		printf("===> test failed!\n");
+	}
+	if (memError) {
+		printf("===> memError! that's a problem...\n");
+	}
+}
+
+void
 putByte_badaddress_setsmemerror(int byteAddr)
 {
 	printf("input:\t%08x\n", byteAddr);
@@ -106,6 +129,36 @@ putByte_validinput_storesvalue(int byteAddr, unsigned char val)
 	}
 }
 
+void
+getWord_badaddress_setsmemerror(int byteAddr)
+{
+	printf("input:\t%08x\n", byteAddr);
+
+	unsigned char result;
+	bool memError;
+	result = getWord(byteAddr, &memError);
+
+	printf("output:\tmemError = %d\n", memError);
+	if (!memError) {
+		printf("===> test failed!\n");
+	}
+}
+
+void
+getWord_badaddress_returnszero(int byteAddr)
+{
+	printf("input:\t%08x\n", byteAddr);
+
+	unsigned char result;
+	bool memError;
+	result = getWord(byteAddr, &memError);
+
+	printf("output:\t%d\n", result);
+	if (result != 0) {
+		printf("===> test failed!\n");
+	}
+}
+
 int
 main(int argc, char **argv)
 {
@@ -129,6 +182,7 @@ main(int argc, char **argv)
 		return 1;
 	}
 
+	/* begin tests */
 	printf("Test: clearMemory_setsallzeros\n\n");
 	clearMemory();
 	clearMemory_setsallzeros(0);
@@ -163,6 +217,33 @@ main(int argc, char **argv)
 	for (i = 0; i < BASZ; i++) {
 		getByte_badaddress_returnszero(badaddresses[i]);
 	}
+
+	printf("\n");
+	printf("Test: getByte_validinput_returnsval\n\n");
+	getByte_validinput_returnsval(0, 10);
+	getByte_validinput_returnsval(1024, 16);
+	getByte_validinput_returnsval(4091, 9);
+	getByte_validinput_returnsval(4095, 255);
+
+	printf("\n");
+	printf("Test: getWord_badaddress_setsmemerror\n\n");
+	for (i = 0; i < BASZ; i++) {
+		getWord_badaddress_setsmemerror(badaddresses[i]);
+	}
+	/* addresses that are not multiples of 4 */
+	getWord_badaddress_setsmemerror(1);
+	getWord_badaddress_setsmemerror(5);
+	getWord_badaddress_setsmemerror(4095);
+
+	printf("\n");
+	printf("Test: getWord_badaddress_returnszero\n\n");
+	for (i = 0; i < BASZ; i++) {
+		getWord_badaddress_returnszero(badaddresses[i]);
+	}
+	/* addresses that are not multiples of 4 */
+	getWord_badaddress_returnszero(1);
+	getWord_badaddress_returnszero(5);
+	getWord_badaddress_returnszero(4095);
 
 	return 0;
 }
