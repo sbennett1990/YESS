@@ -135,7 +135,7 @@ getWord_badaddress_setsmemerror(int byteAddr)
 {
 	printf("input:\t%08x\n", byteAddr);
 
-	unsigned char result;
+	unsigned int result;
 	bool memError;
 	result = getWord(byteAddr, &memError);
 
@@ -150,7 +150,7 @@ getWord_badaddress_returnszero(int byteAddr)
 {
 	printf("input:\t%08x\n", byteAddr);
 
-	unsigned char result;
+	unsigned int result;
 	bool memError;
 	result = getWord(byteAddr, &memError);
 
