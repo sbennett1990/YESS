@@ -6,6 +6,7 @@ src/yess.exe
 
 # test executables
 test/memory-test
+test/tools-test
 
 *.d
 
