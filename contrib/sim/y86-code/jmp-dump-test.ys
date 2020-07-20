@@ -1,0 +1,17 @@
+	      irmovl $1, %esi
+	      irmovl $2, %edi
+	      irmovl $4, %ebp
+	      irmovl $-32, %eax
+	      irmovl $64, %edx
+	      subl %edx,%eax
+	      je target
+	      nop
+	      call $0x07    # Change to dump (c0)
+              halt
+target:
+	      addl %esi,%edx
+	      nop
+              nop
+              nop
+	      call $0x07    # Change to dump (c0)
+	      halt
