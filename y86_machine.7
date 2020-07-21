@@ -13,7 +13,7 @@
 .\" ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
 .\" OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 .\"
-.Dd March 21, 2020
+.Dd July 21, 2020
 .Dt Y86_MACHINE 7
 .Os
 .Sh NAME
@@ -23,11 +23,13 @@
 The Y86
 .Pq Dq YES
 machine is a theoretical processor based on a subset of x86 concepts.
-Being a teaching processor, Y86 embodies elements of both RISC and CISC architectures.
-The Y86 machine is a little endian machine consisting of three main components:
+Being a teaching processor, Y86 embodies elements of both RISC and CISC
+architectures.
+The Y86 machine is a 32-bit little endian machine consisting of three main
+components:
 memory, program registers, and processor registers.
 .Ss Memory
-The Y86 memory consists of 1024, 32-bit words.
+Y86 memory consists of 1024, 32-bit words.
 Addresses generated during program execution are
 .Sy byte
 addresses
@@ -35,8 +37,8 @@ addresses
 However, memory can only be accessed with
 .Sy word
 addresses.
-If a byte of data is needed from memory, it is obtaining by first loading the word it's
-contained within.
+If a byte of data is needed from memory, it is obtaining by first loading the
+word it's contained within.
 Thus, this simulates a memory system where the
 .Em word
 is the smallest accessible unit.
@@ -57,7 +59,7 @@ Word Address	Byte Address
 1023	4095	4094	4093	4092
 .TE
 .Ss Program Registers
-The Y86 has 8 four-byte program registers.
+The Y86 has 8 32-bit program registers.
 The names of those registers and their encodings can be seen in the table below.
 .\" Table of program registers
 .TS
@@ -70,7 +72,7 @@ Register Name	Number
 %edx	2
 %ebx	3
 %esp	4
-%edp	5
+%ebp	5
 %esi	6
 %edi	7
 .TE
@@ -81,7 +83,11 @@ These registers hold the output of one stage of the pipeline that then becomes t
 the next stage of the pipeline.
 .Bl -tag -width "xreg" -offset indent
 .It freg
-Holds the input to the "fetch" stage.
+Holds the input to the
+.Sy fetch
+stage.
+This stage fetches instructions from memory to feed to the
+.Dq processor .
 .Bd -literal
 struct fregister {
         unsigned int predPC;
@@ -94,7 +100,9 @@ The fields have the following meanings:
 The byte address for the predicted PC.
 .El
 .It dreg
-Holds the input to the "decode" stage.
+Holds the input to the
+.Sy decode
+stage.
 .Bd -literal
 struct dregister {
         unsigned int stat;
@@ -115,7 +123,9 @@ The "stat"?
 Instruction code.
 .El
 .It ereg
-Holds the input to the "execute" stage.
+Holds the input to the
+.Sy execute
+stage.
 .Bd -literal
 struct eregister {
         unsigned int stat;
@@ -131,7 +141,9 @@ struct eregister {
 };
 .Ed
 .It mreg
-Holds the input to the "memory" stage.
+Holds the input to the
+.Sy memory
+stage.
 .Bd -literal
 struct mregister {
         unsigned int stat;
@@ -144,7 +156,9 @@ struct mregister {
 };
 .Ed
 .It wreg
-Holds the input to the "writeback" stage.
+Holds the input to the
+.Sy writeback
+stage.
 .Bd -literal
 struct wregister {
         unsigned int stat;
