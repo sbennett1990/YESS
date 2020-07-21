@@ -46,7 +46,7 @@ getByte_badaddress_setsmemerror(int byteAddr)
 {
 	printf("input:\t%08x\n", byteAddr);
 
-	unsigned char result;
+	uint8_t result;
 	bool memError;
 	result = getByte(byteAddr, &memError);
 
@@ -61,7 +61,7 @@ getByte_badaddress_returnszero(int byteAddr)
 {
 	printf("input:\t%08x\n", byteAddr);
 
-	unsigned char result;
+	uint8_t result;
 	bool memError;
 	result = getByte(byteAddr, &memError);
 
@@ -72,11 +72,11 @@ getByte_badaddress_returnszero(int byteAddr)
 }
 
 void
-getByte_validinput_returnsval(int byteAddr, unsigned char val)
+getByte_validinput_returnsval(int byteAddr, uint8_t val)
 {
 	printf("addr:\t%03x\n", byteAddr);
 
-	unsigned char result;
+	uint8_t result;
 	bool memError;
 
 	putByte(byteAddr, val, &memError);
@@ -109,7 +109,7 @@ putByte_badaddress_setsmemerror(int byteAddr)
 }
 
 void
-putByte_validinput_storesvalue(int byteAddr, unsigned char val)
+putByte_validinput_storesvalue(int byteAddr, uint8_t val)
 {
 	printf("addr:\t%03x\n", byteAddr);
 	printf("val:\t %02x\n", val);
@@ -120,7 +120,7 @@ putByte_validinput_storesvalue(int byteAddr, unsigned char val)
 		printf("===> memError on putByte()! that's a problem...\n");
 	}
 
-	unsigned char result = getByte(byteAddr, &memError);
+	uint8_t result = getByte(byteAddr, &memError);
 	printf("result:\tAddr 0x%03x: %02x\n", byteAddr, result);
 	if (result != val) {
 		printf("===> test failed!\n");
