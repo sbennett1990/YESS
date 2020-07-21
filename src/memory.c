@@ -73,75 +73,76 @@ store(int address, unsigned int value, bool * memError)
 
 /*
  * Read a byte of memory using it's byte address. If there is
- * an error, *memError is set to true, otherwise it's false.
+ * an error, *memError is set to true.
  *
  * Parameters:
- *  byteAddress     a byte address of memory [0..4095]
- *  *memError       pointer to the memory error indicator
+ *	byteAddress    address of a byte of memory [0..4095]
+ *	*memError      memory error indicator
  *
- * Return the contents of memory at the byte address, or 0 for error
+ * Return the contents of memory at the byte address, or 0 on error.
  */
-unsigned char
-getByte(int byteAddress, bool * memError)
+uint8_t
+getByte(int byteAddress, bool *memError)
 {
-    if (byteAddress < 0 || byteAddress > HIGHBYTE) {
+	if (byteAddress < 0 || byteAddress > HIGHBYTE) {
 		log_debug("can't get byte: invalid memory address %08x",
 		    byteAddress);
-        *memError = TRUE;
-        return 0;
-    }
+		*memError = TRUE;
+		return 0;
+	}
 
-    *memError = FALSE;
+	*memError = FALSE;
 
-    /*
-     * Retrieve the word containing the specified byte address using integer
-     * division
-     */
-    unsigned int word = fetch((byteAddress / WORDSIZE), memError);
+	/*
+	 * Retrieve the word containing the specified byte address using
+	 * integer division
+	 */
+	unsigned int word = fetch((byteAddress / WORDSIZE), memError);
 	if (*memError) {
 		log_debug("can't get byte: error fetching containing word");
 		return 0;
 	}
 
-    return getByteNumber((byteAddress % WORDSIZE), word);
+	return getByteNumber((byteAddress % WORDSIZE), word);
 }
 
 /*
- * Store a value (1 byte) in memory. If there is an error,
- * *memError is set to true, otherwise it's false. If address
- * isn't a valid memory address, then memory isn't modified.
+ * Store a 1-byte value in memory. If there is an error,
+ * *memError is set to true. If address isn't a valid memory
+ * address, then memory isn't modified.
  *
  * Parameters:
- *  byteAddress     a byte address of memory [0..4095]
- *  value           the value to store in memory at the address
- *  *memError       pointer to the memory error indicator
+ *	byteAddress    address of a byte of memory [0..4095]
+ *	value          the 8-bit value to store in memory
+ *	*memError      memory error indicator
  */
 void
-putByte(int byteAddress, unsigned char value, bool * memError)
+putByte(int byteAddress, uint8_t value, bool *memError)
 {
-    if (byteAddress < 0 || byteAddress > HIGHBYTE) {
+	if (byteAddress < 0 || byteAddress > HIGHBYTE) {
 		log_debug("can't put byte: invalid memory address %08x",
 		    byteAddress);
-        *memError = TRUE;
-        return;
-    }
+		*memError = TRUE;
+		return;
+	}
 
-    *memError = FALSE;
+	*memError = FALSE;
 
-    /*
-     * Retrieve the word containing the specified byte address using integer
-     * division
-     */
-    unsigned int word = fetch((byteAddress / WORDSIZE), memError);
+	/*
+	 * Retrieve the word containing the specified byte address using
+	 * integer division
+	 */
+	unsigned int word = fetch((byteAddress / WORDSIZE), memError);
 	if (*memError) {
 		log_debug("can't put byte: error fetching containing word");
 		return;
 	}
 
-    // Modify the byte address of the word, store in newWord
-    unsigned int newWord = putByteNumber((byteAddress % WORDSIZE), value, word);
+	// Modify the byte address of the word, store in newWord
+	unsigned int newWord = putByteNumber((byteAddress % WORDSIZE), value,
+	    word);
 
-    store((byteAddress / WORDSIZE), newWord, memError);
+	store((byteAddress / WORDSIZE), newWord, memError);
 }
 
 /*
