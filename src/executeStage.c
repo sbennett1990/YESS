@@ -19,17 +19,17 @@ static struct eregister E;
 
 static unsigned int (*funcPtr[INSTR_COUNT])(void);
 static unsigned int performZero(void);
-static unsigned int performDUMP(void);
-static unsigned int performIrmovl(void);
-static unsigned int performOpl(void);
 static unsigned int performRrmovl(void);  // also is Cmovxx
-static unsigned int performMrmovl(void);
+static unsigned int performIrmovl(void);
 static unsigned int performRmmovl(void);
-static unsigned int performPopl(void);
-static unsigned int performPushl(void);
+static unsigned int performMrmovl(void);
+static unsigned int performOpl(void);
 static unsigned int performJXX(void);
 static unsigned int performCall(void);
 static unsigned int performRet(void);
+static unsigned int performPushl(void);
+static unsigned int performPopl(void);
+static unsigned int performDUMP(void);
 
 static void computeCC(int result, int a, int b);	// XXX: what was this?
 static short computeCnd(const struct eregister *);
@@ -233,7 +233,6 @@ computeCnd(const struct eregister *ereg)
 	return e_Cnd;
 }
 
-
 /*
  * Does nothing. Just returns 0 for HALT and NOP instructions.
  */
@@ -241,6 +240,29 @@ unsigned int
 performZero()
 {
 	return 0;
+}
+
+/*
+ * Perform rrmovl and cmovxx instructions.
+ *
+ * @return The value from rA
+ */
+unsigned int
+performRrmovl()
+{
+	return E.valA;
+}
+
+/*
+ * Perform the immediate to register move
+ * instruction.
+ *
+ * @return Constant word, part of the instruction
+ */
+unsigned int
+performIrmovl()
+{
+	return E.valC;
 }
 
 /*
@@ -268,35 +290,12 @@ performMrmovl()
 }
 
 /*
- * Perform rrmovl and cmovxx instructions.
- *
- * @return The value from rA
- */
-unsigned int
-performRrmovl()
-{
-	return E.valA;
-}
-
-/*
  * Perform dump instruction.
  *
  * @return Constant word, part of the instruction
  */
 unsigned int
 performDUMP()
-{
-	return E.valC;
-}
-
-/*
- * Perform the immediate to register move
- * instruction.
- *
- * @return Constant word, part of the instruction
- */
-unsigned int
-performIrmovl()
 {
 	return E.valC;
 }
@@ -386,28 +385,6 @@ performOpl()
 }
 
 /*
- * Perform popl instruction.
- *
- * @return Modified value for the stack pointer
- */
-unsigned int
-performPopl()
-{
-	return E.valB + 4;
-}
-
-/*
- * Perform pushl instruction.
- *
- * @return Modified value for the stack pointer
- */
-unsigned int
-performPushl()
-{
-	return E.valB - 4;
-}
-
-/*
  * Perform JXX instructions.
  *
  * @return 0
@@ -436,6 +413,28 @@ performCall()
  */
 unsigned int
 performRet()
+{
+	return E.valB + 4;
+}
+
+/*
+ * Perform pushl instruction.
+ *
+ * @return Modified value for the stack pointer
+ */
+unsigned int
+performPushl()
+{
+	return E.valB - 4;
+}
+
+/*
+ * Perform popl instruction.
+ *
+ * @return Modified value for the stack pointer
+ */
+unsigned int
+performPopl()
 {
 	return E.valB + 4;
 }
