@@ -22,4 +22,9 @@ CFLAGS+=    -Wmissing-declarations
 CFLAGS+=    -Wshadow -Wpointer-arith -Wcast-qual
 CFLAGS+=    -Wsign-compare
 
+BINDIR=     ~/bin
+
+install:
+	install -b -o scott -g scott ${PROG} ${BINDIR}/${PROG}
+
 .include <bsd.prog.mk>
