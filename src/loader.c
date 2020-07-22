@@ -35,16 +35,13 @@
 #define MAXLEN		80
 #define RECORDLEN	24
 
-/* Calculate the column of the data byte */
-#define WHICH_BYTE(n)	(((n) * 2) + 7)
-
 static bool validateaddress(const char *line, int prev_addr);
 static bool validatedata(char * record);
 static bool validline(const char *line, int len, int prev_addr);
 static bool hashexdigits(const char * line, int start, int end);
 static bool hasspaces(const char * line, int start, int end);
 static int grabAddress(const char *line);
-static uint8_t grabDataByte(const char *record, int start, bool *error);
+static uint8_t grabDataByte(const char *record, short byteNum, bool *error);
 static bool iscommentrecord(const char *line);
 static bool isdatarecord(const char *line);
 static bool hasaddress(const char *line);
@@ -113,10 +110,9 @@ load(const char * fileName)
 			byteAddress = grabAddress(buf);
 			short numBytes;
 			if ((numBytes = hasdata(buf)) != 0) {
-				short byteNumber;
-				for (byteNumber = 1; byteNumber <= numBytes; byteNumber++) {
+				for (short byteNumber = 1; byteNumber <= numBytes; byteNumber++) {
 					uint8_t data; /* byte to store in mem */
-					data = grabDataByte(buf, WHICH_BYTE(byteNumber), &memError);
+					data = grabDataByte(buf, byteNumber, &memError);
 					if (memError) {
 						goto error;
 					}
@@ -474,17 +470,22 @@ isdatarecord(const char *line)
  *
  * Parameters:
  *	*record    the data record to search
- *	start      the starting index
+ *	byteNum    the byte number of the data to grab out of the record
  *
  * Return one byte of data from the record
  */
 uint8_t
-grabDataByte(const char *record, int start, bool *error)
+grabDataByte(const char *record, short byteNum, bool *error)
 {
 	*error = FALSE;
+
+/* Calculate the start of the data byte */
+#define WHICH_BYTE_IDX(n)	(((n) * 2) + 7)
+
+	int index = WHICH_BYTE_IDX(byteNum);
 	char bytestr[3] = {
-		record[start],
-		record[start + 1],
+		record[index],
+		record[index + 1],
 		'\0'
 	};
 
