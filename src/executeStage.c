@@ -11,6 +11,8 @@
 #include "instructions.h"
 #include "memoryStage.h"
 
+#include "logger.h"
+
 /*
  * E register holds the input for the execute stage.
  */
@@ -373,6 +375,11 @@ performOpl()
 		if (result < 0) {
 			setCC(SF, 1);
 		}
+		break;
+
+	default:
+		E.stat = SINS;
+		log_info("invalid ifun %d encountered executing OPL", E.ifun);
 		break;
 	}
 
