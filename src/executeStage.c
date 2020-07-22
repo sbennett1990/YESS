@@ -98,11 +98,11 @@ executeStage(forwardType *fwd)
 		dstE.reg = RNONE;
 	}
 
+	fwd->E_icode = E.icode;
+	fwd->e_Cnd = e_Cnd;
 	fwd->e_dstE = dstE.reg;
 	fwd->e_valE = valE;
 	fwd->E_dstM = dstM.reg;
-	fwd->E_icode = E.icode;
-	fwd->e_Cnd = e_Cnd;
 
 	// Bubble M?
 	if (m_bubble) {
