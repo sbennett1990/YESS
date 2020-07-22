@@ -41,7 +41,7 @@ static bool validline(const char *line, int len, int prev_addr);
 static bool hashexdigits(const char * line, int start, int end);
 static bool hasspaces(const char * line, int start, int end);
 static int grabAddress(const char *line);
-static unsigned char grabDataByte(char * record, int start);
+static unsigned char grabDataByte(const char *record, int start, bool *error);
 static bool iscommentrecord(const char *line);
 static bool isdatarecord(const char *line);
 static bool hasaddress(const char *line);
@@ -113,9 +113,12 @@ load(const char * fileName)
 			if ((numBytes = hasdata(buf)) != 0) {
 				short byteNumber;
 				for (byteNumber = 1; byteNumber <= numBytes; byteNumber++) {
-					dataByte = grabDataByte(buf, WHICH_BYTE(byteNumber));
-					putByte(byteAddress, dataByte, &memError);
+					dataByte = grabDataByte(buf, WHICH_BYTE(byteNumber), &memError);
+					if (memError) {
+						goto error;
+					}
 
+					putByte(byteAddress, dataByte, &memError);
 					if (memError) {
 						goto error;
 					}
@@ -467,20 +470,26 @@ isdatarecord(const char *line)
  * Returns one byte of data at the index in the record.
  *
  * Parameters:
- *     *record    the data record to search
- *     start      the starting index
+ *	*record    the data record to search
+ *	start      the starting index
  *
  * Return one byte of data from the record
  */
 unsigned char
-grabDataByte(char * record, int start)
+grabDataByte(const char *record, int start, bool *error)
 {
-    char byte[3];
+	*error = FALSE;
+	char bytestr[3] = {
+		record[start],
+		record[start + 1],
+		'\0'
+	};
 
-    byte[0] = record[start];
-    byte[1] = record[start + 1];
-    byte[2] = '\0';
+	int result = strtoint(bytestr, HEX);
+	if (result == -1) {
+		*error = TRUE;
+		return 0;
+	}
 
-    // TODO: check for the error value -1
-    return (unsigned char) strtoint(byte, HEX);
+	return (unsigned char) result; /* TODO: uint8_t */
 }
