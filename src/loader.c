@@ -17,6 +17,7 @@
 #include <sys/types.h>
 
 #include <ctype.h>
+#include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -43,7 +44,7 @@ static bool validline(const char *line, int len, int prev_addr);
 static bool hashexdigits(const char * line, int start, int end);
 static bool hasspaces(const char * line, int start, int end);
 static int grabAddress(const char *line);
-static unsigned char grabDataByte(const char *record, int start, bool *error);
+static uint8_t grabDataByte(const char *record, int start, bool *error);
 static bool iscommentrecord(const char *line);
 static bool isdatarecord(const char *line);
 static bool hasaddress(const char *line);
@@ -82,7 +83,6 @@ load(const char * fileName)
 	int prevaddr = -1;
 	int lineno = 1;
 	int byteAddress;        // memory address of one byte [0..4095]
-	unsigned char dataByte; // a byte to store in memory
 
 	char *record = NULL;
 	size_t recordsize = 0;
@@ -115,12 +115,13 @@ load(const char * fileName)
 			if ((numBytes = hasdata(buf)) != 0) {
 				short byteNumber;
 				for (byteNumber = 1; byteNumber <= numBytes; byteNumber++) {
-					dataByte = grabDataByte(buf, WHICH_BYTE(byteNumber), &memError);
+					uint8_t data; /* byte to store in mem */
+					data = grabDataByte(buf, WHICH_BYTE(byteNumber), &memError);
 					if (memError) {
 						goto error;
 					}
 
-					putByte(byteAddress, dataByte, &memError);
+					putByte(byteAddress, data, &memError);
 					if (memError) {
 						goto error;
 					}
@@ -477,7 +478,7 @@ isdatarecord(const char *line)
  *
  * Return one byte of data from the record
  */
-unsigned char
+uint8_t
 grabDataByte(const char *record, int start, bool *error)
 {
 	*error = FALSE;
@@ -493,5 +494,5 @@ grabDataByte(const char *record, int start, bool *error)
 		return 0;
 	}
 
-	return (unsigned char) result; /* TODO: uint8_t */
+	return (uint8_t)result;
 }
