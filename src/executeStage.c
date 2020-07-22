@@ -7,7 +7,6 @@
 
 #include "executeStage.h"
 #include "bool.h"
-#include "tools.h"
 #include "instructions.h"
 #include "memoryStage.h"
 
