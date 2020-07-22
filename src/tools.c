@@ -301,24 +301,25 @@ clearBuffer(char * buff, size_t length)
  * Base must be a number between 2 and 36 inclusive or the special value 0.
  *
  * Parameters:
- *     *nptr   string representation of an int
- *     base    a base between 2 and 36 inclusive, or 0
+ *	*nptr   string representation of an int
+ *	base    a base between 2 and 36 inclusive, or 0
  *
  * Returns the result of the conversion, or -1 on error
  */
 int
-strtoint(const char * nptr, int base)
+strtoint(const char *nptr, int base)
 {
-    int num;
-    const char *errstr;
+	int num;
+	const char *errstr;
 
-    num = (int) strtonum_OBSD(nptr, INT_MIN, INT_MAX, &errstr, base);
-    if (errstr != NULL) {
-        // TODO: display an error with the returned errstr
-        return -1;
-    }
+	num = (int) strtonum_OBSD(nptr, INT_MIN, INT_MAX, &errstr, base);
+	if (errstr != NULL) {
+		log_debug("can't convert to int: nptr is %s: %s\n", errstr,
+		    nptr);
+		return -1;
+	}
 
-    return num;
+	return num;
 }
 
 /*

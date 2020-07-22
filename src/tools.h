@@ -5,13 +5,14 @@
 #ifndef TOOLS_H
 #define TOOLS_H
 
-#define BYTESIZE	8   // Size of one byte in bits
-#define INTHIGHBIT	31  // Highest bit for type int
+#include <stddef.h>
+
+#include "bool.h"
+
+#define BYTESIZE	8   /* Size of one byte in bits */
+#define INTHIGHBIT	31  /* Highest bit for type int */
 
 #define FILENAME_LEN	50
-
-#include <stddef.h>
-#include "bool.h"
 
 unsigned int getBits(int low, int high, unsigned int source);
 unsigned int setBits(int low, int high, unsigned int source);
@@ -25,7 +26,7 @@ unsigned int buildWord(unsigned char byte0, unsigned char byte1,
 bool isNegative(unsigned int source);
 void expandBits(unsigned int source, char bits[36]);
 void clearBuffer(char * buff, size_t length);
-int strtoint(const char * nptr, int base);
+int strtoint(const char *nptr, int base);
 int validatefilename(const char * filename);
 void initialpledge(void);
 void reduceprivileges(void);
