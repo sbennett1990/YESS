@@ -18,7 +18,6 @@
 #define	DECODESTAGE_H
 
 #include "forwarding.h"
-#include "control.h"
 #include "registers.h"
 
 /*
@@ -38,7 +37,7 @@ struct dregister {
 
 struct dregister getDregister(void);
 void clearDregister(void);
-void decodeStage(forwardType, controlType *);
+void decodeStage(forwardType *);
 void updateDregister(unsigned int stat, unsigned int icode, unsigned int ifun,
     rregister rA, rregister rB, unsigned int valC, unsigned int valP);
 

@@ -35,7 +35,7 @@ static void computeCC(int result, int a, int b);	// XXX: what was this?
 static short computeCnd(const struct eregister *);
 
 static bool stallM(void);
-static bool bubbleM(statusType status);
+static bool bubbleM(const forwardType *fwd);
 
 static bool changeCC;
 
@@ -72,22 +72,20 @@ clearEregister()
  * Compute e_Cnd and dstE and update the values in the M
  * register.
  *
- * @param *forward  Pointer to a forwardType
- * @param status    Holds status values from later stages
- * @param *control  Pointer to struct that holds values forwarded from
- *                    later stages
+ * Parameters:
+ *	*fwd    Holds values forwarded to previous stages
  */
 void
-executeStage(forwardType * forward, statusType status, controlType * control)
+executeStage(forwardType *fwd)
 {
-	bool m_bubble = bubbleM(status);
+	bool m_bubble = bubbleM(fwd);
 	changeCC = TRUE;
 	rregister dstE = E.dstE;
 	rregister dstM = E.dstM;
 
 	// If either m_stat or W_stat are SINS, SADR, or SHLT, then do not modify CC's
-	if (status.m_stat == SINS || status.m_stat == SADR || status.m_stat == SHLT ||
-	    status.W_stat == SINS || status.W_stat == SADR || status.W_stat == SHLT) {
+	if (fwd->m_stat == SINS || fwd->m_stat == SADR || fwd->m_stat == SHLT ||
+	    fwd->W_stat == SINS || fwd->W_stat == SADR || fwd->W_stat == SHLT) {
 		changeCC = FALSE;
 		m_bubble = TRUE;
 	}
@@ -100,11 +98,11 @@ executeStage(forwardType * forward, statusType status, controlType * control)
 		dstE.reg = RNONE;
 	}
 
-	forward->e_dstE = dstE.reg;
-	forward->e_valE = valE;
-	control->E_dstM = dstM.reg;
-	control->E_icode = E.icode;
-	control->e_Cnd = e_Cnd;
+	fwd->e_dstE = dstE.reg;
+	fwd->e_valE = valE;
+	fwd->E_dstM = dstM.reg;
+	fwd->E_icode = E.icode;
+	fwd->e_Cnd = e_Cnd;
 
 	// Bubble M?
 	if (m_bubble) {
@@ -453,16 +451,16 @@ stallM()
  * Determine if M needs to be bubbled based on status forwarded
  * from memory and writeback stages.
  *
- * @param status Holds status values from later stages
- * @return True if M should be bubbled, false otherwise
+ * @param *fwd Holds status values from later stages
+ * @return True if M should be bubbled
  */
 bool
-bubbleM(statusType status)
+bubbleM(const forwardType *fwd)
 {
 	bool bubble = FALSE;
 
-	if ((status.m_stat == SADR || status.m_stat == SINS || status.m_stat == SHLT) ||
-	    (status.W_stat == SADR || status.W_stat == SINS || status.W_stat == SHLT)) {
+	if ((fwd->m_stat == SADR || fwd->m_stat == SINS || fwd->m_stat == SHLT) ||
+	    (fwd->W_stat == SADR || fwd->W_stat == SINS || fwd->W_stat == SHLT)) {
 		bubble = TRUE;
 	}
 

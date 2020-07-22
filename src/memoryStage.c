@@ -19,7 +19,7 @@ static struct mregister M;
 static unsigned int memory_addr(const struct mregister *);
 static bool mem_write(const struct mregister *);
 static bool mem_read(const struct mregister *);
-static bool stallW(statusType status);
+static bool stallW(const forwardType *);
 static bool bubbleW(void);
 
 /*
@@ -53,12 +53,10 @@ clearMregister()
  * Updates the W register.
  *
  * Parameters:
- *  *forward	Holds values forwarded to previous stages
- *  *status	Holds values forwarded to previous stages
- *  *control	Holds values forwarded to previous stages
+ *	*fwd    Holds values forwarded to previous stages
  */
 void
-memoryStage(forwardType * forward, statusType * status, controlType * control)
+memoryStage(forwardType *fwd)
 {
 	unsigned int stat = M.stat;
 	unsigned int valM = NOADDRESS;	/* value read from memory */
@@ -80,17 +78,16 @@ memoryStage(forwardType * forward, statusType * status, controlType * control)
 		stat = SADR;
 	}
 
-	forward->M_dstM = M.dstM.reg;
-	forward->M_dstE = M.dstE.reg;
-	forward->m_valM = valM;
-	forward->M_valE = M.valE;
-	forward->M_Cnd = M.Cnd;
-	forward->M_valA = M.valA;
-	forward->M_icode = M.icode;
-	status->m_stat = stat;
-	control->M_icode = M.icode;
+	fwd->M_dstM = M.dstM.reg;
+	fwd->M_dstE = M.dstE.reg;
+	fwd->m_valM = valM;
+	fwd->M_valE = M.valE;
+	fwd->M_Cnd = M.Cnd;
+	fwd->M_valA = M.valA;
+	fwd->M_icode = M.icode;
+	fwd->m_stat = stat;
 
-	if (!stallW(*status)) {
+	if (!stallW(fwd)) {
 		/*
 		 * If stall is true, do nothing to keep current values in the
 		 * Writeback Stage.
@@ -195,13 +192,13 @@ mem_write(const struct mregister *mreg)
  * @param status Holds values of statuses forwarded from later stages
  */
 bool
-stallW(statusType status)
+stallW(const forwardType *fwd)
 {
 	bool stall = FALSE;
 
-	if (status.W_stat == SADR
-	    || status.W_stat == SINS
-	    || status.W_stat == SHLT) {
+	if (fwd->W_stat == SADR
+	    || fwd->W_stat == SINS
+	    || fwd->W_stat == SHLT) {
 		stall = TRUE;
 	}
 

@@ -18,7 +18,6 @@
 #define	FETCHSTAGE_H
 
 #include "forwarding.h"
-#include "control.h"
 
 /*
  * +----+---------------------------------------------------------------------+
@@ -31,6 +30,6 @@ struct fregister {
 
 struct fregister getFregister(void);
 void clearFregister(void);
-void fetchStage(forwardType, controlType);
+void fetchStage(const forwardType *);
 
 #endif	/* FETCHSTAGE_H */

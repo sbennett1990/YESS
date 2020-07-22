@@ -24,8 +24,6 @@
 #include "memory.h"
 #include "dump.h"
 #include "loader.h"
-#include "status.h"
-#include "control.h"
 #include "forwarding.h"
 #include "fetchStage.h"
 #include "decodeStage.h"
@@ -128,15 +126,13 @@ main(int argc, char **argv)
 	int clockCount = 0;
 	int stop = 0;
 	forwardType forward;
-	statusType status;
-	controlType control;
 
 	while (stop != -1) {
-		stop = writebackStage(&forward, &status);
-		memoryStage(&forward, &status, &control);
-		executeStage(&forward, status, &control);
-		decodeStage(forward, &control);
-		fetchStage(forward, control);
+		stop = writebackStage(&forward);
+		memoryStage(&forward);
+		executeStage(&forward);
+		decodeStage(&forward);
+		fetchStage(&forward);
 		clockCount++;	/* each loop iteration is 1 clock cycle */
 	}
 

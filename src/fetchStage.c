@@ -27,7 +27,7 @@
  */
 static struct fregister F;
 
-static unsigned int selectPC(forwardType forward, const struct fregister *);
+static unsigned int selectPC(const forwardType *, const struct fregister *);
 static unsigned int predictPC(unsigned int icode, unsigned int valC,
     unsigned int valP);
 static unsigned int pcIncrement(unsigned int f_pc, unsigned int icode);
@@ -40,9 +40,9 @@ static rregister getRegB(unsigned int memByte);
 static bool needValC(unsigned int icode);
 static unsigned int getValC(unsigned int f_pc, bool * memError);
 static bool bubbleF(void);
-static bool stallF(controlType *control);
-static bool bubbleD(controlType control);
-static bool stallD(controlType *control);
+static bool stallF(const forwardType *);
+static bool bubbleD(const forwardType *);
+static bool stallD(const forwardType *);
 
 /*
  * Return a copy of the F register.
@@ -69,14 +69,13 @@ clearFregister()
  * accordingly.
  *
  * Parameters:
- *  forward     holds values forwarded from previous stages
- *  control     holds values forwarded from later stages
+ *	*fwd     holds values forwarded from previous stages
  */
 void
-fetchStage(forwardType forward, controlType control)
+fetchStage(const forwardType *fwd)
 {
     bool memError = FALSE;
-    unsigned int f_pc = selectPC(forward, &F);
+    unsigned int f_pc = selectPC(fwd, &F);
     unsigned int stat = SAOK;
     unsigned int icode;
     unsigned int ifun;
@@ -140,7 +139,7 @@ fetchStage(forwardType forward, controlType control)
     valP = pcIncrement(f_pc, icode);
 
     // Stall F? keep previous value
-    if (stallF(&control)) {
+    if (stallF(fwd)) {
         F.predPC = f_pc;
     }
     else {
@@ -148,12 +147,12 @@ fetchStage(forwardType forward, controlType control)
     }
 
     // Stall or bubble D?
-    if (bubbleD(control)) {
+    if (bubbleD(fwd)) {
         // Insert a NOP
 	rregister rnone = { RNONE };
         updateDregister(SAOK, NOP, 0, rnone, rnone, 0, 0);
     }
-    else if (!stallD(&control)) {
+    else if (!stallD(fwd)) {
         // Update D as normal (do not stall)
         updateDregister(stat, icode, ifun, rA, rB, valC, valP);
     }
@@ -164,23 +163,23 @@ fetchStage(forwardType forward, controlType control)
  * Select the source of the PC.
  *
  * Parameters:
- *  forward     holds values forwarded from previous stages
- *  predPC	current value of F.predPC
+ *	*fwd     holds values forwarded from previous stages
+ *	predPC   current value of F.predPC
  *
  * Return source value for the PC
  */
 unsigned int
-selectPC(forwardType forward, const struct fregister *freg)
+selectPC(const forwardType *fwd, const struct fregister *freg)
 {
     // Uses forwarded M_valA, W_valM
     // Mispredicted branch. Fetch at incremented PC
-    if (forward.M_icode == JXX && !(forward.M_Cnd)) {
-        return forward.M_valA;
+    if (fwd->M_icode == JXX && !(fwd->M_Cnd)) {
+        return fwd->M_valA;
     }
 
     // Completion of RET instruction
-    if (forward.W_icode == RET) {
-        return forward.W_valM;
+    if (fwd->W_icode == RET) {
+        return fwd->W_valM;
     }
 
     // Default
@@ -460,19 +459,19 @@ bubbleF()
  * from later stages.
  *
  * Parameters:
- *  control     holds values from later stages
+ *	*fwd     holds values from later stages
  *
  * Return true if F needs to be stalled.
  */
 bool
-stallF(controlType *control)
+stallF(const forwardType *fwd)
 {
 	bool stall = FALSE;
 
-	if (((control->E_icode == MRMOVL || control->E_icode == POPL) &&
-	    (control->E_dstM == control->d_srcA || control->E_dstM == control->d_srcB))
+	if (((fwd->E_icode == MRMOVL || fwd->E_icode == POPL) &&
+	    (fwd->E_dstM == fwd->d_srcA || fwd->E_dstM == fwd->d_srcB))
 	    ||
-	    (control->D_icode == RET || control->E_icode == RET || control->M_icode == RET)) {
+	    (fwd->D_icode == RET || fwd->E_icode == RET || fwd->M_icode == RET)) {
 		stall = TRUE;
 	}
 
@@ -484,20 +483,20 @@ stallF(controlType *control)
  * from later stages.
  *
  * Parameters:
- *  control     holds values from later stages
+ *	*fwd     holds values from later stages
  *
  * Return true if D should be bubbled.
  */
 bool
-bubbleD(controlType control)
+bubbleD(const forwardType *fwd)
 {
 	bool bubble = FALSE;
 
 	// conditions for mispredicted branch
-	if ((control.E_icode == JXX && !control.e_Cnd)
+	if ((fwd->E_icode == JXX && !fwd->e_Cnd)
 	    ||
-	    (!stallD(&control) && (RET == control.D_icode || RET == control.E_icode
-	     || RET == control.M_icode))) {
+	    (!stallD(fwd) && (RET == fwd->D_icode || RET == fwd->E_icode
+	     || RET == fwd->M_icode))) {
 		bubble = TRUE;
 	}
 
@@ -509,19 +508,19 @@ bubbleD(controlType control)
  * from later stages.
  *
  * Parameters:
- *  control     holds values from later stages
+ *	*fwd     holds values from later stages
  *
  * Return true if D should be stalled.
  */
 bool
-stallD(controlType *control)
+stallD(const forwardType *fwd)
 {
 	bool stall = FALSE;
 
 	// conditions for load/use hazard
-	if ((control->E_icode == MRMOVL || control->E_icode == POPL)
+	if ((fwd->E_icode == MRMOVL || fwd->E_icode == POPL)
 	    &&
-	    (control->E_dstM == control->d_srcA || control->E_dstM == control->d_srcB)) {
+	    (fwd->E_dstM == fwd->d_srcA || fwd->E_dstM == fwd->d_srcB)) {
 		stall = TRUE;
 	}
 

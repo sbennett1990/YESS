@@ -7,8 +7,6 @@
 #define	MEMORYSTAGE_H
 
 #include "forwarding.h"
-#include "control.h"
-#include "status.h"
 #include "registers.h"
 
 /*
@@ -28,7 +26,7 @@ struct mregister {
 
 struct mregister getMregister(void);
 void clearMregister(void);
-void memoryStage(forwardType *, statusType *, controlType *);
+void memoryStage(forwardType *);
 void updateMRegister(unsigned int stat, unsigned int icode, unsigned int Cnd,
     unsigned int valE, unsigned int valA, rregister dstE, rregister dstM);
 

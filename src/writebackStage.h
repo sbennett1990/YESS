@@ -6,7 +6,6 @@
 #define	WRITEBACKSTAGE_H
 
 #include "forwarding.h"
-#include "status.h"
 #include "registers.h"
 
 /*
@@ -23,7 +22,7 @@ struct wregister {
 	rregister dstM;		// Program Register: destination for valM
 };
 
-int writebackStage(forwardType *, statusType *);
+int writebackStage(forwardType *);
 struct wregister getWregister(void);
 void clearWregister(void);
 void updateWRegister(unsigned int stat, unsigned int icode, unsigned int valE,

@@ -49,14 +49,13 @@ clearWregister()
  * program. When an exception is encountered, writeback will return -1.
  *
  * Parameters:
- *	*forward    Holds values forwarded to previous stages
- *	*status     Holds values of statuses
+ *	*fwd    Holds values forwarded to previous stages
  *
  * Returns -1 if an exception occurs, and >0 to
  * continue program execution.
  */
 int
-writebackStage(forwardType *forward, statusType *status)
+writebackStage(forwardType *fwd)
 {
 	// if stat == SINS, SADR, SHLT; HALT program and dump
 	if (W.stat == SINS) {
@@ -91,13 +90,13 @@ writebackStage(forwardType *forward, statusType *status)
 		}
 	}
 
-	// set fields of forward and status struct to current values
-	forward->W_dstE = W.dstE.reg;
-	forward->W_valE = W.valE;
-	forward->W_dstM = W.dstM.reg;
-	forward->W_valM = W.valM;
-	forward->W_icode = W.icode;
-	status->W_stat = W.stat;
+	// set fields of forward struct to current values
+	fwd->W_dstE = W.dstE.reg;
+	fwd->W_valE = W.valE;
+	fwd->W_dstM = W.dstM.reg;
+	fwd->W_valM = W.valM;
+	fwd->W_icode = W.icode;
+	fwd->W_stat = W.stat;
 
 	// write result to appropriate program register
 	setRegister(W.dstE, W.valE);
