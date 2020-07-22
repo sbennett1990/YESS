@@ -268,7 +268,7 @@ performMrmovl()
 }
 
 /*
- * Performs rrmovl and cmovxx instructions.
+ * Perform rrmovl and cmovxx instructions.
  *
  * @return The value from rA
  */
@@ -385,49 +385,59 @@ performOpl()
 	return result;
 }
 
-/**
- * Perform popl instruction
+/*
+ * Perform popl instruction.
  *
  * @return Modified value for the stack pointer
  */
-unsigned int performPopl() {
-    return E.valB + 4;
+unsigned int
+performPopl()
+{
+	return E.valB + 4;
 }
 
-/**
- * Perform pushl instruction
+/*
+ * Perform pushl instruction.
  *
  * @return Modified value for the stack pointer
  */
-unsigned int performPushl() {
-    return E.valB - 4;
+unsigned int
+performPushl()
+{
+	return E.valB - 4;
 }
 
-/**
- * Perform jxx instruction
+/*
+ * Perform JXX instructions.
  *
  * @return 0
  */
-unsigned int performJXX() {
-    return 0;
+unsigned int
+performJXX()
+{
+	return 0;
 }
 
-/**
- * Perform call instruction
+/*
+ * Perform call instruction.
  *
  * @return Modified value for the stack pointer
  */
-unsigned int performCall() {
-    return E.valB - 4;
+unsigned int
+performCall()
+{
+	return E.valB - 4;
 }
 
-/**
- * Perform ret instruction
+/*
+ * Perform ret instruction.
  *
  * @return Modified value for the stack pointer
  */
-unsigned int performRet() {
-    return E.valB + 4;
+unsigned int
+performRet()
+{
+	return E.valB + 4;
 }
 
 /*
