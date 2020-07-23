@@ -52,8 +52,10 @@ getDregister()
 void
 clearDregister()
 {
+	stat_t okay = { SAOK };
 	rregister rnone = { RNONE };
-	D.stat = SAOK;
+
+	D.stat = okay;
 	D.icode = NOP;
 	D.ifun = 0;
 	D.rA = rnone;
@@ -87,8 +89,9 @@ decodeStage(forwardType *fwd)
 	// Bubble E?
 	if (bubbleE(fwd)) {
 		// Insert a NOP
+		stat_t okay = { SAOK };
 		rregister rnone = { RNONE };
-		updateEregister(SAOK, NOP, 0, 0, 0, 0, rnone, rnone,
+		updateEregister(okay, NOP, 0, 0, 0, 0, rnone, rnone,
 		    rnone, rnone);
 	}
 	else {
@@ -102,7 +105,7 @@ decodeStage(forwardType *fwd)
  * Update the values in the D register
  */
 void
-updateDregister(unsigned int stat, unsigned int icode, unsigned int ifun,
+updateDregister(stat_t stat, unsigned int icode, unsigned int ifun,
     rregister rA, rregister rB, unsigned int valC, unsigned int valP)
 {
 	D.stat = stat;

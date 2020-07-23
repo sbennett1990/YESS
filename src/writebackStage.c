@@ -34,8 +34,9 @@ getWregister()
 void
 clearWregister()
 {
+	stat_t okay = { SAOK };
 	rregister rnone = { RNONE };
-	W.stat = SAOK;
+	W.stat = okay;
 	W.icode = NOP;
 	W.valE = 0;
 	W.valM = 0;
@@ -58,21 +59,21 @@ int
 writebackStage(forwardType *fwd)
 {
 	// if stat == SINS, SADR, SHLT; HALT program and dump
-	if (W.stat == SINS) {
+	if (W.stat.s == SINS) {
 		printf("\n*** Invalid instruction ***\n");
 		dumpProgramRegisters();
 		dumpProcessorRegisters();
 		dumpMemory();
 		return -1;
 	}
-	else if (W.stat == SADR) {
+	else if (W.stat.s == SADR) {
 		printf("\n*** Invalid memory address ***\n");
 		dumpProgramRegisters();
 		dumpProcessorRegisters();
 		dumpMemory();
 		return -1;
 	}
-	else if (W.stat == SHLT) {
+	else if (W.stat.s == SHLT) {
 		log_debug("halting program");
 		return -1; // XXX: maybe return a different code to differentiate?
 	}
@@ -117,7 +118,7 @@ writebackStage(forwardType *fwd)
  *	dstM     Destination program register 'M', from the M register
  */
 void
-updateWRegister(unsigned int stat, unsigned int icode, unsigned int valE,
+updateWRegister(stat_t stat, unsigned int icode, unsigned int valE,
     unsigned int valM, rregister dstE, rregister dstM)
 {
 	W.stat = stat;

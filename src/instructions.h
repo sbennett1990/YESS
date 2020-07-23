@@ -5,6 +5,8 @@
 #ifndef	INSTRUCTIONS_H
 #define	INSTRUCTIONS_H
 
+#include <stdint.h>
+
 #define INSTR_COUNT	16	/* Possible size of the instruction set */
 
 // Instruction Codes (icode)
@@ -55,5 +57,10 @@
 #define SHLT  2	/* Halt instruction encountered */
 #define SADR  3	/* Bad address encountered */
 #define SINS  4	/* Invalid instruction encountered */
+
+/* Status Code type */
+typedef struct {
+	uint8_t	s;
+} stat_t;
 
 #endif	/* INSTRUCTIONS_H */

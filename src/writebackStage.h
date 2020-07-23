@@ -6,6 +6,7 @@
 #define	WRITEBACKSTAGE_H
 
 #include "forwarding.h"
+#include "instructions.h"
 #include "registers.h"
 
 /*
@@ -14,7 +15,7 @@
  * +----+---------------------------------------------------------------------+
  */
 struct wregister {
-	unsigned int stat;
+	stat_t stat;
 	unsigned int icode;
 	unsigned int valE;	// Result from Execute Stage (ALU)
 	unsigned int valM;	// Data read from memory
@@ -25,7 +26,7 @@ struct wregister {
 int writebackStage(forwardType *);
 struct wregister getWregister(void);
 void clearWregister(void);
-void updateWRegister(unsigned int stat, unsigned int icode, unsigned int valE,
+void updateWRegister(stat_t stat, unsigned int icode, unsigned int valE,
     unsigned int valM, rregister dstE, rregister dstM);
 
 #endif	/* WRITEBACKSTAGE_H */

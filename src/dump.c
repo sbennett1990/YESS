@@ -163,13 +163,13 @@ void dumpProcessorRegisters(void) {
     printf("CC - ZF: %01x SF: %01x OF: %01x\n", getCC(ZF), getCC(SF), getCC(OF));
     printf("F - predPC: %08x\n", F.predPC);
     printf("D - stat: %01x icode: %01x ifun: %01x rA: %01x rB: %01x valC: %08x  valP: %08x\n",
-           D.stat, D.icode, D.ifun, D.rA.reg, D.rB.reg, D.valC, D.valP);
+           D.stat.s, D.icode, D.ifun, D.rA.reg, D.rB.reg, D.valC, D.valP);
     printf("E - stat: %01x icode: %01x ifun: %01x  valC: %08x valA: %08x valB: %08x\n",
-           E.stat, E.icode, E.ifun, E.valC, E.valA, E.valB);
+           E.stat.s, E.icode, E.ifun, E.valC, E.valA, E.valB);
     printf("    dstE: %01x dstM: %01x srcA: %01x srcB: %01x\n",
            E.dstE.reg, E.dstM.reg, E.srcA.reg, E.srcB.reg);
     printf("M - stat: %01x icode: %01x Cnd: %01x valE: %08x valA: %08x dstE: %01x dstM: %01x\n",
-           M.stat, M.icode, M.Cnd, M.valE, M.valA, M.dstE.reg, M.dstM.reg);
+           M.stat.s, M.icode, M.Cnd, M.valE, M.valA, M.dstE.reg, M.dstM.reg);
     printf("W - stat: %01x icode: %01x valE: %08x valM: %08x dstE: %01x dstM: %01x\n\n",
-           W.stat, W.icode, W.valE, W.valM, W.dstE.reg, W.dstM.reg);
+           W.stat.s, W.icode, W.valE, W.valM, W.dstE.reg, W.dstM.reg);
 }

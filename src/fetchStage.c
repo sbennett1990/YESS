@@ -76,7 +76,7 @@ fetchStage(const forwardType *fwd)
 {
     bool memError = FALSE;
     unsigned int f_pc = selectPC(fwd, &F);
-    unsigned int stat = SAOK;
+    stat_t stat = { SAOK };
     unsigned int icode;
     unsigned int ifun;
     rregister rA = { RNONE };
@@ -89,7 +89,7 @@ fetchStage(const forwardType *fwd)
     memByte = getByte(f_pc, &memError);
 
     if (memError) {
-        stat = SADR;
+        stat.s = SADR;
     }
 
     icode = getIcode(memByte, memError);
@@ -97,7 +97,7 @@ fetchStage(const forwardType *fwd)
 
     if (instructionValid(icode)) {
         if (icode == HALT) {
-            stat = SHLT;
+            stat.s = SHLT;
         }
 
         // Get register ids if necessary
@@ -108,7 +108,7 @@ fetchStage(const forwardType *fwd)
             memByte = getByte(tempPC, &memError);
 
             if (memError) {
-                stat = SADR;
+                stat.s = SADR;
             }
 
 		rA = getRegA(memByte);
@@ -126,12 +126,12 @@ fetchStage(const forwardType *fwd)
             valC = getValC(tempPC, &memError);
 
             if (memError) {
-                stat = SADR;
+                stat.s = SADR;
             }
         }
     }
     else {
-        stat = SINS;
+        stat.s = SINS;
         F.predPC = F.predPC + 1;
     }
 
@@ -149,8 +149,9 @@ fetchStage(const forwardType *fwd)
     // Stall or bubble D?
     if (bubbleD(fwd)) {
         // Insert a NOP
+	stat_t okay = { SAOK };
 	rregister rnone = { RNONE };
-        updateDregister(SAOK, NOP, 0, rnone, rnone, 0, 0);
+        updateDregister(okay, NOP, 0, rnone, rnone, 0, 0);
     }
     else if (!stallD(fwd)) {
         // Update D as normal (do not stall)

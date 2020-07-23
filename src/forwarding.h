@@ -5,6 +5,7 @@
 #ifndef	FORWARDING_H
 #define	FORWARDING_H
 
+#include "instructions.h"
 #include "registers.h"
 
 typedef struct {
@@ -27,10 +28,10 @@ typedef struct {
 	rregister	M_dstM;
 	unsigned int	M_valA;
 
-	unsigned int	m_stat;
+	stat_t		m_stat;
 	unsigned int	m_valM;
 
-	unsigned int	W_stat;
+	stat_t		W_stat;
 	unsigned int	W_icode;
 	rregister	W_dstE;
 	unsigned int	W_valE;

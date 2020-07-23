@@ -54,8 +54,9 @@ getEregister()
 void
 clearEregister()
 {
+	stat_t okay = { SAOK };
 	rregister rnone = { RNONE };
-	E.stat = SAOK;
+	E.stat = okay;
 	E.icode = NOP;
 	E.ifun = 0;
 	E.valC = 0;
@@ -84,8 +85,8 @@ executeStage(forwardType *fwd)
 	rregister dstM = E.dstM;
 
 	// If either m_stat or W_stat are SINS, SADR, or SHLT, then do not modify CC's
-	if (fwd->m_stat == SINS || fwd->m_stat == SADR || fwd->m_stat == SHLT ||
-	    fwd->W_stat == SINS || fwd->W_stat == SADR || fwd->W_stat == SHLT) {
+	if (fwd->m_stat.s == SINS || fwd->m_stat.s == SADR || fwd->m_stat.s == SHLT ||
+	    fwd->W_stat.s == SINS || fwd->W_stat.s == SADR || fwd->W_stat.s == SHLT) {
 		changeCC = FALSE;
 		m_bubble = TRUE;
 	}
@@ -107,8 +108,9 @@ executeStage(forwardType *fwd)
 	// Bubble M?
 	if (m_bubble) {
 		// Insert a NOP
+		stat_t okay = { SAOK };
 		rregister rnone = { RNONE };
-		updateMRegister(SAOK, NOP, 0, 0, 0, rnone, rnone);
+		updateMRegister(okay, NOP, 0, 0, 0, rnone, rnone);
 	}
 	else {
 		// Update M register as normal
@@ -121,7 +123,7 @@ executeStage(forwardType *fwd)
  * Update the values in the E register.
  */
 void
-updateEregister(unsigned int stat, unsigned int icode, unsigned int ifun,
+updateEregister(stat_t stat, unsigned int icode, unsigned int ifun,
     unsigned int valC, unsigned int valA, unsigned int valB, rregister dstE,
     rregister dstM, rregister srcA, rregister srcB)
 {
@@ -374,7 +376,7 @@ performOpl()
 		break;
 
 	default:
-		E.stat = SINS;
+		E.stat.s = SINS;
 		log_info("invalid ifun %d encountered executing OPL", E.ifun);
 		break;
 	}
@@ -459,8 +461,8 @@ bubbleM(const forwardType *fwd)
 {
 	bool bubble = FALSE;
 
-	if ((fwd->m_stat == SADR || fwd->m_stat == SINS || fwd->m_stat == SHLT) ||
-	    (fwd->W_stat == SADR || fwd->W_stat == SINS || fwd->W_stat == SHLT)) {
+	if ((fwd->m_stat.s == SADR || fwd->m_stat.s == SINS || fwd->m_stat.s == SHLT) ||
+	    (fwd->W_stat.s == SADR || fwd->W_stat.s == SINS || fwd->W_stat.s == SHLT)) {
 		bubble = TRUE;
 	}
 

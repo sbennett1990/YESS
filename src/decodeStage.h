@@ -18,6 +18,7 @@
 #define	DECODESTAGE_H
 
 #include "forwarding.h"
+#include "instructions.h"
 #include "registers.h"
 
 /*
@@ -26,7 +27,7 @@
  * +----+---------------------------------------------------------------------+
  */
 struct dregister {
-	unsigned int stat;
+	stat_t stat;
 	unsigned int icode;
 	unsigned int ifun;
 	rregister rA;		// Program Register
@@ -38,7 +39,7 @@ struct dregister {
 struct dregister getDregister(void);
 void clearDregister(void);
 void decodeStage(forwardType *);
-void updateDregister(unsigned int stat, unsigned int icode, unsigned int ifun,
+void updateDregister(stat_t stat, unsigned int icode, unsigned int ifun,
     rregister rA, rregister rB, unsigned int valC, unsigned int valP);
 
 #endif	/* DECODESTAGE_H */

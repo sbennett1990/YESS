@@ -38,8 +38,9 @@ getMregister()
 void
 clearMregister()
 {
+	stat_t okay = { SAOK };
 	rregister rnone = { RNONE };
-	M.stat = SAOK;
+	M.stat = okay;
 	M.icode = NOP;
 	M.Cnd = 0;
 	M.valE = 0;
@@ -58,7 +59,7 @@ clearMregister()
 void
 memoryStage(forwardType *fwd)
 {
-	unsigned int stat = M.stat;
+	stat_t stat = M.stat;
 	unsigned int valM = NOADDRESS;	/* value read from memory */
 	bool memError = FALSE;
 
@@ -75,7 +76,7 @@ memoryStage(forwardType *fwd)
 	}
 
 	if (memError) {
-		stat = SADR;
+		stat.s = SADR;
 	}
 
 	fwd->m_stat = stat;
@@ -100,7 +101,7 @@ memoryStage(forwardType *fwd)
  * Update the values in the M register.
  */
 void
-updateMRegister(unsigned int stat, unsigned int icode, unsigned int Cnd,
+updateMRegister(stat_t stat, unsigned int icode, unsigned int Cnd,
     unsigned int valE, unsigned int valA, rregister dstE, rregister dstM)
 {
 	M.stat = stat;
@@ -196,9 +197,9 @@ stallW(const forwardType *fwd)
 {
 	bool stall = FALSE;
 
-	if (fwd->W_stat == SADR
-	    || fwd->W_stat == SINS
-	    || fwd->W_stat == SHLT) {
+	if (fwd->W_stat.s == SADR
+	    || fwd->W_stat.s == SINS
+	    || fwd->W_stat.s == SHLT) {
 		stall = TRUE;
 	}
 

@@ -7,6 +7,7 @@
 #define EXECUTESTAGE_H
 
 #include "forwarding.h"
+#include "instructions.h"
 #include "registers.h"
 
 /*
@@ -15,7 +16,7 @@
  * +----+---------------------------------------------------------------------+
  */
 struct eregister {
-	unsigned int stat;
+	stat_t stat;
 	unsigned int icode;
 	unsigned int ifun;
 	unsigned int valC;
@@ -32,7 +33,7 @@ struct eregister getEregister(void);
 void clearEregister(void);
 void executeStage(forwardType *);
 void initFuncPtrArray(void);
-void updateEregister(unsigned int stat, unsigned int icode, unsigned int ifun,
+void updateEregister(stat_t stat, unsigned int icode, unsigned int ifun,
     unsigned int valC, unsigned int valA, unsigned int valB, rregister dstE,
     rregister dstM, rregister srcA, rregister srcB);
 #endif	/* EXECUTESTAGE_H */

@@ -7,6 +7,7 @@
 #define	MEMORYSTAGE_H
 
 #include "forwarding.h"
+#include "instructions.h"
 #include "registers.h"
 
 /*
@@ -15,7 +16,7 @@
  * +----+---------------------------------------------------------------------+
  */
 struct mregister {
-	unsigned int stat;
+	stat_t stat;
 	unsigned int icode;
 	unsigned int Cnd;
 	unsigned int valE;	// Result from Execute Stage (ALU)
@@ -27,7 +28,7 @@ struct mregister {
 struct mregister getMregister(void);
 void clearMregister(void);
 void memoryStage(forwardType *);
-void updateMRegister(unsigned int stat, unsigned int icode, unsigned int Cnd,
+void updateMRegister(stat_t stat, unsigned int icode, unsigned int Cnd,
     unsigned int valE, unsigned int valA, rregister dstE, rregister dstM);
 
 #endif	/* MEMORYSTAGE_H */
