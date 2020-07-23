@@ -24,6 +24,8 @@
 #include "instructions.h"
 #include "decodeStage.h"
 
+#include "logger.h"
+
 /*
  * F register holds the input for the fetch stage.
  */
@@ -76,17 +78,22 @@ clearFregister()
 void
 fetchStage(const forwardType *fwd)
 {
-    unsigned int f_pc = selectPC(fwd, &F);
-    stat_t stat = { SAOK };
-    unsigned int icode;
-    unsigned int ifun;
-    rregister rA = { RNONE };
-    rregister rB = { RNONE };
-    unsigned int valC = 0;	/* constant word: part of instruction */
-    unsigned int valP = 0;	/* address of next sequential instruction in memory */
+	unsigned int f_pc;
+	stat_t stat = { SAOK };
+	unsigned int icode;
+	unsigned int ifun;
+	rregister rA = { RNONE };
+	rregister rB = { RNONE };
+	unsigned int valC = 0;	/* constant word: part of instruction */
+	unsigned int valP = 0;	/* address of next sequential instruction in memory */
 
-    bool memError;
-    uint8_t data = getByte(f_pc, &memError);
+	f_pc = selectPC(fwd, &F);
+	if (f_pc > HIGHBYTE) {
+		log_info("PC problem: addr %08x is too large", f_pc);
+	}
+
+	bool memError;
+	uint8_t data = getByte(f_pc, &memError);
 
     if (memError) {
         stat.s = SADR;
