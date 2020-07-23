@@ -14,12 +14,14 @@
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
+#include <stdint.h>
+
+#include "fetchStage.h"
 #include "bool.h"
 #include "tools.h"
 #include "memory.h"
 #include "registers.h"
 #include "instructions.h"
-#include "fetchStage.h"
 #include "decodeStage.h"
 
 /*
@@ -32,11 +34,11 @@ static unsigned int predictPC(unsigned int icode, unsigned int valC,
     unsigned int valP);
 static unsigned int pcIncrement(unsigned int f_pc, unsigned int icode);
 static bool instructionValid(unsigned int icode);
-static unsigned int getIcode(unsigned int memByte, bool memError);
-static unsigned int getIfun(unsigned int memByte, bool memError);
+static unsigned int getIcode(uint8_t memByte, bool memError);
+static unsigned int getIfun(uint8_t memByte, bool memError);
 static bool needRegids(unsigned int icode);
-static rregister getRegA(unsigned int memByte);
-static rregister getRegB(unsigned int memByte);
+static rregister getRegA(uint8_t memByte);
+static rregister getRegB(uint8_t memByte);
 static bool needValC(unsigned int icode);
 static unsigned int getValC(unsigned int f_pc, bool * memError);
 static bool bubbleF(void);
@@ -74,7 +76,6 @@ clearFregister()
 void
 fetchStage(const forwardType *fwd)
 {
-    bool memError = FALSE;
     unsigned int f_pc = selectPC(fwd, &F);
     stat_t stat = { SAOK };
     unsigned int icode;
@@ -83,16 +84,16 @@ fetchStage(const forwardType *fwd)
     rregister rB = { RNONE };
     unsigned int valC = 0;	/* constant word: part of instruction */
     unsigned int valP = 0;	/* address of next sequential instruction in memory */
-    unsigned int memByte;
 
-    memByte = getByte(f_pc, &memError);
+    bool memError;
+    uint8_t data = getByte(f_pc, &memError);
 
     if (memError) {
         stat.s = SADR;
     }
 
-    icode = getIcode(memByte, memError);
-    ifun = getIfun(memByte, memError);
+    icode = getIcode(data, memError);
+    ifun = getIfun(data, memError);
 
     if (instructionValid(icode)) {
         if (icode == HALT) {
@@ -104,14 +105,14 @@ fetchStage(const forwardType *fwd)
             unsigned int tempPC = f_pc + 1;
 
             // get rA and rB from the next byte of memory
-            memByte = getByte(tempPC, &memError);
+            data = getByte(tempPC, &memError);
 
             if (memError) {
                 stat.s = SADR;
             }
 
-		rA = getRegA(memByte);
-		rB = getRegB(memByte);
+		rA = getRegA(data);
+		rB = getRegB(data);
         }
 
         // Get valC if necessary
@@ -267,7 +268,7 @@ pcIncrement(unsigned int f_pc, unsigned int icode)
  * Return the instruction code, or a NOP for a memory error
  */
 unsigned int
-getIcode(unsigned int memByte, bool memError)
+getIcode(uint8_t memByte, bool memError)
 {
     if (memError) {
         return NOP;
@@ -286,7 +287,7 @@ getIcode(unsigned int memByte, bool memError)
  * Return the instruction function, or FNONE for a memory error
  */
 unsigned int
-getIfun(unsigned int memByte, bool memError)
+getIfun(uint8_t memByte, bool memError)
 {
     if (memError) {
         return 0;
@@ -302,7 +303,7 @@ getIfun(unsigned int memByte, bool memError)
  *  memByte     a byte that should contain a program register id
  */
 rregister
-getRegA(unsigned int memByte)
+getRegA(uint8_t memByte)
 {
 	unsigned int reg = getBits(4, 7, memByte);
 	rregister rA = { reg };
@@ -316,7 +317,7 @@ getRegA(unsigned int memByte)
  *  memByte     a byte that should contain a program register id
  */
 rregister
-getRegB(unsigned int memByte)
+getRegB(uint8_t memByte)
 {
 	unsigned int reg = getBits(0, 3, memByte);
 	rregister rB = { reg };
