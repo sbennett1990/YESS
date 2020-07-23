@@ -43,5 +43,4 @@ void clearCC(void);
 int getCC(short bitNumber);
 void setCC(short bitNumber, unsigned int value);
 
-
 #endif	/* REGISTERS_H */

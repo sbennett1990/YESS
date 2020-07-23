@@ -81,9 +81,9 @@ memoryStage(forwardType *fwd)
 	fwd->m_stat = stat;
 	fwd->M_icode = M.icode;
 	fwd->M_Cnd = M.Cnd;
-	fwd->M_dstM = M.dstM.reg;
+	fwd->M_dstM = M.dstM;
 	fwd->m_valM = valM;
-	fwd->M_dstE = M.dstE.reg;
+	fwd->M_dstE = M.dstE;
 	fwd->M_valE = M.valE;
 	fwd->M_valA = M.valA;
 

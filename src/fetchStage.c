@@ -469,7 +469,7 @@ stallF(const forwardType *fwd)
 	bool stall = FALSE;
 
 	if (((fwd->E_icode == MRMOVL || fwd->E_icode == POPL) &&
-	    (fwd->E_dstM == fwd->d_srcA || fwd->E_dstM == fwd->d_srcB))
+	    (fwd->E_dstM.reg == fwd->d_srcA.reg || fwd->E_dstM.reg == fwd->d_srcB.reg))
 	    ||
 	    (fwd->D_icode == RET || fwd->E_icode == RET || fwd->M_icode == RET)) {
 		stall = TRUE;
@@ -520,7 +520,7 @@ stallD(const forwardType *fwd)
 	// conditions for load/use hazard
 	if ((fwd->E_icode == MRMOVL || fwd->E_icode == POPL)
 	    &&
-	    (fwd->E_dstM == fwd->d_srcA || fwd->E_dstM == fwd->d_srcB)) {
+	    (fwd->E_dstM.reg == fwd->d_srcA.reg || fwd->E_dstM.reg == fwd->d_srcB.reg)) {
 		stall = TRUE;
 	}
 

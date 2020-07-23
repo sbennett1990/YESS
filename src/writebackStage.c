@@ -93,9 +93,9 @@ writebackStage(forwardType *fwd)
 	// set fields of forward struct to current values
 	fwd->W_stat = W.stat;
 	fwd->W_icode = W.icode;
-	fwd->W_dstE = W.dstE.reg;
+	fwd->W_dstE = W.dstE;
 	fwd->W_valE = W.valE;
-	fwd->W_dstM = W.dstM.reg;
+	fwd->W_dstM = W.dstM;
 	fwd->W_valM = W.valM;
 
 	// write result to appropriate program register

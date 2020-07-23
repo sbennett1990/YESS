@@ -81,8 +81,8 @@ decodeStage(forwardType *fwd)
 
 	// Update values that need to be forwarded
 	fwd->D_icode = D.icode;
-	fwd->d_srcA = srcA.reg;
-	fwd->d_srcB = srcB.reg;
+	fwd->d_srcA = srcA;
+	fwd->d_srcB = srcB;
 
 	// Bubble E?
 	if (bubbleE(fwd)) {
@@ -241,15 +241,15 @@ selectFwdA(const struct dregister *dreg, rregister srcA,
         return dreg->valP;
     } else if (srcA.reg == RNONE) {
         return 0;
-    } else if (srcA.reg == fwd->e_dstE) {
+    } else if (srcA.reg == fwd->e_dstE.reg) {
         return fwd->e_valE;
-    } else if (srcA.reg == fwd->M_dstM) {
+    } else if (srcA.reg == fwd->M_dstM.reg) {
         return fwd->m_valM;
-    } else if (srcA.reg == fwd->M_dstE) {
+    } else if (srcA.reg == fwd->M_dstE.reg) {
         return fwd->M_valE;
-    } else if (srcA.reg == fwd->W_dstM) {
+    } else if (srcA.reg == fwd->W_dstM.reg) {
         return fwd->W_valM;
-    } else if (srcA.reg == fwd->W_dstE) {
+    } else if (srcA.reg == fwd->W_dstE.reg) {
         return fwd->W_valE;
     } else {
         return getRegister(srcA);
@@ -268,15 +268,15 @@ forwardB(rregister srcB, const forwardType *fwd)
 {
     if (srcB.reg == RNONE) {
         return 0;
-    } else if (srcB.reg == fwd->e_dstE) {
+    } else if (srcB.reg == fwd->e_dstE.reg) {
         return fwd->e_valE;
-    } else if (srcB.reg == fwd->M_dstM) {
+    } else if (srcB.reg == fwd->M_dstM.reg) {
         return fwd->m_valM;
-    } else if (srcB.reg == fwd->M_dstE) {
+    } else if (srcB.reg == fwd->M_dstE.reg) {
         return fwd->M_valE;
-    } else if (srcB.reg == fwd->W_dstM) {
+    } else if (srcB.reg == fwd->W_dstM.reg) {
         return fwd->W_valM;
-    } else if (srcB.reg == fwd->W_dstE) {
+    } else if (srcB.reg == fwd->W_dstE.reg) {
         return fwd->W_valE;
     } else {
         return getRegister(srcB);
@@ -307,7 +307,7 @@ bubbleE(const forwardType *fwd)
 
 	if ((fwd->E_icode == JXX && !fwd->e_Cnd) ||
 	    ((fwd->E_icode == MRMOVL || fwd->E_icode == POPL) &&
-	    (fwd->E_dstM == fwd->d_srcA || fwd->E_dstM == fwd->d_srcB))) {
+	    (fwd->E_dstM.reg == fwd->d_srcA.reg || fwd->E_dstM.reg == fwd->d_srcB.reg))) {
 		bubble = TRUE;
 	}
 
