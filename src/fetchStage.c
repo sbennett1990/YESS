@@ -81,10 +81,9 @@ fetchStage(const forwardType *fwd)
     unsigned int ifun;
     rregister rA = { RNONE };
     rregister rB = { RNONE };
-    unsigned int valC = 0;
-    unsigned int valP = 0;
+    unsigned int valC = 0;	/* constant word: part of instruction */
+    unsigned int valP = 0;	/* address of next sequential instruction in memory */
     unsigned int memByte;
-    unsigned int tempPC;
 
     memByte = getByte(f_pc, &memError);
 
@@ -102,7 +101,7 @@ fetchStage(const forwardType *fwd)
 
         // Get register ids if necessary
         if (needRegids(icode)) {
-            tempPC = f_pc + 1;
+            unsigned int tempPC = f_pc + 1;
 
             // get rA and rB from the next byte of memory
             memByte = getByte(tempPC, &memError);
@@ -117,7 +116,7 @@ fetchStage(const forwardType *fwd)
 
         // Get valC if necessary
         if (needValC(icode)) {
-            tempPC = f_pc;
+            unsigned int tempPC = f_pc;
 
             if (needRegids(icode)) {
                 tempPC += 1;
