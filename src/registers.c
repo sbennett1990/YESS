@@ -30,40 +30,38 @@ static unsigned int CC = 0;
  * Returns the value in the specified program register.
  *
  * Parameters:
- *  reg		Program register
+ *	reg     Program register
  *
  * Return the value in the register, or 0 on error.
  */
 unsigned int
 getRegister(rregister reg)
 {
-	if (reg.reg >= 0 && reg.reg < REGSIZE) {
-		return registers[reg.reg];
-	}
-	else {
+	if (reg.reg < 0 || reg.reg > REGSIZE) {
 		log_debug("can't get register value: invalid register id %d",
 		    reg.reg);
 		return 0;
 	}
+
+	return registers[reg.reg];
 }
 
 /*
- * Set program register reg to the value val.
+ * Store val in program register reg.
  *
  * Parameters:
- *  reg		Program register
- *  val		the value to put in the register
+ *	reg     Program register
+ *	val     The value to put in the register
  */
 void
 setRegister(rregister reg, unsigned int val)
 {
-	if (reg.reg >= 0 || reg.reg < REGSIZE) {
-		registers[reg.reg] = val;
+	if (reg.reg < 0 || reg.reg > REGSIZE) {
+		log_debug("can't set register value %08x: invalid register id %d",
+		    val, reg.reg);
 	}
-	else {
-		log_debug("can't set register value: invalid register id %d",
-		    reg.reg);
-	}
+
+	registers[reg.reg] = val;
 }
 
 /*
