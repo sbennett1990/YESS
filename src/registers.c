@@ -57,8 +57,10 @@ void
 setRegister(rregister reg, unsigned int val)
 {
 	if (reg.reg < 0 || reg.reg > REGSIZE) {
+#if DEBUG
 		log_debug("can't set register value %08x: invalid register id %x",
 		    val, reg.reg);
+#endif
 	}
 
 	registers[reg.reg] = val;
