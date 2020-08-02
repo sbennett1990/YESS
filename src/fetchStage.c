@@ -41,8 +41,8 @@ static bool instructionValid(uint8_t icode);
 static bool needRegids(uint8_t icode);
 static bool needValC(uint8_t icode);
 static unsigned int getValC(unsigned int f_pc, bool *memError);
-static rregister getRegA(uint8_t memByte);
-static rregister getRegB(uint8_t memByte);
+static rregister getRegA(uint8_t memByte, bool memError);
+static rregister getRegB(uint8_t memByte, bool memError);
 static bool bubbleF(void);
 static bool stallF(const forwardType *);
 static bool bubbleD(const forwardType *);
@@ -124,10 +124,9 @@ fetchStage(const forwardType *fwd)
 		if (memError) {
 			stat.s = SADR;
 		}
-		else {
-			rA = getRegA(data);
-			rB = getRegB(data);
-		}
+
+		rA = getRegA(data, memError);
+		rB = getRegB(data, memError);
         }
 
         // Get valC if necessary
@@ -317,13 +316,19 @@ getIfun(uint8_t memByte, bool memError)
  * Decipher program register id A.
  *
  * Parameters:
- *  memByte     a byte that should contain a program register id
+ *	memByte     a byte that should contain a program register id
+ *	memError    specifies whether a memory error occurred
  */
 rregister
-getRegA(uint8_t memByte)
+getRegA(uint8_t memByte, bool memError)
 {
+	rregister rA = { RNONE };
+	if (memError) {
+		return rA;
+	}
+
 	unsigned int reg = getBits(4, 7, memByte);
-	rregister rA = { reg };
+	rA.reg = reg;
 	return rA;
 }
 
@@ -331,13 +336,19 @@ getRegA(uint8_t memByte)
  * Decipher program register id B.
  *
  * Parameters:
- *  memByte     a byte that should contain a program register id
+ *	memByte     a byte that should contain a program register id
+ *	memError    specifies whether a memory error occurred
  */
 rregister
-getRegB(uint8_t memByte)
+getRegB(uint8_t memByte, bool memError)
 {
+	rregister rB = { RNONE };
+	if (memError) {
+		return rB;
+	}
+
 	unsigned int reg = getBits(0, 3, memByte);
-	rregister rB = { reg };
+	rB.reg = reg;
 	return rB;
 }
 
