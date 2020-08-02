@@ -434,18 +434,25 @@ getValC(unsigned int f_pc, bool *memError)
 	byte0 = getByte(f_pc + 1, memError);
 	if (*memError) {
 		log_info("memory error in getValC!");
+		return 0;
 	}
+
 	byte1 = getByte(f_pc + 2, memError);
 	if (*memError) {
 		log_info("memory error in getValC!");
+		return 0;
 	}
+
 	byte2 = getByte(f_pc + 3, memError);
 	if (*memError) {
 		log_info("memory error in getValC!");
+		return 0;
 	}
+
 	byte3 = getByte(f_pc + 4, memError);
 	if (*memError) {
 		log_info("memory error in getValC!");
+		return 0;
 	}
 
 	return buildWord(byte0, byte1, byte2, byte3);
