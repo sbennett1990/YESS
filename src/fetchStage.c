@@ -37,7 +37,7 @@ static unsigned int predictPC(uint8_t icode, unsigned int valC,
 static unsigned int pcIncrement(unsigned int f_pc, uint8_t icode);
 static bool instructionValid(uint8_t icode);
 static uint8_t getIcode(uint8_t memByte, bool memError);
-static unsigned int getIfun(uint8_t memByte, bool memError);
+static uint8_t getIfun(uint8_t memByte, bool memError);
 static bool needRegids(uint8_t icode);
 static rregister getRegA(uint8_t memByte);
 static rregister getRegB(uint8_t memByte);
@@ -81,7 +81,7 @@ fetchStage(const forwardType *fwd)
 	unsigned int f_pc;
 	stat_t stat = { SAOK };
 	uint8_t icode;
-	unsigned int ifun;
+	uint8_t ifun;
 	rregister rA = { RNONE };
 	rregister rB = { RNONE };
 	unsigned int valC = 0;	/* constant word: part of instruction */
@@ -269,8 +269,8 @@ pcIncrement(unsigned int f_pc, uint8_t icode)
  * Determine the icode of the fetched instruction.
  *
  * Parameters:
- *  memByte     a byte that should contain the instruction code
- *  memError    specifies whether a memory error occurred
+ *	memByte     a byte that should contain the instruction code
+ *	memError    specifies whether a memory error occurred
  *
  * Return the instruction code, or a NOP for a memory error
  */
@@ -289,19 +289,20 @@ getIcode(uint8_t memByte, bool memError)
  * Determine the ifun of the fetched instruction.
  *
  * Parameters:
- *  memByte     a byte that should contain the instruction function
- *  memError    specifies whether a memory error occurred
+ *	memByte     a byte that should contain the instruction function
+ *	memError    specifies whether a memory error occurred
  *
  * Return the instruction function, or FNONE for a memory error
  */
-unsigned int
+uint8_t
 getIfun(uint8_t memByte, bool memError)
 {
-    if (memError) {
-        return 0;
-    } else {
-        return getBits(0, 3, memByte);
-    }
+	if (memError) {
+		return 0;
+	}
+
+	uint8_t ifun = getBits(0, 3, memByte);
+	return ifun;
 }
 
 /*
