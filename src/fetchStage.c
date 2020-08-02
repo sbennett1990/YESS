@@ -346,17 +346,17 @@ instructionValid(uint8_t icode)
     switch (icode) {
         case HALT:
         case NOP:
-        case DUMP:
-        case IRMOVL:
-        case OPL:
         case RRMOVL:
+        case IRMOVL:
         case RMMOVL:
         case MRMOVL:
-        case POPL:
-        case PUSHL:
-        case RET:
+        case OPL:
         case JXX:
         case CALL:
+        case RET:
+        case PUSHL:
+        case POPL:
+        case DUMP:
 		return TRUE;
 
         default:
@@ -378,12 +378,12 @@ needRegids(uint8_t icode)
 {
     switch (icode) {
         case RRMOVL:
-        case OPL:
-        case PUSHL:
-        case POPL:
         case IRMOVL:
         case RMMOVL:
         case MRMOVL:
+        case OPL:
+        case PUSHL:
+        case POPL:
 		return TRUE;
 
         default:
@@ -403,12 +403,12 @@ bool
 needValC(uint8_t icode)
 {
     switch (icode) {
-        case DUMP:
         case IRMOVL:
         case RMMOVL:
         case MRMOVL:
         case JXX:
         case CALL:
+        case DUMP:
 		return TRUE;
 
         default:
