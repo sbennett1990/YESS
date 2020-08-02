@@ -32,16 +32,16 @@
 static struct fregister F;
 
 static unsigned int selectPC(const forwardType *, const struct fregister *);
-static unsigned int predictPC(unsigned int icode, unsigned int valC,
+static unsigned int predictPC(uint8_t icode, unsigned int valC,
     unsigned int valP);
-static unsigned int pcIncrement(unsigned int f_pc, unsigned int icode);
-static bool instructionValid(unsigned int icode);
-static unsigned int getIcode(uint8_t memByte, bool memError);
+static unsigned int pcIncrement(unsigned int f_pc, uint8_t icode);
+static bool instructionValid(uint8_t icode);
+static uint8_t getIcode(uint8_t memByte, bool memError);
 static unsigned int getIfun(uint8_t memByte, bool memError);
-static bool needRegids(unsigned int icode);
+static bool needRegids(uint8_t icode);
 static rregister getRegA(uint8_t memByte);
 static rregister getRegB(uint8_t memByte);
-static bool needValC(unsigned int icode);
+static bool needValC(uint8_t icode);
 static unsigned int getValC(unsigned int f_pc, bool * memError);
 static bool bubbleF(void);
 static bool stallF(const forwardType *);
@@ -80,7 +80,7 @@ fetchStage(const forwardType *fwd)
 {
 	unsigned int f_pc;
 	stat_t stat = { SAOK };
-	unsigned int icode;
+	uint8_t icode;
 	unsigned int ifun;
 	rregister rA = { RNONE };
 	rregister rB = { RNONE };
@@ -199,15 +199,15 @@ selectPC(const forwardType *fwd, const struct fregister *freg)
  * executed.
  *
  * Parameters:
- *  icode   the instruction code
- *  valC    a constant word, part of the instruction
- *  valP    the address of next sequential instruction
- *          in memory
+ *	icode     the instruction code
+ *	valC      a constant word, part of the instruction
+ *	valP      the address of next sequential instruction
+ *                in memory
  *
- * Return the predicted PC
+ * Return the predicted PC.
  */
 unsigned int
-predictPC(unsigned int icode, unsigned int valC, unsigned int valP)
+predictPC(uint8_t icode, unsigned int valC, unsigned int valP)
 {
 	if (icode == JXX || icode == CALL) {
 		return valC;
@@ -222,13 +222,13 @@ predictPC(unsigned int icode, unsigned int valC, unsigned int valP)
  * memory.
  *
  * Parameters:
- *  f_pc    current value of the PC
- *  icode   the instruction code
+ *	f_pc     current value of the PC
+ *	icode    the instruction code
  *
- * Return the address of the next sequential instruction
+ * Return the address of the next sequential instruction.
  */
 unsigned int
-pcIncrement(unsigned int f_pc, unsigned int icode)
+pcIncrement(unsigned int f_pc, uint8_t icode)
 {
     unsigned int valP;
 
@@ -274,14 +274,15 @@ pcIncrement(unsigned int f_pc, unsigned int icode)
  *
  * Return the instruction code, or a NOP for a memory error
  */
-unsigned int
+uint8_t
 getIcode(uint8_t memByte, bool memError)
 {
-    if (memError) {
-        return NOP;
-    } else {
-        return getBits(4, 7, memByte);
-    }
+	if (memError) {
+		return NOP;
+	}
+
+	uint8_t icode = getBits(4, 7, memByte);
+	return icode;
 }
 
 /*
@@ -335,15 +336,13 @@ getRegB(uint8_t memByte)
  * Test whether the fetched instruction is valid.
  *
  * Parameters:
- *  icode   the instruction code
+ *	icode     the instruction code
  *
- * Return true if icode is valid; false otherwise
+ * Return true if icode is valid.
  */
 bool
-instructionValid(unsigned int icode)
+instructionValid(uint8_t icode)
 {
-    bool valid = FALSE;
-
     switch (icode) {
         case HALT:
         case NOP:
@@ -358,29 +357,25 @@ instructionValid(unsigned int icode)
         case RET:
         case JXX:
         case CALL:
-            valid = TRUE;
-            break;
+		return TRUE;
 
         default:
-            valid = FALSE;
+		log_debug("invalid instruction: %02x", icode);
+		return FALSE;
     }
-
-    return valid;
 }
 
 /*
  * Does fetched instruction require a regid byte?
  *
  * Parameters:
- *  icode   the instruction code
+ *	icode     the instruction code
  *
- * Return true if icode requires a regid; false otherwise
+ * Return true if icode requires a regid.
  */
 bool
-needRegids(unsigned int icode)
+needRegids(uint8_t icode)
 {
-    bool need = FALSE;
-
     switch (icode) {
         case RRMOVL:
         case OPL:
@@ -389,29 +384,24 @@ needRegids(unsigned int icode)
         case IRMOVL:
         case RMMOVL:
         case MRMOVL:
-            need = TRUE;
-            break;
+		return TRUE;
 
         default:
-            need = FALSE;
+		return FALSE;
     }
-
-    return need;
 }
 
 /*
  * Does fetched instruction require a constant word (valC)?
  *
  * Parameters:
- *  icode   the instruction code
+ *	icode     the instruction code
  *
- * Return true if instruction needs a valC; false otherwise
+ * Return true if instruction needs a valC.
  */
 bool
-needValC(unsigned int icode)
+needValC(uint8_t icode)
 {
-    bool need = FALSE;
-
     switch (icode) {
         case DUMP:
         case IRMOVL:
@@ -419,14 +409,11 @@ needValC(unsigned int icode)
         case MRMOVL:
         case JXX:
         case CALL:
-            need = TRUE;
-            break;
+		return TRUE;
 
         default:
-            need = FALSE;
+		return FALSE;
     }
-
-    return need;
 }
 
 /*
