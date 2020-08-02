@@ -35,14 +35,14 @@ static unsigned int selectPC(const forwardType *, const struct fregister *);
 static unsigned int predictPC(uint8_t icode, unsigned int valC,
     unsigned int valP);
 static unsigned int pcIncrement(unsigned int f_pc, uint8_t icode);
-static bool instructionValid(uint8_t icode);
 static uint8_t getIcode(uint8_t memByte, bool memError);
 static uint8_t getIfun(uint8_t memByte, bool memError);
+static bool instructionValid(uint8_t icode);
 static bool needRegids(uint8_t icode);
-static rregister getRegA(uint8_t memByte);
-static rregister getRegB(uint8_t memByte);
 static bool needValC(uint8_t icode);
 static unsigned int getValC(unsigned int f_pc, bool * memError);
+static rregister getRegA(uint8_t memByte);
+static rregister getRegB(uint8_t memByte);
 static bool bubbleF(void);
 static bool stallF(const forwardType *);
 static bool bubbleD(const forwardType *);
