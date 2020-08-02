@@ -117,17 +117,17 @@ fetchStage(const forwardType *fwd)
 
         // Get register ids if necessary
         if (needRegids(icode)) {
-            unsigned int tempPC = f_pc + 1;
+		unsigned int tempPC = f_pc + 1;
 
-            // get rA and rB from the next byte of memory
-            data = getByte(tempPC, &memError);
-
-            if (memError) {
-                stat.s = SADR;
-            }
-
-		rA = getRegA(data);
-		rB = getRegB(data);
+		// try to get rA and rB from the next byte of memory
+		data = getByte(tempPC, &memError);
+		if (memError) {
+			stat.s = SADR;
+		}
+		else {
+			rA = getRegA(data);
+			rB = getRegB(data);
+		}
         }
 
         // Get valC if necessary
@@ -139,7 +139,6 @@ fetchStage(const forwardType *fwd)
             }
 
             valC = getValC(tempPC, &memError);
-
             if (memError) {
                 stat.s = SADR;
             }
