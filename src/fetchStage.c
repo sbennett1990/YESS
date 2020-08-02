@@ -94,13 +94,21 @@ fetchStage(const forwardType *fwd)
 
 	bool memError;
 	uint8_t data = getByte(f_pc, &memError);
+	if (memError) {
+		stat.s = SADR;
+	}
 
-    if (memError) {
-        stat.s = SADR;
-    }
+	icode = getIcode(data, memError);
+	ifun = getIfun(data, memError);
 
-    icode = getIcode(data, memError);
-    ifun = getIfun(data, memError);
+	if (memError) {
+		/*
+		 * If there was a memory error fetching the instruction,
+		 * icode will be NOP and stat will be SADR. So skip the
+		 * other memory reading steps.
+		 */
+		goto updateregs;
+	}
 
     if (instructionValid(icode)) {
         if (icode == HALT) {
@@ -142,6 +150,7 @@ fetchStage(const forwardType *fwd)
         F.predPC = F.predPC + 1;
     }
 
+updateregs:
     // Calculate valP
     valP = pcIncrement(f_pc, icode);
 
