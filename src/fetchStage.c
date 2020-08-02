@@ -421,22 +421,22 @@ needValC(uint8_t icode)
  * Get and build the constant word, valC, from memory.
  *
  * Parameters:
- *  f_pc        the current value of the PC
- *  *memError   pointer to memory error status
+ *	f_pc      the current value of the PC
+ *	*memError pointer to memory error status
  *
- * Return the constant word, valC
+ * Return the constant word, valC.
  */
 unsigned int
-getValC(unsigned int f_pc, bool * memError)
+getValC(unsigned int f_pc, bool *memError)
 {
-    unsigned char byte0, byte1, byte2, byte3;
+	uint8_t byte0, byte1, byte2, byte3;
 
-    byte0 = getByte(f_pc + 1, memError);
-    byte1 = getByte(f_pc + 2, memError);
-    byte2 = getByte(f_pc + 3, memError);
-    byte3 = getByte(f_pc + 4, memError);
+	byte0 = getByte(f_pc + 1, memError);
+	byte1 = getByte(f_pc + 2, memError);
+	byte2 = getByte(f_pc + 3, memError);
+	byte3 = getByte(f_pc + 4, memError);
 
-    return buildWord(byte0, byte1, byte2, byte3);
+	return buildWord(byte0, byte1, byte2, byte3);
 }
 
 /*
