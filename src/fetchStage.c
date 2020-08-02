@@ -40,7 +40,7 @@ static uint8_t getIfun(uint8_t memByte, bool memError);
 static bool instructionValid(uint8_t icode);
 static bool needRegids(uint8_t icode);
 static bool needValC(uint8_t icode);
-static unsigned int getValC(unsigned int f_pc, bool * memError);
+static unsigned int getValC(unsigned int f_pc, bool *memError);
 static rregister getRegA(uint8_t memByte);
 static rregister getRegB(uint8_t memByte);
 static bool bubbleF(void);
@@ -432,9 +432,21 @@ getValC(unsigned int f_pc, bool *memError)
 	uint8_t byte0, byte1, byte2, byte3;
 
 	byte0 = getByte(f_pc + 1, memError);
+	if (*memError) {
+		log_info("memory error in getValC!");
+	}
 	byte1 = getByte(f_pc + 2, memError);
+	if (*memError) {
+		log_info("memory error in getValC!");
+	}
 	byte2 = getByte(f_pc + 3, memError);
+	if (*memError) {
+		log_info("memory error in getValC!");
+	}
 	byte3 = getByte(f_pc + 4, memError);
+	if (*memError) {
+		log_info("memory error in getValC!");
+	}
 
 	return buildWord(byte0, byte1, byte2, byte3);
 }
@@ -447,7 +459,7 @@ getValC(unsigned int f_pc, bool *memError)
 bool
 bubbleF()
 {
-    return FALSE;
+	return FALSE;
 }
 
 /*
