@@ -55,6 +55,19 @@ typedef struct {
 	uint8_t	ic;
 } icode_t;
 
+/*
+ * Determine if the given instruction code type is a specific icode.
+ *
+ * Parameters:
+ *	it     Instruction code type
+ *	ic     icode
+ */
+static inline int
+icode_is(icode_t it, uint8_t ic)
+{
+	return (it.ic == ic);
+}
+
 
 /* Status Codes */
 #define SAOK	1	/* Normal operation */

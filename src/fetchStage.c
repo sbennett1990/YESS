@@ -32,14 +32,14 @@
 static struct fregister F;
 
 static unsigned int selectPC(const forwardType *, const struct fregister *);
-static unsigned int predictPC(uint8_t icode, unsigned int valC,
+static unsigned int predictPC(icode_t icode, unsigned int valC,
     unsigned int valP);
-static unsigned int pcIncrement(unsigned int f_pc, uint8_t icode);
-static uint8_t getIcode(uint8_t memByte, bool memError);
+static unsigned int pcIncrement(unsigned int f_pc, icode_t icode);
+static icode_t getIcode(uint8_t memByte, bool memError);
 static uint8_t getIfun(uint8_t memByte, bool memError);
-static bool instructionValid(uint8_t icode);
-static bool needRegids(uint8_t icode);
-static bool needValC(uint8_t icode);
+static bool instructionValid(icode_t icode);
+static bool needRegids(icode_t icode);
+static bool needValC(icode_t icode);
 static unsigned int getValC(unsigned int f_pc, bool *memError);
 static rregister getRegA(uint8_t memByte, bool memError);
 static rregister getRegB(uint8_t memByte, bool memError);
@@ -80,7 +80,7 @@ fetchStage(const forwardType *fwd)
 {
 	unsigned int f_pc;
 	stat_t stat = { SAOK };
-	uint8_t icode;
+	icode_t icode;
 	uint8_t ifun;
 	rregister rA = { RNONE };
 	rregister rB = { RNONE };
@@ -111,7 +111,7 @@ fetchStage(const forwardType *fwd)
 	}
 
     if (instructionValid(icode)) {
-        if (icode == HALT) {
+        if (icode_is(icode, HALT)) {
             stat.s = SHLT;
         }
 
@@ -169,7 +169,7 @@ updateregs:
     }
     else if (!stallD(fwd)) {
         // Update D as normal (do not stall)
-        updateDregister(stat, icode, ifun, rA, rB, valC, valP);
+        updateDregister(stat, icode.ic, ifun, rA, rB, valC, valP);
     }
 	// else do nothing because D should be stalled
 }
@@ -214,14 +214,13 @@ selectPC(const forwardType *fwd, const struct fregister *freg)
  * Return the predicted PC.
  */
 unsigned int
-predictPC(uint8_t icode, unsigned int valC, unsigned int valP)
+predictPC(icode_t icode, unsigned int valC, unsigned int valP)
 {
-	if (icode == JXX || icode == CALL) {
+	if (icode_is(icode, JXX) || icode_is(icode, CALL)) {
 		return valC;
 	}
-	else {
-		return valP;
-	}
+
+	return valP;
 }
 
 /*
@@ -235,41 +234,41 @@ predictPC(uint8_t icode, unsigned int valC, unsigned int valP)
  * Return the address of the next sequential instruction.
  */
 unsigned int
-pcIncrement(unsigned int f_pc, uint8_t icode)
+pcIncrement(unsigned int f_pc, icode_t icode)
 {
-    unsigned int valP;
+	unsigned int valP;
 
-    switch (icode) {
-        case HALT:
-        case NOP:
-        case RET:
-            valP = f_pc + 1;
-            break;
+	switch (icode.ic) {
+	case HALT:
+	case NOP:
+	case RET:
+		valP = f_pc + 1;
+		break;
 
-        case OPL:
-        case RRMOVL:
-        case POPL:
-        case PUSHL:
-            valP = f_pc + 2;
-            break;
+	case OPL:
+	case RRMOVL:
+	case POPL:
+	case PUSHL:
+		valP = f_pc + 2;
+		break;
 
-        case DUMP:
-        case JXX:
-        case CALL:
-            valP = f_pc + 5;
-            break;
+	case DUMP:
+	case JXX:
+	case CALL:
+		valP = f_pc + 5;
+		break;
 
-        case IRMOVL:
-        case RMMOVL:
-        case MRMOVL:
-            valP = f_pc + 6;
-            break;
+	case IRMOVL:
+	case RMMOVL:
+	case MRMOVL:
+		valP = f_pc + 6;
+		break;
 
-        default:
-            valP = f_pc + 1;
-    }
+	default:
+		valP = f_pc + 1;
+	}
 
-    return valP;
+	return valP;
 }
 
 /*
@@ -279,16 +278,17 @@ pcIncrement(unsigned int f_pc, uint8_t icode)
  *	memByte     a byte that should contain the instruction code
  *	memError    specifies whether a memory error occurred
  *
- * Return the instruction code, or a NOP for a memory error
+ * Return the decoded instruction code, or a NOP for memory error
  */
-uint8_t
+icode_t
 getIcode(uint8_t memByte, bool memError)
 {
+	icode_t icode = { NOP };
 	if (memError) {
-		return NOP;
+		return icode;
 	}
 
-	uint8_t icode = getBits(4, 7, memByte);
+	icode.ic = getBits(4, 7, memByte);
 	return icode;
 }
 
@@ -361,28 +361,28 @@ getRegB(uint8_t memByte, bool memError)
  * Return true if icode is valid.
  */
 bool
-instructionValid(uint8_t icode)
+instructionValid(icode_t icode)
 {
-    switch (icode) {
-        case HALT:
-        case NOP:
-        case RRMOVL:
-        case IRMOVL:
-        case RMMOVL:
-        case MRMOVL:
-        case OPL:
-        case JXX:
-        case CALL:
-        case RET:
-        case PUSHL:
-        case POPL:
-        case DUMP:
+	switch (icode.ic) {
+	case HALT:
+	case NOP:
+	case RRMOVL:
+	case IRMOVL:
+	case RMMOVL:
+	case MRMOVL:
+	case OPL:
+	case JXX:
+	case CALL:
+	case RET:
+	case PUSHL:
+	case POPL:
+	case DUMP:
 		return TRUE;
 
-        default:
-		log_debug("invalid instruction: %02x", icode);
+	default:
+		log_debug("invalid instruction: %02x", icode.ic);
 		return FALSE;
-    }
+	}
 }
 
 /*
@@ -394,21 +394,21 @@ instructionValid(uint8_t icode)
  * Return true if icode requires a regid.
  */
 bool
-needRegids(uint8_t icode)
+needRegids(icode_t icode)
 {
-    switch (icode) {
-        case RRMOVL:
-        case IRMOVL:
-        case RMMOVL:
-        case MRMOVL:
-        case OPL:
-        case PUSHL:
-        case POPL:
+	switch (icode.ic) {
+	case RRMOVL:
+	case IRMOVL:
+	case RMMOVL:
+	case MRMOVL:
+	case OPL:
+	case PUSHL:
+	case POPL:
 		return TRUE;
 
-        default:
+	default:
 		return FALSE;
-    }
+	}
 }
 
 /*
@@ -420,20 +420,20 @@ needRegids(uint8_t icode)
  * Return true if instruction needs a valC.
  */
 bool
-needValC(uint8_t icode)
+needValC(icode_t icode)
 {
-    switch (icode) {
-        case IRMOVL:
-        case RMMOVL:
-        case MRMOVL:
-        case JXX:
-        case CALL:
-        case DUMP:
+	switch (icode.ic) {
+	case IRMOVL:
+	case RMMOVL:
+	case MRMOVL:
+	case JXX:
+	case CALL:
+	case DUMP:
 		return TRUE;
 
-        default:
+	default:
 		return FALSE;
-    }
+	}
 }
 
 /*
