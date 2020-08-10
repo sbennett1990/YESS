@@ -40,8 +40,8 @@ clearWregister()
 	W.icode = i_nop;
 	W.valE = 0;
 	W.valM = 0;
-	W.dstE = *r_none;
-	W.dstM = *r_none;
+	W.dstE = r_none;
+	W.dstM = r_none;
 }
 
 /*

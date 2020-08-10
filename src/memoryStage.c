@@ -45,8 +45,8 @@ clearMregister()
 	M.Cnd = 0;
 	M.valE = 0;
 	M.valA = 0;
-	M.dstE = *r_none;
-	M.dstM = *r_none;
+	M.dstE = r_none;
+	M.dstM = r_none;
 }
 
 /*

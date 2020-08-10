@@ -63,10 +63,10 @@ clearEregister()
 	E.valC = 0;
 	E.valA = 0;
 	E.valB = 0;
-	E.dstE = *r_none;
-	E.dstM = *r_none;
-	E.srcA = *r_none;
-	E.srcB = *r_none;
+	E.dstE = r_none;
+	E.dstM = r_none;
+	E.srcA = r_none;
+	E.srcB = r_none;
 }
 
 /*
@@ -109,7 +109,7 @@ executeStage(forwardType *fwd)
 	// Bubble M?
 	if (m_bubble) {
 		// Insert a NOP
-		updateMRegister(s_okay, i_nop, 0, 0, 0, *r_none, *r_none);
+		updateMRegister(s_okay, i_nop, 0, 0, 0, r_none, r_none);
 	}
 	else {
 		// Update M register as normal

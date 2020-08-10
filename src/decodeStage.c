@@ -57,8 +57,8 @@ clearDregister()
 	D.stat = s_okay;
 	D.icode = i_nop;
 	D.ifun = 0;
-	D.rA = *r_none;
-	D.rB = *r_none;
+	D.rA = r_none;
+	D.rB = r_none;
 	D.valC = 0;
 	D.valP = 0;
 }
@@ -88,8 +88,8 @@ decodeStage(forwardType *fwd)
 	// Bubble E?
 	if (bubbleE(fwd)) {
 		// Insert a NOP
-		updateEregister(s_okay, i_nop, 0, 0, 0, 0, *r_none, *r_none,
-		    *r_none, *r_none);
+		updateEregister(s_okay, i_nop, 0, 0, 0, 0, r_none, r_none,
+		    r_none, r_none);
 	}
 	else {
 		// Update E as normal
@@ -123,7 +123,7 @@ updateDregister(stat_t stat, icode_t icode, unsigned int ifun,
 rregister
 getSrcA(const struct dregister *dreg)
 {
-	rregister srcA = { RNONE };
+	rregister srcA;
 
 	switch (dreg->icode.ic) {
 	case RRMOVL:
@@ -135,11 +135,11 @@ getSrcA(const struct dregister *dreg)
 
 	case POPL:
 	case RET:
-		srcA.reg = ESP;
+		srcA = r_esp;
 		break;
 
 	default:
-		srcA.reg = RNONE;
+		srcA = r_none;
 	}
 
 	return srcA;
@@ -154,7 +154,7 @@ getSrcA(const struct dregister *dreg)
 rregister
 getSrcB(const struct dregister *dreg)
 {
-	rregister srcB = { RNONE };
+	rregister srcB;
 
 	switch (dreg->icode.ic) {
 	case OPL:
@@ -167,11 +167,11 @@ getSrcB(const struct dregister *dreg)
 	case RET:
 	case CALL:
 	case PUSHL:
-		srcB.reg = ESP;
+		srcB = r_esp;
 		break;
 
 	default:
-		srcB.reg = RNONE;
+		srcB = r_none;
 	}
 
 	return srcB;
@@ -185,7 +185,7 @@ getSrcB(const struct dregister *dreg)
 rregister
 getDstE(const struct dregister *dreg)
 {
-	rregister dstE = { RNONE };
+	rregister dstE;
 
 	switch (dreg->icode.ic) {
 	case OPL:
@@ -198,11 +198,11 @@ getDstE(const struct dregister *dreg)
 	case RET:
 	case CALL:
 	case PUSHL:
-		dstE.reg = ESP;
+		dstE = r_esp;
 		break;
 
 	default:
-		dstE.reg = RNONE;
+		dstE = r_none;
 	}
 
 	return dstE;
@@ -216,7 +216,7 @@ getDstE(const struct dregister *dreg)
 rregister
 getDstM(const struct dregister *dreg)
 {
-	rregister dstM = { RNONE };
+	rregister dstM = r_none;
 
 	if (icode_is(dreg->icode, MRMOVL) || icode_is(dreg->icode, POPL)) {
 		dstM = dreg->rA;

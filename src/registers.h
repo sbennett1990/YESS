@@ -24,15 +24,15 @@ typedef struct {
 } rregister;
 
 /* Register typedefs */
-#define r_eax	&(rregister){ EAX }
-#define r_ecx	&(rregister){ ECX }
-#define r_edx	&(rregister){ EDX }
-#define r_ebx	&(rregister){ EBX }
-#define r_esp	&(rregister){ ESP }
-#define r_ebp	&(rregister){ EBP }
-#define r_esi	&(rregister){ ESI }
-#define r_edi	&(rregister){ EDI }
-#define r_none	&(rregister){ RNONE }
+#define r_eax	(rregister){ EAX }
+#define r_ecx	(rregister){ ECX }
+#define r_edx	(rregister){ EDX }
+#define r_ebx	(rregister){ EBX }
+#define r_esp	(rregister){ ESP }
+#define r_ebp	(rregister){ EBP }
+#define r_esi	(rregister){ ESI }
+#define r_edi	(rregister){ EDI }
+#define r_none	(rregister){ RNONE }
 
 
 /* Condition Codes (CC)

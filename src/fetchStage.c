@@ -85,8 +85,8 @@ fetchStage(const forwardType *fwd)
 	stat_t stat = s_okay;
 	icode_t icode;
 	uint8_t ifun;
-	rregister rA = *r_none;
-	rregister rB = *r_none;
+	rregister rA = r_none;
+	rregister rB = r_none;
 	unsigned int valC = 0;	/* constant word: part of instruction */
 	unsigned int valP = 0;	/* address of next sequential instruction in memory */
 
@@ -166,7 +166,7 @@ updateregs:
     // Stall or bubble D?
     if (bubbleD(fwd)) {
         // Insert a NOP
-        updateDregister(s_okay, i_nop, 0, *r_none, *r_none, 0, 0);
+        updateDregister(s_okay, i_nop, 0, r_none, r_none, 0, 0);
     }
     else if (!stallD(fwd)) {
         // Update D as normal (do not stall)
@@ -323,7 +323,7 @@ getIfun(uint8_t memByte, bool memError)
 rregister
 getRegA(uint8_t memByte, bool memError)
 {
-	rregister rA = { RNONE };
+	rregister rA = r_none;
 	if (memError) {
 		return rA;
 	}
@@ -343,7 +343,7 @@ getRegA(uint8_t memByte, bool memError)
 rregister
 getRegB(uint8_t memByte, bool memError)
 {
-	rregister rB = { RNONE };
+	rregister rB = r_none;
 	if (memError) {
 		return rB;
 	}
