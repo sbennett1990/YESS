@@ -1,8 +1,10 @@
 # Exception handling
 # /* $begin prog9-yo */
    xorl %eax,%eax 
+   call $0x07       # dump
    jne  Target      # Not taken
    irmovl $1, %eax  # Fall through
+   call $0x07       # dump
    halt
 Target:
    .byte 0xFF       # Invalid instruction code
