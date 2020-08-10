@@ -25,7 +25,7 @@
  * +----+---------------------------------------------------------------------+
  */
 struct fregister {
-	unsigned int predPC;
+	unsigned short predPC;
 };
 
 struct fregister getFregister(void);

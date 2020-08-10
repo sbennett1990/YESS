@@ -33,13 +33,13 @@ struct dregister {
 	rregister rA;		/* Program Register */
 	rregister rB;		/* Program Register */
 	unsigned int valC;	/* Instruction constant */
-	unsigned int valP;	/* Incremented PC */
+	unsigned short valP;	/* Incremented PC */
 };
 
 struct dregister getDregister(void);
 void clearDregister(void);
 void decodeStage(forwardType *);
 void updateDregister(stat_t stat, icode_t icode, unsigned int ifun,
-    rregister rA, rregister rB, unsigned int valC, unsigned int valP);
+    rregister rA, rregister rB, unsigned int valC, unsigned short valP);
 
 #endif	/* DECODESTAGE_H */

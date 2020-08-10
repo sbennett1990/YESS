@@ -31,10 +31,10 @@
  */
 static struct fregister F;
 
-static unsigned int selectPC(const forwardType *, const struct fregister *);
+static unsigned short selectPC(const forwardType *, const struct fregister *);
 static unsigned int predictPC(icode_t icode, unsigned int valC,
-    unsigned int valP);
-static unsigned int pcIncrement(unsigned int f_pc, icode_t icode);
+    unsigned short valP);
+static unsigned short pcIncrement(unsigned short f_pc, icode_t icode);
 static icode_t getIcode(uint8_t memByte, bool memError);
 static uint8_t getIfun(uint8_t memByte, bool memError);
 static bool instructionValid(icode_t icode);
@@ -81,14 +81,14 @@ clearFregister()
 void
 fetchStage(const forwardType *fwd)
 {
-	unsigned int f_pc;
+	unsigned short f_pc;
 	stat_t stat = s_okay;
 	icode_t icode;
 	uint8_t ifun;
 	rregister rA = r_none;
 	rregister rB = r_none;
 	unsigned int valC = 0;	/* constant word: part of instruction */
-	unsigned int valP = 0;	/* address of next sequential instruction in memory */
+	unsigned short valP = 0;	/* address of next sequential instruction in memory */
 
 	f_pc = selectPC(fwd, &F);
 	if (f_pc > HIGHBYTE) {
@@ -132,7 +132,7 @@ fetchStage(const forwardType *fwd)
 
         // Get valC if necessary
         if (needValC(icode)) {
-            unsigned int tempPC = f_pc;
+            unsigned short tempPC = f_pc;
 
             if (needRegids(icode)) {
                 tempPC += 1;
@@ -157,9 +157,14 @@ updateregs:
     if (stallF(fwd)) {
         F.predPC = f_pc;
     }
-    else {
-        F.predPC = predictPC(icode, valC, valP);
-    }
+	else {
+		unsigned int pc = predictPC(icode, valC, valP);
+		if (pc > HIGHBYTE) {
+			log_debug("predicted PC problem: addr %08x will be too large",
+			    f_pc);
+		}
+		F.predPC = pc;
+	}
 
     // Stall or bubble D?
     if (bubbleD(fwd)) {
@@ -182,7 +187,7 @@ updateregs:
  *
  * Return source value for the PC
  */
-unsigned int
+unsigned short
 selectPC(const forwardType *fwd, const struct fregister *freg)
 {
 	// Uses forwarded M_valA, W_valM
@@ -213,7 +218,7 @@ selectPC(const forwardType *fwd, const struct fregister *freg)
  * Return the predicted PC.
  */
 unsigned int
-predictPC(icode_t icode, unsigned int valC, unsigned int valP)
+predictPC(icode_t icode, unsigned int valC, unsigned short valP)
 {
 	if (icode_is(icode, JXX) || icode_is(icode, CALL)) {
 		return valC;
@@ -230,12 +235,12 @@ predictPC(icode_t icode, unsigned int valC, unsigned int valP)
  *	f_pc     current value of the PC
  *	icode    the instruction code
  *
- * Return the address of the next sequential instruction.
+ * Return the address of the next sequential instruction (valP).
  */
-unsigned int
-pcIncrement(unsigned int f_pc, icode_t icode)
+unsigned short
+pcIncrement(unsigned short f_pc, icode_t icode)
 {
-	unsigned int valP;
+	unsigned short valP;
 
 	switch (icode.ic) {
 	case HALT:
