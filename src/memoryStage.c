@@ -22,6 +22,10 @@ static bool mem_read(const struct mregister *);
 static bool stallW(const forwardType *);
 static bool bubbleW(void);
 
+static stat_t s_okay = { SAOK };
+static icode_t i_nop = { NOP };
+static rregister r_none = { RNONE };
+
 /*
  * Return a copy of the M register
  */
@@ -38,17 +42,13 @@ getMregister()
 void
 clearMregister()
 {
-	stat_t okay = { SAOK };
-	icode_t nop = { NOP };
-	rregister rnone = { RNONE };
-
-	M.stat = okay;
-	M.icode = nop;
+	M.stat = s_okay;
+	M.icode = i_nop;
 	M.Cnd = 0;
 	M.valE = 0;
 	M.valA = 0;
-	M.dstE = rnone;
-	M.dstM = rnone;
+	M.dstE = r_none;
+	M.dstM = r_none;
 }
 
 /*

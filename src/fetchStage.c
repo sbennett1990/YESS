@@ -48,6 +48,10 @@ static bool stallF(const forwardType *);
 static bool bubbleD(const forwardType *);
 static bool stallD(const forwardType *);
 
+static stat_t s_okay = { SAOK };
+static icode_t i_nop = { NOP };
+static rregister r_none = { RNONE };
+
 /*
  * Return a copy of the F register.
  *
@@ -79,11 +83,11 @@ void
 fetchStage(const forwardType *fwd)
 {
 	unsigned int f_pc;
-	stat_t stat = { SAOK };
+	stat_t stat = s_okay;
 	icode_t icode;
 	uint8_t ifun;
-	rregister rA = { RNONE };
-	rregister rB = { RNONE };
+	rregister rA = r_none;
+	rregister rB = r_none;
 	unsigned int valC = 0;	/* constant word: part of instruction */
 	unsigned int valP = 0;	/* address of next sequential instruction in memory */
 
@@ -163,10 +167,7 @@ updateregs:
     // Stall or bubble D?
     if (bubbleD(fwd)) {
         // Insert a NOP
-	stat_t okay = { SAOK };
-	icode_t nop = { NOP };
-	rregister rnone = { RNONE };
-        updateDregister(okay, nop, 0, rnone, rnone, 0, 0);
+        updateDregister(s_okay, i_nop, 0, r_none, r_none, 0, 0);
     }
     else if (!stallD(fwd)) {
         // Update D as normal (do not stall)

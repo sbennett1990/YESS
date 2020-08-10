@@ -18,6 +18,10 @@
  */
 static struct wregister W;
 
+static stat_t s_okay = { SAOK };
+static icode_t i_nop = { NOP };
+static rregister r_none = { RNONE };
+
 /*
  * Return a copy of the W register.
  */
@@ -34,16 +38,12 @@ getWregister()
 void
 clearWregister()
 {
-	stat_t okay = { SAOK };
-	icode_t nop = { NOP };
-	rregister rnone = { RNONE };
-
-	W.stat = okay;
-	W.icode = nop;
+	W.stat = s_okay;
+	W.icode = i_nop;
 	W.valE = 0;
 	W.valM = 0;
-	W.dstE = rnone;
-	W.dstM = rnone;
+	W.dstE = r_none;
+	W.dstM = r_none;
 }
 
 /*

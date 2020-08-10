@@ -36,6 +36,10 @@ static unsigned int forwardB(rregister srcB, const forwardType *);
 static bool stallE(void);
 static bool bubbleE(const forwardType *);
 
+static stat_t s_okay = { SAOK };
+static icode_t i_nop = { NOP };
+static rregister r_none = { RNONE };
+
 /*
  * Return a copy of the D register
  */
@@ -52,15 +56,11 @@ getDregister()
 void
 clearDregister()
 {
-	stat_t okay = { SAOK };
-	icode_t nop = { NOP };
-	rregister rnone = { RNONE };
-
-	D.stat = okay;
-	D.icode = nop;
+	D.stat = s_okay;
+	D.icode = i_nop;
 	D.ifun = 0;
-	D.rA = rnone;
-	D.rB = rnone;
+	D.rA = r_none;
+	D.rB = r_none;
 	D.valC = 0;
 	D.valP = 0;
 }
@@ -90,11 +90,8 @@ decodeStage(forwardType *fwd)
 	// Bubble E?
 	if (bubbleE(fwd)) {
 		// Insert a NOP
-		stat_t okay = { SAOK };
-		icode_t nop = { NOP };
-		rregister rnone = { RNONE };
-		updateEregister(okay, nop, 0, 0, 0, 0, rnone, rnone,
-		    rnone, rnone);
+		updateEregister(s_okay, i_nop, 0, 0, 0, 0, r_none, r_none,
+		    r_none, r_none);
 	}
 	else {
 		// Update E as normal
