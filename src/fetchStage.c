@@ -120,10 +120,8 @@ fetchStage(const forwardType *fwd)
 
         // Get register ids if necessary
         if (needRegids(icode)) {
-		unsigned int tempPC = f_pc + 1;
-
 		// try to get rA and rB from the next byte of memory
-		data = getByte(tempPC, &memError);
+		data = getByte(f_pc + 1, &memError);
 		if (memError) {
 			stat.s = SADR;
 		}
