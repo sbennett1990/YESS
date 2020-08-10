@@ -5,27 +5,27 @@
 #ifndef	REGISTERS_H
 #define	REGISTERS_H
 
-#define REGSIZE	8	/* number of registers */
+#define REGSIZE	8	/* total number of program registers */
 
 /* Program Registers */
-#define EAX		0x0
-#define ECX		0x1
-#define EDX		0x2
-#define EBX		0x3
-#define ESP		0x4
-#define EBP		0x5
-#define ESI		0x6
-#define EDI		0x7
-#define RNONE		0xf
+#define EAX	0x0	/* accumulator */
+#define ECX	0x1	/* counter */
+#define EDX	0x2	/* data register */
+#define EBX	0x3	/* base register */
+#define ESP	0x4	/* stack pointer */
+#define EBP	0x5	/* stack base pointer */
+#define ESI	0x6	/* source index */
+#define EDI	0x7	/* destination index */
+#define RNONE	0xf	/* "no register" */
 
 /* Program Register type */
 typedef struct {
 	int reg;
 } rregister;
 
-/* Condition Codes (CC) */
-/*
+/* Condition Codes (CC)
  * Set with each arithmetic/logical operation (OPL).
+ *
  * ZF: was the result 0?
  * SF: was the result < 0?
  * OF: did the result overflow? (2's complement)
@@ -34,6 +34,25 @@ typedef struct {
 #define SF	0x1	/* sign flag     - bit 1 of the CC */
 #define OF	0x0	/* overflow flag - bit 0 of the CC */
 
+/*
+ * Compare two register types to determine if they are the same.
+ * Note that this does not compare the *data* in either
+ * register.
+ *
+ * Parameters:
+ *	r1     First program register
+ *	r2     Second program register
+ */
+#define reg_cmp(r1, r2)	((r1).reg == (r2).reg)
+
+/*
+ * Determine if the given register type is a specific register.
+ *
+ * Parameters:
+ *	reg    Register type
+ *	r      Program register
+ */
+#define reg_is(reg, r)	((reg).reg == r)
 
 void clearRegisters(void);
 unsigned int getRegister(rregister regNum);
