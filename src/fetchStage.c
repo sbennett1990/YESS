@@ -187,19 +187,19 @@ updateregs:
 unsigned int
 selectPC(const forwardType *fwd, const struct fregister *freg)
 {
-    // Uses forwarded M_valA, W_valM
-    // Mispredicted branch. Fetch at incremented PC
-    if (fwd->M_icode == JXX && !(fwd->M_Cnd)) {
-        return fwd->M_valA;
-    }
+	// Uses forwarded M_valA, W_valM
+	// Mispredicted branch. Fetch at incremented PC
+	if (icode_is(fwd->M_icode, JXX) && !fwd->M_Cnd) {
+		return fwd->M_valA;
+	}
 
-    // Completion of RET instruction
-    if (fwd->W_icode == RET) {
-        return fwd->W_valM;
-    }
+	// Completion of RET instruction
+	if (icode_is(fwd->W_icode, RET)) {
+		return fwd->W_valM;
+	}
 
-    // Default
-    return freg->predPC;
+	// Default
+	return freg->predPC;
 }
 
 /*
@@ -503,10 +503,10 @@ stallF(const forwardType *fwd)
 {
 	bool stall = FALSE;
 
-	if (((fwd->E_icode == MRMOVL || fwd->E_icode == POPL) &&
+	if (((icode_is(fwd->E_icode, MRMOVL) || icode_is(fwd->E_icode, POPL)) &&
 	    (fwd->E_dstM.reg == fwd->d_srcA.reg || fwd->E_dstM.reg == fwd->d_srcB.reg))
 	    ||
-	    (fwd->D_icode == RET || fwd->E_icode == RET || fwd->M_icode == RET)) {
+	    (icode_is(fwd->D_icode, RET) || icode_is(fwd->E_icode, RET) || icode_is(fwd->M_icode, RET))) {
 		stall = TRUE;
 	}
 
@@ -528,10 +528,10 @@ bubbleD(const forwardType *fwd)
 	bool bubble = FALSE;
 
 	// conditions for mispredicted branch
-	if ((fwd->E_icode == JXX && !fwd->e_Cnd)
+	if ((icode_is(fwd->E_icode, JXX) && !fwd->e_Cnd)
 	    ||
-	    (!stallD(fwd) && (RET == fwd->D_icode || RET == fwd->E_icode
-	     || RET == fwd->M_icode))) {
+	    (!stallD(fwd) && (icode_is(fwd->D_icode, RET) || icode_is(fwd->E_icode, RET) ||
+	    icode_is(fwd->M_icode, RET)))) {
 		bubble = TRUE;
 	}
 
@@ -553,7 +553,7 @@ stallD(const forwardType *fwd)
 	bool stall = FALSE;
 
 	// conditions for load/use hazard
-	if ((fwd->E_icode == MRMOVL || fwd->E_icode == POPL)
+	if ((icode_is(fwd->E_icode, MRMOVL) || icode_is(fwd->E_icode, POPL))
 	    &&
 	    (fwd->E_dstM.reg == fwd->d_srcA.reg || fwd->E_dstM.reg == fwd->d_srcB.reg)) {
 		stall = TRUE;

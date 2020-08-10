@@ -83,7 +83,7 @@ decodeStage(forwardType *fwd)
 	unsigned int valB = forwardB(srcB, fwd);
 
 	// Update values that need to be forwarded
-	fwd->D_icode = D.icode.ic;
+	fwd->D_icode = D.icode;
 	fwd->d_srcA = srcA;
 	fwd->d_srcB = srcB;
 
@@ -317,8 +317,8 @@ bubbleE(const forwardType *fwd)
 {
 	bool bubble = FALSE;
 
-	if ((fwd->E_icode == JXX && !fwd->e_Cnd) ||
-	    ((fwd->E_icode == MRMOVL || fwd->E_icode == POPL) &&
+	if ((icode_is(fwd->E_icode, JXX) && !fwd->e_Cnd) ||
+	    ((icode_is(fwd->E_icode, MRMOVL) || icode_is(fwd->E_icode, POPL)) &&
 	    (fwd->E_dstM.reg == fwd->d_srcA.reg || fwd->E_dstM.reg == fwd->d_srcB.reg))) {
 		bubble = TRUE;
 	}

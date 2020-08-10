@@ -101,7 +101,7 @@ executeStage(forwardType *fwd)
 		dstE.reg = RNONE;
 	}
 
-	fwd->E_icode = E.icode.ic;
+	fwd->E_icode = E.icode;
 	fwd->e_Cnd = e_Cnd;
 	fwd->e_dstE = dstE;
 	fwd->e_valE = valE;

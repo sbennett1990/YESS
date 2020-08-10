@@ -9,19 +9,19 @@
 #include "registers.h"
 
 typedef struct {
-	unsigned int	D_icode;
+	icode_t		D_icode;
 
 	rregister	d_srcA;
 	rregister	d_srcB;
 
-	unsigned int	E_icode;
+	icode_t		E_icode;
 	rregister	E_dstM;
 
 	unsigned int	e_Cnd;
 	rregister	e_dstE;
 	unsigned int	e_valE;
 
-	unsigned int	M_icode;
+	icode_t		M_icode;
 	unsigned int	M_Cnd;
 	rregister	M_dstE;
 	unsigned int	M_valE;
@@ -32,7 +32,7 @@ typedef struct {
 	unsigned int	m_valM;
 
 	stat_t		W_stat;
-	unsigned int	W_icode;
+	icode_t		W_icode;
 	rregister	W_dstE;
 	unsigned int	W_valE;
 	rregister	W_dstM;

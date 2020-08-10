@@ -82,7 +82,7 @@ memoryStage(forwardType *fwd)
 	}
 
 	fwd->m_stat = stat;
-	fwd->M_icode = M.icode.ic;
+	fwd->M_icode = M.icode;
 	fwd->M_Cnd = M.Cnd;
 	fwd->M_dstM = M.dstM;
 	fwd->m_valM = valM;
