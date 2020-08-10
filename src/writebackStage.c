@@ -35,9 +35,11 @@ void
 clearWregister()
 {
 	stat_t okay = { SAOK };
+	icode_t nop = { NOP };
 	rregister rnone = { RNONE };
+
 	W.stat = okay;
-	W.icode = NOP;
+	W.icode = nop;
 	W.valE = 0;
 	W.valM = 0;
 	W.dstE = rnone;
@@ -79,7 +81,7 @@ writebackStage(forwardType *fwd)
 	}
 
 	// if icode = DUMP, dump appropriate information
-	if (W.icode == DUMP) {
+	if (icode_is(W.icode, DUMP)) {
 		if (getBits(0, 0, W.valE)) {
 			dumpProgramRegisters();
 		}
@@ -93,7 +95,7 @@ writebackStage(forwardType *fwd)
 
 	// set fields of forward struct to current values
 	fwd->W_stat = W.stat;
-	fwd->W_icode = W.icode;
+	fwd->W_icode = W.icode.ic;
 	fwd->W_dstE = W.dstE;
 	fwd->W_valE = W.valE;
 	fwd->W_dstM = W.dstM;
@@ -118,7 +120,7 @@ writebackStage(forwardType *fwd)
  *	dstM     Destination program register 'M', from the M register
  */
 void
-updateWRegister(stat_t stat, unsigned int icode, unsigned int valE,
+updateWRegister(stat_t stat, icode_t icode, unsigned int valE,
     unsigned int valM, rregister dstE, rregister dstM)
 {
 	W.stat = stat;

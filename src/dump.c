@@ -171,5 +171,5 @@ void dumpProcessorRegisters(void) {
     printf("M - stat: %01x icode: %01x Cnd: %01x valE: %08x valA: %08x dstE: %01x dstM: %01x\n",
            M.stat.s, M.icode.ic, M.Cnd, M.valE, M.valA, M.dstE.reg, M.dstM.reg);
     printf("W - stat: %01x icode: %01x valE: %08x valM: %08x dstE: %01x dstM: %01x\n\n",
-           W.stat.s, W.icode, W.valE, W.valM, W.dstE.reg, W.dstM.reg);
+           W.stat.s, W.icode.ic, W.valE, W.valM, W.dstE.reg, W.dstM.reg);
 }

@@ -95,7 +95,7 @@ memoryStage(forwardType *fwd)
 		 * If stall is true, do nothing to keep current values in the
 		 * Writeback Stage.
 		 */
-		updateWRegister(stat, M.icode.ic, M.valE, valM, M.dstE, M.dstM);
+		updateWRegister(stat, M.icode, M.valE, valM, M.dstE, M.dstM);
 	}
 }
 
