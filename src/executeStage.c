@@ -55,9 +55,10 @@ void
 clearEregister()
 {
 	stat_t okay = { SAOK };
+	icode_t nop = { NOP };
 	rregister rnone = { RNONE };
 	E.stat = okay;
-	E.icode = NOP;
+	E.icode = nop;
 	E.ifun = 0;
 	E.valC = 0;
 	E.valA = 0;
@@ -92,14 +93,14 @@ executeStage(forwardType *fwd)
 	}
 
 	// Execute the instruction and compute Cnd
-	unsigned int valE = funcPtr[E.icode]();
+	unsigned int valE = funcPtr[E.icode.ic]();
 	short e_Cnd = computeCnd(&E);
 
-	if ((E.icode == RRMOVL) && !e_Cnd) {
+	if (icode_is(E.icode, RRMOVL) && !e_Cnd) {
 		dstE.reg = RNONE;
 	}
 
-	fwd->E_icode = E.icode;
+	fwd->E_icode = E.icode.ic;
 	fwd->e_Cnd = e_Cnd;
 	fwd->e_dstE = dstE;
 	fwd->e_valE = valE;
@@ -109,12 +110,13 @@ executeStage(forwardType *fwd)
 	if (m_bubble) {
 		// Insert a NOP
 		stat_t okay = { SAOK };
+		icode_t nop = { NOP };
 		rregister rnone = { RNONE };
 		updateMRegister(okay, NOP, 0, 0, 0, rnone, rnone);
 	}
 	else {
 		// Update M register as normal
-		updateMRegister(E.stat, E.icode, e_Cnd, valE, E.valA,
+		updateMRegister(E.stat, E.icode.ic, e_Cnd, valE, E.valA,
 		    dstE, dstM);
 	}
 }
@@ -123,7 +125,7 @@ executeStage(forwardType *fwd)
  * Update the values in the E register.
  */
 void
-updateEregister(stat_t stat, unsigned int icode, unsigned int ifun,
+updateEregister(stat_t stat, icode_t icode, unsigned int ifun,
     unsigned int valC, unsigned int valA, unsigned int valB, rregister dstE,
     rregister dstM, rregister srcA, rregister srcB)
 {
@@ -179,7 +181,7 @@ computeCnd(const struct eregister *ereg)
 {
 	short e_Cnd = 0;
 
-	if (ereg->icode == RRMOVL || ereg->icode == JXX) {
+	if (icode_is(ereg->icode, RRMOVL) || icode_is(ereg->icode, JXX)) {
 		int sf = getCC(SF);
 		int zf = getCC(ZF);
 		int of = getCC(OF);

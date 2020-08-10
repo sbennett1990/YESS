@@ -91,13 +91,14 @@ decodeStage(forwardType *fwd)
 	if (bubbleE(fwd)) {
 		// Insert a NOP
 		stat_t okay = { SAOK };
+		icode_t nop = { NOP };
 		rregister rnone = { RNONE };
-		updateEregister(okay, NOP, 0, 0, 0, 0, rnone, rnone,
+		updateEregister(okay, nop, 0, 0, 0, 0, rnone, rnone,
 		    rnone, rnone);
 	}
 	else {
 		// Update E as normal
-		updateEregister(D.stat, D.icode.ic, D.ifun, D.valC, valA, valB,
+		updateEregister(D.stat, D.icode, D.ifun, D.valC, valA, valB,
 		    dstE, dstM, srcA, srcB);
 	}
 }
