@@ -25,7 +25,6 @@ typedef struct {
 
 /* Register typedefs */
 #define r_eax	&(rregister){ EAX }
-#define r_eax	&(rregister){ EAX }
 #define r_ecx	&(rregister){ ECX }
 #define r_edx	&(rregister){ EDX }
 #define r_ebx	&(rregister){ EBX }
