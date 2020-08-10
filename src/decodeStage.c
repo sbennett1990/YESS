@@ -99,7 +99,16 @@ decodeStage(forwardType *fwd)
 }
 
 /*
- * Update the values in the D register
+ * Update the values in the D register.
+ *
+ * Parameters:
+ *	stat     Status code from Fetch Stage
+ *	icode    Instruction Code from Fetch Stage
+ *	ifun     Instruction Function from Fetch Stage
+ *	rA       Program Register A from icode
+ *	rB       Program Register B from icode
+ *	valC     Constant word from icode
+ *	valP     Address of next sequential instruction in memory
  */
 void
 updateDregister(stat_t stat, icode_t icode, unsigned int ifun,
