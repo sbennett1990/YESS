@@ -160,6 +160,39 @@ getWord_badaddress_returnszero(int byteAddr)
 	}
 }
 
+void
+getWord_validinput_returnsword(int byteAddr)
+{
+	/* TODO */
+}
+
+void
+integration(int byteAddr, short offset)
+{
+	printf("addr:\t%03x\n", byteAddr);
+
+	bool memError;
+	unsigned int v = 0xddccbbaa;
+	putWord(byteAddr, v, &memError);
+	if (memError) {
+		printf("===> memError! that's a problem...\n");
+	}
+
+	printf("input:\t%08x\n", v);
+
+	putByte(byteAddr + offset, 7, &memError);
+	if (memError) {
+		printf("===> memError! that's a problem...\n");
+	}
+
+	unsigned int result = getWord(byteAddr, &memError);
+	if (memError) {
+		printf("===> memError! that's a problem...\n");
+	}
+
+	printf("output:\t%08x\n", result);
+}
+
 int
 main(int argc, char **argv)
 {
@@ -244,6 +277,11 @@ main(int argc, char **argv)
 	getWord_badaddress_returnszero(1);
 	getWord_badaddress_returnszero(5);
 	getWord_badaddress_returnszero(4095);
+
+	printf("\n");
+	printf("Test: integration\n\n");
+	integration(4, 0);
+	integration(4, 3);
 
 	/* test clearing memory again for good measure */
 	printf("\n");
