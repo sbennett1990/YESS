@@ -381,7 +381,7 @@ instructionValid(icode_t icode)
 		return TRUE;
 
 	default:
-		log_debug("invalid instruction: %02x", icode.ic);
+		log_debug("invalid instruction: %x", icode.ic);
 		return FALSE;
 	}
 }
