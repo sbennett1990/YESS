@@ -53,10 +53,11 @@ void
 clearDregister()
 {
 	stat_t okay = { SAOK };
+	icode_t nop = { NOP };
 	rregister rnone = { RNONE };
 
 	D.stat = okay;
-	D.icode = NOP;
+	D.icode = nop;
 	D.ifun = 0;
 	D.rA = rnone;
 	D.rB = rnone;
@@ -82,7 +83,7 @@ decodeStage(forwardType *fwd)
 	unsigned int valB = forwardB(srcB, fwd);
 
 	// Update values that need to be forwarded
-	fwd->D_icode = D.icode;
+	fwd->D_icode = D.icode.ic;
 	fwd->d_srcA = srcA;
 	fwd->d_srcB = srcB;
 
@@ -96,7 +97,7 @@ decodeStage(forwardType *fwd)
 	}
 	else {
 		// Update E as normal
-		updateEregister(D.stat, D.icode, D.ifun, D.valC, valA, valB,
+		updateEregister(D.stat, D.icode.ic, D.ifun, D.valC, valA, valB,
 		    dstE, dstM, srcA, srcB);
 	}
 }
@@ -105,7 +106,7 @@ decodeStage(forwardType *fwd)
  * Update the values in the D register
  */
 void
-updateDregister(stat_t stat, unsigned int icode, unsigned int ifun,
+updateDregister(stat_t stat, icode_t icode, unsigned int ifun,
     rregister rA, rregister rB, unsigned int valC, unsigned int valP)
 {
 	D.stat = stat;
@@ -126,26 +127,26 @@ updateDregister(stat_t stat, unsigned int icode, unsigned int ifun,
 rregister
 getSrcA(const struct dregister *dreg)
 {
-    rregister srcA = { RNONE };
+	rregister srcA = { RNONE };
 
-    switch (dreg->icode) {
-        case RRMOVL:
-        case RMMOVL:
-        case OPL:
-        case PUSHL:
-            srcA = dreg->rA;
-            break;
+	switch (dreg->icode.ic) {
+	case RRMOVL:
+	case RMMOVL:
+	case OPL:
+	case PUSHL:
+		srcA = dreg->rA;
+		break;
 
-        case POPL:
-        case RET:
-            srcA.reg = ESP;
-            break;
+	case POPL:
+	case RET:
+		srcA.reg = ESP;
+		break;
 
-        default:
-            srcA.reg = RNONE;
-    }
+	default:
+		srcA.reg = RNONE;
+	}
 
-    return srcA;
+	return srcA;
 }
 
 /*
@@ -159,7 +160,7 @@ getSrcB(const struct dregister *dreg)
 {
 	rregister srcB = { RNONE };
 
-	switch (dreg->icode) {
+	switch (dreg->icode.ic) {
 	case OPL:
 	case RMMOVL:
 	case MRMOVL:
@@ -190,23 +191,23 @@ getDstE(const struct dregister *dreg)
 {
 	rregister dstE = { RNONE };
 
-    switch (dreg->icode) {
-        case OPL:
-        case RRMOVL:
-        case IRMOVL:
-            dstE = dreg->rB;
-            break;
+	switch (dreg->icode.ic) {
+	case OPL:
+	case RRMOVL:
+	case IRMOVL:
+		dstE = dreg->rB;
+		break;
 
-        case POPL:
-        case RET:
-        case CALL:
-        case PUSHL:
-            dstE.reg = ESP;
-            break;
+	case POPL:
+	case RET:
+	case CALL:
+	case PUSHL:
+		dstE.reg = ESP;
+		break;
 
-        default:
-            dstE.reg = RNONE;
-    }
+	default:
+		dstE.reg = RNONE;
+	}
 
 	return dstE;
 }
@@ -221,7 +222,7 @@ getDstM(const struct dregister *dreg)
 {
 	rregister dstM = { RNONE };
 
-	if (dreg->icode == MRMOVL || dreg->icode == POPL) {
+	if (icode_is(dreg->icode, MRMOVL) || icode_is(dreg->icode, POPL)) {
 		dstM = dreg->rA;
 	}
 
@@ -240,23 +241,30 @@ unsigned int
 selectFwdA(const struct dregister *dreg, rregister srcA,
     const forwardType *fwd)
 {
-    if (dreg->icode == CALL || dreg->icode == JXX) {
-        return dreg->valP;
-    } else if (srcA.reg == RNONE) {
-        return 0;
-    } else if (srcA.reg == fwd->e_dstE.reg) {
-        return fwd->e_valE;
-    } else if (srcA.reg == fwd->M_dstM.reg) {
-        return fwd->m_valM;
-    } else if (srcA.reg == fwd->M_dstE.reg) {
-        return fwd->M_valE;
-    } else if (srcA.reg == fwd->W_dstM.reg) {
-        return fwd->W_valM;
-    } else if (srcA.reg == fwd->W_dstE.reg) {
-        return fwd->W_valE;
-    } else {
-        return getRegister(srcA);
-    }
+	if (icode_is(dreg->icode, CALL) || icode_is(dreg->icode, JXX)) {
+		return dreg->valP;
+	}
+	else if (srcA.reg == RNONE) {
+		return 0;
+	}
+	else if (srcA.reg == fwd->e_dstE.reg) {
+		return fwd->e_valE;
+	}
+	else if (srcA.reg == fwd->M_dstM.reg) {
+		return fwd->m_valM;
+	}
+	else if (srcA.reg == fwd->M_dstE.reg) {
+		return fwd->M_valE;
+	}
+	else if (srcA.reg == fwd->W_dstM.reg) {
+		return fwd->W_valM;
+	}
+	else if (srcA.reg == fwd->W_dstE.reg) {
+		return fwd->W_valE;
+	}
+	else {
+		return getRegister(srcA);
+	}
 }
 
 /*

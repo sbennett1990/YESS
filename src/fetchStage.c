@@ -164,12 +164,13 @@ updateregs:
     if (bubbleD(fwd)) {
         // Insert a NOP
 	stat_t okay = { SAOK };
+	icode_t nop = { NOP };
 	rregister rnone = { RNONE };
-        updateDregister(okay, NOP, 0, rnone, rnone, 0, 0);
+        updateDregister(okay, nop, 0, rnone, rnone, 0, 0);
     }
     else if (!stallD(fwd)) {
         // Update D as normal (do not stall)
-        updateDregister(stat, icode.ic, ifun, rA, rB, valC, valP);
+        updateDregister(stat, icode, ifun, rA, rB, valC, valP);
     }
 	// else do nothing because D should be stalled
 }

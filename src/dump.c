@@ -163,7 +163,7 @@ void dumpProcessorRegisters(void) {
     printf("CC - ZF: %01x SF: %01x OF: %01x\n", getCC(ZF), getCC(SF), getCC(OF));
     printf("F - predPC: %08x\n", F.predPC);
     printf("D - stat: %01x icode: %01x ifun: %01x rA: %01x rB: %01x valC: %08x  valP: %08x\n",
-           D.stat.s, D.icode, D.ifun, D.rA.reg, D.rB.reg, D.valC, D.valP);
+           D.stat.s, D.icode.ic, D.ifun, D.rA.reg, D.rB.reg, D.valC, D.valP);
     printf("E - stat: %01x icode: %01x ifun: %01x  valC: %08x valA: %08x valB: %08x\n",
            E.stat.s, E.icode, E.ifun, E.valC, E.valA, E.valB);
     printf("    dstE: %01x dstM: %01x srcA: %01x srcB: %01x\n",

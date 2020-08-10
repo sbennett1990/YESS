@@ -28,18 +28,18 @@
  */
 struct dregister {
 	stat_t stat;
-	unsigned int icode;
+	icode_t icode;
 	unsigned int ifun;
-	rregister rA;		// Program Register
-	rregister rB;		// Program Register
-	unsigned int valC;	// Instruction constant
-	unsigned int valP;	// Incremented PC
+	rregister rA;		/* Program Register */
+	rregister rB;		/* Program Register */
+	unsigned int valC;	/* Instruction constant */
+	unsigned int valP;	/* Incremented PC */
 };
 
 struct dregister getDregister(void);
 void clearDregister(void);
 void decodeStage(forwardType *);
-void updateDregister(stat_t stat, unsigned int icode, unsigned int ifun,
+void updateDregister(stat_t stat, icode_t icode, unsigned int ifun,
     rregister rA, rregister rB, unsigned int valC, unsigned int valP);
 
 #endif	/* DECODESTAGE_H */
