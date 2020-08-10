@@ -7,7 +7,6 @@
 
 #include "tools.h"
 #include "dump.h"
-#include "registers.h"
 #include "instructions.h"
 #include "writebackStage.h"
 
@@ -20,7 +19,6 @@ static struct wregister W;
 
 static stat_t s_okay = { SAOK };
 static icode_t i_nop = { NOP };
-static rregister r_none = { RNONE };
 
 /*
  * Return a copy of the W register.
@@ -42,8 +40,8 @@ clearWregister()
 	W.icode = i_nop;
 	W.valE = 0;
 	W.valM = 0;
-	W.dstE = r_none;
-	W.dstM = r_none;
+	W.dstE = *r_none;
+	W.dstM = *r_none;
 }
 
 /*

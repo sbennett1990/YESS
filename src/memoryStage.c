@@ -7,7 +7,6 @@
 #include "tools.h"
 #include "memory.h"
 #include "instructions.h"
-#include "registers.h"
 #include "memoryStage.h"
 #include "writebackStage.h"
 
@@ -24,7 +23,6 @@ static bool bubbleW(void);
 
 static stat_t s_okay = { SAOK };
 static icode_t i_nop = { NOP };
-static rregister r_none = { RNONE };
 
 /*
  * Return a copy of the M register
@@ -47,8 +45,8 @@ clearMregister()
 	M.Cnd = 0;
 	M.valE = 0;
 	M.valA = 0;
-	M.dstE = r_none;
-	M.dstM = r_none;
+	M.dstE = *r_none;
+	M.dstM = *r_none;
 }
 
 /*
