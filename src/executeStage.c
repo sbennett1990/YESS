@@ -97,7 +97,7 @@ executeStage(forwardType *fwd)
 	short e_Cnd = computeCnd(&E);
 
 	if (icode_is(E.icode, RRMOVL) && !e_Cnd) {
-		dstE.reg = RNONE;
+		dstE = r_none;
 	}
 
 	fwd->E_icode = E.icode;
