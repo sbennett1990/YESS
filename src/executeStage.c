@@ -57,6 +57,7 @@ clearEregister()
 	stat_t okay = { SAOK };
 	icode_t nop = { NOP };
 	rregister rnone = { RNONE };
+
 	E.stat = okay;
 	E.icode = nop;
 	E.ifun = 0;
@@ -112,11 +113,11 @@ executeStage(forwardType *fwd)
 		stat_t okay = { SAOK };
 		icode_t nop = { NOP };
 		rregister rnone = { RNONE };
-		updateMRegister(okay, NOP, 0, 0, 0, rnone, rnone);
+		updateMRegister(okay, nop, 0, 0, 0, rnone, rnone);
 	}
 	else {
 		// Update M register as normal
-		updateMRegister(E.stat, E.icode.ic, e_Cnd, valE, E.valA,
+		updateMRegister(E.stat, E.icode, e_Cnd, valE, E.valA,
 		    dstE, dstM);
 	}
 }

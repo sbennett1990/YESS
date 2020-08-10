@@ -169,7 +169,7 @@ void dumpProcessorRegisters(void) {
     printf("    dstE: %01x dstM: %01x srcA: %01x srcB: %01x\n",
            E.dstE.reg, E.dstM.reg, E.srcA.reg, E.srcB.reg);
     printf("M - stat: %01x icode: %01x Cnd: %01x valE: %08x valA: %08x dstE: %01x dstM: %01x\n",
-           M.stat.s, M.icode, M.Cnd, M.valE, M.valA, M.dstE.reg, M.dstM.reg);
+           M.stat.s, M.icode.ic, M.Cnd, M.valE, M.valA, M.dstE.reg, M.dstM.reg);
     printf("W - stat: %01x icode: %01x valE: %08x valM: %08x dstE: %01x dstM: %01x\n\n",
            W.stat.s, W.icode, W.valE, W.valM, W.dstE.reg, W.dstM.reg);
 }

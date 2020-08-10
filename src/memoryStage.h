@@ -17,7 +17,7 @@
  */
 struct mregister {
 	stat_t stat;
-	unsigned int icode;
+	icode_t icode;
 	unsigned int Cnd;
 	unsigned int valE;	// Result from Execute Stage (ALU)
 	unsigned int valA;	// Data to be written to memory (except POPL & RET)
@@ -28,7 +28,7 @@ struct mregister {
 struct mregister getMregister(void);
 void clearMregister(void);
 void memoryStage(forwardType *);
-void updateMRegister(stat_t stat, unsigned int icode, unsigned int Cnd,
+void updateMRegister(stat_t stat, icode_t icode, unsigned int Cnd,
     unsigned int valE, unsigned int valA, rregister dstE, rregister dstM);
 
 #endif	/* MEMORYSTAGE_H */

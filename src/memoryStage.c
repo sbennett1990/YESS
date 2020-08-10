@@ -39,9 +39,11 @@ void
 clearMregister()
 {
 	stat_t okay = { SAOK };
+	icode_t nop = { NOP };
 	rregister rnone = { RNONE };
+
 	M.stat = okay;
-	M.icode = NOP;
+	M.icode = nop;
 	M.Cnd = 0;
 	M.valE = 0;
 	M.valA = 0;
@@ -80,7 +82,7 @@ memoryStage(forwardType *fwd)
 	}
 
 	fwd->m_stat = stat;
-	fwd->M_icode = M.icode;
+	fwd->M_icode = M.icode.ic;
 	fwd->M_Cnd = M.Cnd;
 	fwd->M_dstM = M.dstM;
 	fwd->m_valM = valM;
@@ -93,7 +95,7 @@ memoryStage(forwardType *fwd)
 		 * If stall is true, do nothing to keep current values in the
 		 * Writeback Stage.
 		 */
-		updateWRegister(stat, M.icode, M.valE, valM, M.dstE, M.dstM);
+		updateWRegister(stat, M.icode.ic, M.valE, valM, M.dstE, M.dstM);
 	}
 }
 
@@ -101,7 +103,7 @@ memoryStage(forwardType *fwd)
  * Update the values in the M register.
  */
 void
-updateMRegister(stat_t stat, unsigned int icode, unsigned int Cnd,
+updateMRegister(stat_t stat, icode_t icode, unsigned int Cnd,
     unsigned int valE, unsigned int valA, rregister dstE, rregister dstM)
 {
 	M.stat = stat;
@@ -123,7 +125,7 @@ memory_addr(const struct mregister *mreg)
 {
 	unsigned int address = NOADDRESS;
 
-	switch (mreg->icode) {
+	switch (mreg->icode.ic) {
 	case RMMOVL:
 	case PUSHL:
 	case CALL:
@@ -151,7 +153,7 @@ mem_read(const struct mregister *mreg)
 {
 	bool read = FALSE;
 
-	switch (mreg->icode) {
+	switch (mreg->icode.ic) {
 	case MRMOVL:
 	case POPL:
 	case RET:
@@ -173,7 +175,7 @@ mem_write(const struct mregister *mreg)
 {
 	bool write = FALSE;
 
-	switch (mreg->icode) {
+	switch (mreg->icode.ic) {
 	case RMMOVL:
 	case PUSHL:
 	case CALL:
