@@ -150,13 +150,13 @@ fetchStage(const forwardType *fwd)
     }
 
 updateregs:
-    // Calculate valP
-    valP = pcIncrement(f_pc, icode);
+	/* Calculate valP */
+	valP = pcIncrement(f_pc, icode);
 
-    // Stall F? keep previous value
-    if (stallF(fwd)) {
-        F.predPC = f_pc;
-    }
+	if (stallF(fwd)) {
+		/* Stall F? Just keep previous address */
+		F.predPC = f_pc;
+	}
 	else {
 		unsigned int pc = predictPC(icode, valC, valP);
 		if (pc > HIGHBYTE) {
@@ -166,16 +166,15 @@ updateregs:
 		F.predPC = pc;
 	}
 
-    // Stall or bubble D?
-    if (bubbleD(fwd)) {
-        // Insert a NOP
-        updateDregister(s_okay, i_nop, 0, r_none, r_none, 0, 0);
-    }
-    else if (!stallD(fwd)) {
-        // Update D as normal (do not stall)
-        updateDregister(stat, icode, ifun, rA, rB, valC, valP);
-    }
-	// else do nothing because D should be stalled
+	if (bubbleD(fwd)) {
+		/* Insert a NOP */
+		updateDregister(s_okay, i_nop, 0, r_none, r_none, 0, 0);
+	}
+	else if (!stallD(fwd)) {
+		/* Update D as normal */
+		updateDregister(stat, icode, ifun, rA, rB, valC, valP);
+	}
+	/* else do nothing because D should be stalled */
 }
 
 /*
