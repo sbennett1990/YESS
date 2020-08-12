@@ -23,7 +23,7 @@ struct wregister {
 	rregister dstM;		/* Program Register: destination for valM */
 };
 
-int writebackStage(forwardType *);
+int writebackStage(forwardType *, int *);
 struct wregister getWregister(void);
 void clearWregister(void);
 void updateWRegister(stat_t stat, icode_t icode, unsigned int valE,

@@ -56,7 +56,7 @@ clearWregister()
  * continue program execution.
  */
 int
-writebackStage(forwardType *fwd)
+writebackStage(forwardType *fwd, int *dump)
 {
 	// if stat == SINS, SADR, SHLT; HALT program and dump
 	if (W.stat.s == SINS) {
@@ -64,6 +64,7 @@ writebackStage(forwardType *fwd)
 		dumpProgramRegisters();
 		dumpProcessorRegisters();
 		dumpMemory();
+		*dump = 1;
 		return -1;
 	}
 	else if (W.stat.s == SADR) {
@@ -71,6 +72,7 @@ writebackStage(forwardType *fwd)
 		dumpProgramRegisters();
 		dumpProcessorRegisters();
 		dumpMemory();
+		*dump = 1;
 		return -1;
 	}
 	else if (W.stat.s == SHLT) {
@@ -82,12 +84,15 @@ writebackStage(forwardType *fwd)
 	if (icode_is(W.icode, DUMP)) {
 		if (getBits(0, 0, W.valE)) {
 			dumpProgramRegisters();
+			*dump = 1;
 		}
 		if (getBits(1, 1, W.valE)) {
 			dumpProcessorRegisters();
+			*dump = 1;
 		}
 		if (getBits(2, 2, W.valE)) {
 			dumpMemory();
+			*dump = 1;
 		}
 	}
 

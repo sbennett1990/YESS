@@ -125,10 +125,15 @@ main(int argc, char **argv)
 	/* execute the 'program' */
 	int clockCount = 0;
 	int stop = 0;
+	int hasdumped = 0;
 	forwardType forward;
 
 	while (stop != -1) {
-		stop = writebackStage(&forward);
+		int dump = 0;
+		stop = writebackStage(&forward, &dump);
+		if (dump) {
+			hasdumped = 1;
+		}
 		memoryStage(&forward);
 		executeStage(&forward);
 		decodeStage(&forward);
@@ -136,14 +141,14 @@ main(int argc, char **argv)
 		clockCount++;	/* each loop iteration is 1 clock cycle */
 	}
 
-	/* XXX: need to not dump if error encountered */
-#if 0
-	if (dflag) {
+	/* dump yess state if nothing had been dumped before */
+	if (verbosity > 0 && !hasdumped) {
+		log_info("final program state:\n");
 		dumpProgramRegisters();
 		dumpProcessorRegisters();
 		dumpMemory();
 	}
-#endif
+
 	printf("\nTotal clock cycles = %d\n", clockCount);
 	return 0;
 }
