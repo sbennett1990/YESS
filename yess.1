@@ -58,6 +58,24 @@ will write more information to stderr (but not as much as
 .Fl d
 mode).
 .El
+.Sh BUILD
+Making the obj directory first will keep the
+.Pa src
+directory clean:
+.Bd -literal -offset indent
+$ cd src
+$ make obj && make
+.Ed
+.Pp
+The
+.Nm
+executable is now at
+.Pa obj/yess .
+.Pp
+Optionally install to
+.Pa ~/bin :
+.Pp
+.Dl $ make install
 .Sh SEE ALSO
 .Xr y86_obj_code 7
 .Rs
