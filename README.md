@@ -1,36 +1,103 @@
-# YESS
+YESS(1) - General Commands Manual
 
-### A y86 (Assembly Code) Simulator
+# NAME
 
-Simulates a "Y86" processor. The program simulates the execution of y86 machine code,
-which is more or less a subset of x86. Being a teaching language, y86 embodies elements
+**yess** - y86 simulator
+
+# SYNOPSIS
+
+**yess**
+\[**-duv**]
+**-f**&nbsp;*prog.yo*
+
+# DESCRIPTION
+
+The
+**yess**
+program simulates execution of the y86 instruction set.
+y86 is a theoretical teaching assembly language, which embodies elements
 of RISC and CISC archetectures.
 
-#### Assembly
+**yess**
+executes y86 object
+("machine")
+code.
+Object code must be placed in a file ending with a
+*.yo*
+extension.
+This program file is a regular ASCII file, not a binary.
+The y86 assembler can produce ASCII object code required by
+**yess**.
 
-y86 is a theoretical assembly language. However, the YESS program simulates
-y86 _machine_ code. In the bin folder there is an assembler, `yas`, that "assembles"
-y86 source code into the required machine code (just ASCII text), which has the
-extension `.yo`.
+The options are as follows:
 
-#### Use
+**-d**
 
-To assemble y86 source:
-> $ ./yas \<filename\>.ys
+> Produce debug messages.
+> **yess**
+> will write debug information to stderr.
 
-To simulate y86 machine code:
-> $ ./yess [-duv] -f \<filename\>.yo
+**-f** *prog.yo*
 
-#### References
+> The program file to execute.
 
-See the CS:APP2e website for more information on Y86 and running the simulator.
-It includes a lot of useful information on the design of a y86 processor. There
-are also reference tools and programs, including an assembler.
+**-u**
 
-https://web.archive.org/web/20141228221440/http://csapp.cs.cmu.edu/public/students.html
+> Print usage information and exit.
 
-The PDF simulator guide also has great information, although not all of it
-is relavent to YESS. YESS is more closely related to the PIPE machine that
-is mentioned.
+**-v**
 
-https://web.archive.org/web/20141228221440/http://csapp.cs.cmu.edu/public/simguide.pdf
+> Verbose mode.
+> **yess**
+> will write more information to stderr (but not as much as
+> **-d**
+> mode).
+
+# BUILD
+
+Making the obj directory first will keep the
+*src*
+directory clean:
+
+	$ cd src
+	$ make obj && make
+
+The
+**yess**
+executable is now at
+*obj/yess*.
+
+Optionally install to
+*~/bin*:
+
+	$ make install
+
+# SEE ALSO
+
+y86\_obj\_code(7)
+
+Randal E. Bryant,
+David R. O'Hallaron,
+*CS:APP2e Guide to Y86 Processor Simulators*,
+[https://web.archive.org/web/20150330120944/http://csapp.cs.cmu.edu/public/simguide.pdf](https://web.archive.org/web/20150330120944/http://csapp.cs.cmu.edu/public/simguide.pdf),
+July 29, 2013.
+
+# AUTHORS
+
+This program was written by
+Scott Bennett
+and  
+Alex Svarda.
+
+# CAVEATS
+
+**yess**
+only builds and works on
+OpenBSD 6.6
+or newer because it relies on the built-in
+make(1)
+infrastructure.
+Portability could be achieved with a little effort, but that is outside the
+scope of my current goals.
+
+OpenBSD 6.7 - August 13, 2020
