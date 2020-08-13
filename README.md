@@ -79,14 +79,14 @@ y86\_obj\_code(7)
 Randal E. Bryant,
 David R. O'Hallaron,
 *CS:APP2e Guide to Y86 Processor Simulators*,
-[https://web.archive.org/web/20150330120944/http://csapp.cs.cmu.edu/public/simguide.pdf](https://web.archive.org/web/20150330120944/http://csapp.cs.cmu.edu/public/simguide.pdf),
+[https://web.archive.org/web/20150330120944/http://csapp.cs.cmu.edu/public/simguide.pdf](https://web.archive.org/web/20150330120944/http://csapp.cs.cmu.edu/public/simguide.pdf),  
 July 29, 2013.
 
 # AUTHORS
 
 This program was written by
 Scott Bennett
-and  
+and
 Alex Svarda.
 
 # CAVEATS
