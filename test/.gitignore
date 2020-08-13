@@ -1,0 +1,12 @@
+# Ignore copied files
+bool.h
+logger.c
+logger.h
+memory.c
+memory.h
+registers.c
+registers.h
+strtonum.c
+strtonum.h
+tools.c
+tools.h
