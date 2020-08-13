@@ -24,6 +24,7 @@ all: beforebuild ${PROG} ${PROGS} _SUBDIRUSE
 
 # Just copy yess sources here to build tests
 beforebuild:
+	@echo 'preparing to build regression tests...'
 .for s in ${HEADERS}
 	cp ${SRCDIR}/$s .
 .endfor
