@@ -19,6 +19,10 @@ CFLAGS+=   -std=c99 -Wall
 
 SRCDIR=    ../src
 
+# Redefine 'all' target; do beforebuild prior to the rest
+all: beforebuild ${PROG} ${PROGS} _SUBDIRUSE
+
+# Just copy yess sources here to build tests
 beforebuild:
 .for s in ${HEADERS}
 	cp ${SRCDIR}/$s .
