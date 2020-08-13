@@ -25,6 +25,6 @@ CFLAGS+=    -Wsign-compare
 BINDIR=     ~/bin
 
 install:
-	install -b -o scott -g scott ${PROG} ${BINDIR}/${PROG}
+	install -b -m 0740 -o scott -g scott ${PROG} ${BINDIR}/${PROG}
 
 .include <bsd.prog.mk>
