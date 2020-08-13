@@ -8,11 +8,10 @@
 #include <unistd.h>
 #endif
 
+#include <err.h>
 #include <stdio.h>
-#include <stdlib.h>
 #include <string.h>
 
-#include "bool.h"
 #include "tools.h"
 
 static void printbuff(int * buff, size_t length);
