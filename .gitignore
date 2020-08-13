@@ -6,7 +6,12 @@ src/yess.exe
 
 # test executables
 test/memory-test
+test/registers-test
 test/tools-test
+
+# tag files
+src/tags
+test/tags
 
 *.d
 
