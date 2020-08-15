@@ -22,15 +22,10 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include "memory.h"
 #include "loader.h"
 #include "logger.h"
 #include "tools.h"
-
-#ifdef TEST
-#include "mocks/memory_mock.h"
-#else
-#include "memory.h"
-#endif
 
 #define MAXLEN		80
 #define RECORDLEN	24
