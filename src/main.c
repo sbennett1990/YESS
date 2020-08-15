@@ -37,7 +37,7 @@
 static void
 usage(void)
 {
-	fprintf(stderr, "usage: yess [-duv] -f <filename>.yo\n");
+	fprintf(stderr, "usage: yess [-dsuv] -f <filename>.yo\n");
 	exit(EXIT_FAILURE);
 }
 
@@ -65,11 +65,12 @@ main(int argc, char **argv)
 	int ch;
 	int dflag = 0;	/* debug */
 	int fflag = 0;	/* was file given? */
+	int sflag = 0;	/* dump yess state upon completion? */
 	int vflag = 0;	/* verbose */
 	int verbosity = 0;
 	const char *sourcefile;
 
-	while ((ch = getopt(argc, argv, "df:uv")) != -1) {
+	while ((ch = getopt(argc, argv, "df:suv")) != -1) {
 		switch (ch) {
 		case 'd':
 			dflag = 1;
@@ -77,6 +78,9 @@ main(int argc, char **argv)
 		case 'f':
 			sourcefile = optarg;
 			fflag = 1;
+			break;
+		case 's':
+			sflag = 1;
 			break;
 		case 'u':
 			usage(); /* EXIT */
@@ -141,8 +145,8 @@ main(int argc, char **argv)
 		clockCount++;	/* each loop iteration is 1 clock cycle */
 	}
 
-	/* dump yess state if nothing had been dumped before */
-	if (verbosity > 0 && !hasdumped) {
+	/* dump yess state if requested or nothing had been dumped before */
+	if (sflag || (verbosity > 0 && !hasdumped)) {
 		log_info("final program state:\n");
 		dumpProgramRegisters();
 		dumpProcessorRegisters();

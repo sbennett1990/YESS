@@ -13,7 +13,7 @@
 .\" ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
 .\" OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 .\"
-.Dd August 13, 2020
+.Dd August 15, 2020
 .Dt YESS 1
 .Os
 .Sh NAME
@@ -21,7 +21,7 @@
 .Nd y86 simulator
 .Sh SYNOPSIS
 .Nm yess
-.Op Fl duv
+.Op Fl dsuv
 .Fl f Ar prog.yo
 .Sh DESCRIPTION
 The
@@ -49,6 +49,8 @@ Produce debug messages.
 will write debug information to stderr.
 .It Fl f Ar prog.yo
 The program file to execute.
+.It Fl s
+Output the state of the registers and memory after program execution completes.
 .It Fl u
 Print usage information and exit.
 .It Fl v
