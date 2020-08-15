@@ -7,7 +7,7 @@ YESS(1) - General Commands Manual
 # SYNOPSIS
 
 **yess**
-\[**-duv**]
+\[**-dsuv**]
 **-f**&nbsp;*prog.yo*
 
 # DESCRIPTION
@@ -40,6 +40,10 @@ The options are as follows:
 **-f** *prog.yo*
 
 > The program file to execute.
+
+**-s**
+
+> Output the state of the registers and memory after program execution completes.
 
 **-u**
 
@@ -100,4 +104,4 @@ infrastructure.
 Portability could be achieved with a little effort, but that is outside the
 scope of my current goals.
 
-OpenBSD 6.7 - August 13, 2020
+OpenBSD 6.7 - August 15, 2020
