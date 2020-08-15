@@ -146,7 +146,7 @@ main(int argc, char **argv)
 	}
 
 	/* dump yess state if requested or nothing had been dumped before */
-	if (sflag || (verbosity > 0 && !hasdumped)) {
+	if ((sflag && !hasdumped) || (verbosity > 0 && !hasdumped)) {
 		log_info("final program state:\n");
 		dumpProgramRegisters();
 		dumpProcessorRegisters();
