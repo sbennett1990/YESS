@@ -1,4 +1,4 @@
-/*  $OpenBSD: src/lib/libc/stdlib/strtonum.c,v 1.7 2013/04/17 18:40:58 tedu Exp $   */
+/*	$OpenBSD: strtonum.c,v 1.8 2015/09/13 08:31:48 guenther Exp $	*/
 
 /*
  * Copyright (c) 2004 Ted Unangst and Todd Miller
@@ -82,53 +82,45 @@
 
 #include "strtonum.h"
 
-#define INVALID     1
-#define TOOSMALL    2
-#define TOOLARGE    3
+#define	INVALID		1
+#define	TOOSMALL	2
+#define	TOOLARGE	3
 
 long
-strtonum_OBSD(const char * numstr, long minval, long maxval,
+strtonum_OBSD(const char *numstr, long minval, long maxval,
     const char **errstrp, int base)
 {
-    long l = 0;
-    int error = 0;
-    char * ep;
-    struct errval {
-        const char * errstr;
-        int err;
-    } ev[4] = {
-        { NULL,     0 },
-        { "invalid",    EINVAL },
-        { "too small",  ERANGE },
-        { "too large",  ERANGE },
-    };
+	long l = 0;
+	int error = 0;
+	char *ep;
+	struct errval {
+		const char *errstr;
+		int err;
+	} ev[4] = {
+		{ NULL,		0 },
+		{ "invalid",	EINVAL },
+		{ "too small",	ERANGE },
+		{ "too large",	ERANGE },
+	};
 
-    ev[0].err = errno;
-    errno = 0;
+	ev[0].err = errno;
+	errno = 0;
+	if (minval > maxval) {
+		error = INVALID;
+	} else {
+		l = strtol(numstr, &ep, base);
+		if (numstr == ep || *ep != '\0')
+			error = INVALID;
+		else if ((l == LONG_MIN && errno == ERANGE) || l < minval)
+			error = TOOSMALL;
+		else if ((l == LONG_MAX && errno == ERANGE) || l > maxval)
+			error = TOOLARGE;
+	}
+	if (errstrp != NULL)
+		*errstrp = ev[error].errstr;
+	errno = ev[error].err;
+	if (error)
+		l = 0;
 
-    if (minval > maxval) {
-        error = INVALID;
-    } else {
-        l = strtol(numstr, &ep, base);
-
-        if (numstr == ep || *ep != '\0') {
-            error = INVALID;
-        } else if ((l == LONG_MIN && errno == ERANGE) || l < minval) {
-            error = TOOSMALL;
-        } else if ((l == LONG_MAX && errno == ERANGE) || l > maxval) {
-            error = TOOLARGE;
-        }
-    }
-
-    if (errstrp != NULL) {
-        *errstrp = ev[error].errstr;
-    }
-
-    errno = ev[error].err;
-
-    if (error) {
-        l = 0;
-    }
-
-    return (l);
+	return (l);
 }
