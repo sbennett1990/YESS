@@ -37,8 +37,7 @@
  * by isspace(3)) followed by a single optional '+' or '-' sign.
  *
  * The remainder of the string is converted to a long value according to the
- * given base, which must be a number between 2 and 36 inclusive or the special
- * value 0 (see strtol(3)).
+ * given base, which must be either 10 or 16.
  *
  * The value obtained is then checked against the provided minval and maxval
  * bounds. If errstrp is non-null, strtonum() stores an error string in
@@ -115,6 +114,8 @@ strtonum_OBSD(const char *numstr, long minval, long maxval,
 	ev[0].err = errno;
 	errno = 0;
 	if (minval > maxval) {
+		error = INVALID;
+	} else if (!(base == 10 || base == 16)) {
 		error = INVALID;
 	} else {
 		l = strtol(numstr, &ep, base);

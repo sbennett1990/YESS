@@ -298,11 +298,11 @@ clearBuffer(char * buff, size_t length)
 
 /*
  * Reliably convert string value to an integer, between INT_MIN and INT_MAX.
- * Base must be a number between 2 and 36 inclusive or the special value 0.
+ * Base must be either 10 or 16.
  *
  * Parameters:
  *	*nptr   string representation of an int
- *	base    a base between 2 and 36 inclusive, or 0
+ *	base    base 10 or base 16
  *
  * Returns the result of the conversion, or -1 on error
  */
@@ -312,7 +312,7 @@ strtoint(const char *nptr, int base)
 	int num;
 	const char *errstr;
 
-	num = (int) strtonum_OBSD(nptr, INT_MIN, INT_MAX, &errstr, base);
+	num = (int)strtonum_OBSD(nptr, INT_MIN, INT_MAX, &errstr, base);
 	if (errstr != NULL) {
 		log_debug("can't convert to int: nptr is %s: %s\n", errstr,
 		    nptr);
