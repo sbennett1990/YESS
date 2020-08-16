@@ -31,7 +31,7 @@
 #define RECORDLEN	24
 
 static bool validateaddress(const char *line, int prev_addr);
-static bool validatedata(char * record);
+static bool validatedata(const char *record);
 static bool validline(const char *line, int len, int prev_addr);
 static bool hashexdigits(const char * line, int start, int end);
 static bool hasspaces(const char * line, int start, int end);
@@ -433,7 +433,7 @@ isdatarecord(const char *line)
  * false otherwise
  */
 bool
-validatedata(char * record)
+validatedata(const char *record)
 {
     int len = strnlen(record, RECORDLEN);
 
