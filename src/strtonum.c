@@ -23,39 +23,47 @@
  *
  * SYNOPSIS
  * #include "strtonum.h"
+ *
  * long
- * strtonum(const char *numstr, long minval, long maxval, const char **errstrp, int base);
+ * strtonum(const char *numstr, long minval, long maxval, const char **errstrp,
+ *     int base);
  *
  * DESCRIPTION
- * The strtonum() function converts the string in numstr to a long value. The strtonum()
- * function was designed to facilitate safe, robust programming and overcome the shortcomings
- * of the atoi(3) and strtol(3) family of interfaces.
- * The string may begin with an arbitrary amount of whitespace (as determined by isspace(3))
- * followed by a single optional '+' or '-' sign.
+ * The strtonum() function converts the string in numstr to a long value. The
+ * strtonum() function was designed to facilitate safe, robust programming and
+ * overcome the shortcomings of the atoi(3) and strtol(3) family of interfaces.
  *
- * The remainder of the string is converted to a long value according to the given base, which
- * must be a number between 2 and 36 inclusive or the special value 0 (see strtol(3)).
+ * The string may begin with an arbitrary amount of whitespace (as determined
+ * by isspace(3)) followed by a single optional '+' or '-' sign.
  *
- * The value obtained is then checked against the provided minval and maxval bounds. If errstrp
- * is non-null, strtonum() stores an error string in *errstrp indicating the failure.
+ * The remainder of the string is converted to a long value according to the
+ * given base, which must be a number between 2 and 36 inclusive or the special
+ * value 0 (see strtol(3)).
+ *
+ * The value obtained is then checked against the provided minval and maxval
+ * bounds. If errstrp is non-null, strtonum() stores an error string in
+ * *errstrp indicating the failure.
  *
  * RETURN VALUES
- * The strtonum() function returns the result of the conversion, unless the value would exceed
- * the provided bounds or is invalid. On error, 0 is returned, errno is set, and errstrp will
- * point to an error message. *errstrp will be set to NULL on success; this fact can be used to
- * differentiate a successful return of 0 from an error.
+ * The strtonum() function returns the result of the conversion, unless the
+ * value would exceed the provided bounds or is invalid. On error, 0 is
+ * returned, errno is set, and errstrp will point to an error message. *errstrp
+ * will be set to NULL on success; this fact can be used to differentiate a
+ * successful return of 0 from an error.
  *
  * EXAMPLES
- * Using strtonum() correctly is meant to be simpler than the alternative functions.
+ * Using strtonum() correctly is meant to be simpler than the alternative
+ * functions.
  *
  * int iterations;
  * const char *errstr;
  *
  * iterations = strtonum(optarg, 1, 64, &errstr, 10);
- * if (errstr)
- *    errx(1, "number of iterations is %s: %s", errstr, optarg);
+ * if (errstr != NULL)
+ * 	errx(1, "number of iterations is %s: %s", errstr, optarg);
  *
- * The above example will guarantee that the value of iterations is between 1 and 64 (inclusive).
+ * The above example will guarantee that the value of iterations is between 1
+ * and 64 (inclusive).
  *
  * ERRORS
  * [ERANGE]    The given string was out of range.
@@ -69,11 +77,12 @@
  * "invalid"    The string did not consist solely of digit characters.
  *
  * SEE ALSO
- * atof(3), atoi(3), atol(3), atoll(3), sscanf(3), strtod(3), strtol(3), strtoul(3)
+ * atof(3), atoi(3), atol(3), atoll(3), sscanf(3), strtod(3), strtol(3),
+ * strtoul(3)
  *
  * STANDARDS
- * strtonum() is an OpenBSD extension. The existing alternatives, such as atoi(3) and strtol(3),
- * are either impossible or difficult to use safely.
+ * strtonum() is an OpenBSD extension. The existing alternatives, such as
+ * atoi(3) and strtol(3), are either impossible or difficult to use safely.
  */
 
 #include <errno.h>
