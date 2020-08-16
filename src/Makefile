@@ -6,8 +6,6 @@ SRCS=       decodeStage.c dump.c executeStage.c fetchStage.c loader.c \
 
 NOMAN=      noman
 
-CC=         gcc
-
 # make -DDEBUG will set -g and -O0
 .if defined(DEBUG)
 DEBUG=      -g
