@@ -336,48 +336,6 @@ hasdata(const char *line)
 }
 
 /*
- * Validate that the data in the record is in the correct
- * format. Do not check for a hex digit in column
- * 21 since there is supposed to be a space character.
- * If there is a hex digit in column 21 the error
- * will be caught elsewhere. This function assumes
- * the record is supposed to contain data.
- *
- * Parameters:
- *     *record    one record to check
- *
- * Return true if the data is correctly formatted;
- * false otherwise
- */
-bool
-validatedata(char * record)
-{
-    int len = strnlen(record, RECORDLEN);
-
-    if (len < 21) {
-        return FALSE;
-    }
-
-    // data must be in at least columns 9 & 10
-    if (!hashexdigits(record, 9, 10)) {
-        return FALSE;
-    }
-
-    int i;
-
-    for (i = 11; i <= 20; i += 2) {
-        if (isxdigit(record[i])) {
-            // next column should be a hex digit
-            if (!isxdigit(record[i + 1])) {
-                return FALSE;
-            }
-        }
-    }
-
-    return TRUE;
-}
-
-/*
  * Determine if the record (one line from the file) is in the correct
  * format (syntactically and semantically correct).
  *
@@ -458,6 +416,48 @@ isdatarecord(const char *line)
 	}
 
 	return FALSE;
+}
+
+/*
+ * Validate that the data in the record is in the correct
+ * format. Do not check for a hex digit in column
+ * 21 since there is supposed to be a space character.
+ * If there is a hex digit in column 21 the error
+ * will be caught elsewhere. This function assumes
+ * the record is supposed to contain data.
+ *
+ * Parameters:
+ *     *record    one record to check
+ *
+ * Return true if the data is correctly formatted;
+ * false otherwise
+ */
+bool
+validatedata(char * record)
+{
+    int len = strnlen(record, RECORDLEN);
+
+    if (len < 21) {
+        return FALSE;
+    }
+
+    // data must be in at least columns 9 & 10
+    if (!hashexdigits(record, 9, 10)) {
+        return FALSE;
+    }
+
+    int i;
+
+    for (i = 11; i <= 20; i += 2) {
+        if (isxdigit(record[i])) {
+            // next column should be a hex digit
+            if (!isxdigit(record[i + 1])) {
+                return FALSE;
+            }
+        }
+    }
+
+    return TRUE;
 }
 
 /*
