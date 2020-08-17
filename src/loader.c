@@ -104,6 +104,11 @@ load(const char * fileName)
 		if (hasaddress(buf)) {
 			int error;
 			byteAddress = grabAddress(buf, &error);
+			if (error) {
+				log_info("error extracting address");
+				goto error;
+			}
+
 			short numBytes;
 			if ((numBytes = hasdata(buf)) != 0) {
 				for (short byteNumber = 1; byteNumber <= numBytes; byteNumber++) {
@@ -290,24 +295,24 @@ grabAddress(const char *record, int *error)
 bool
 validateaddress(const char *line, int prev_addr)
 {
-    if (!hashexdigits(line, 4, 6)) {
-        // address not formatted correctly
-        return FALSE;
-    }
+	if (!hashexdigits(line, 4, 6)) {
+		// address not formatted correctly
+		return FALSE;
+	}
 
-    if (prev_addr == -1) {
-        return TRUE;
-    }
+	if (prev_addr == -1) {
+		return TRUE;
+	}
 
-    // current must be > prev_addr
-    int error;
-    int current_addr = grabAddress(line, &error);
+	// current must be > prev_addr
+	int error;
+	int current_addr = grabAddress(line, &error);
 
-    if (current_addr > prev_addr) {
-        return TRUE;
-    } else {
-        return FALSE;
-    }
+	if (error || current_addr < prev_addr) {
+		return FALSE;
+	}
+
+	return TRUE;
 }
 
 /*
