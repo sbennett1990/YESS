@@ -28,7 +28,9 @@ static void copy(int *, int *);
  * each line in memory after that up to the next line displayed is
  * identical to the * line.
  */
-void dumpMemory(void) {
+void
+dumpMemory(void)
+{
     int address = 0;
     int prevLine[WORDSPERLINE];
     int currLine[WORDSPERLINE];
@@ -65,7 +67,9 @@ void dumpMemory(void) {
  *
  * Return pLine - initialized to values in cLine (previous line)
  */
-void copy(int pLine[WORDSPERLINE], int cLine[WORDSPERLINE]) {
+void
+copy(int pLine[WORDSPERLINE], int cLine[WORDSPERLINE])
+{
     int i;
 
     for (i = 0; i < WORDSPERLINE; i++) {
@@ -81,7 +85,9 @@ void copy(int pLine[WORDSPERLINE], int cLine[WORDSPERLINE]) {
  *      line         array of ints to output
  *      address   row header
  */
-void dumpLine(int line[WORDSPERLINE], int address) {
+void
+dumpLine(int line[WORDSPERLINE], int address)
+{
     int i;
     printf("%03x: ", address * 4);
 
@@ -101,7 +107,9 @@ void dumpLine(int line[WORDSPERLINE], int address) {
  * Modifies:
  *      line - array initialized to values in memory
  */
-void buildLine(int line[WORDSPERLINE], int address) {
+void
+buildLine(int line[WORDSPERLINE], int address)
+{
     int i;
     bool memError;
     for (i = 0; i < WORDSPERLINE; i++, address++) {
@@ -118,9 +126,10 @@ void buildLine(int line[WORDSPERLINE], int address) {
  *
  * Return TRUE if prevLine and currLine are identical
  */
-int isEqual(int prevLine[WORDSPERLINE], int currLine[WORDSPERLINE]) {
+int
+isEqual(int prevLine[WORDSPERLINE], int currLine[WORDSPERLINE])
+{
     int i;
-
     for (i = 0; i < WORDSPERLINE; i++) {
         if (prevLine[i] != currLine[i]) {
             return FALSE;
@@ -133,7 +142,9 @@ int isEqual(int prevLine[WORDSPERLINE], int currLine[WORDSPERLINE]) {
 /*
  * Output the contents of the YESS program registers to standard out.
  */
-void dumpProgramRegisters(void) {
+void
+dumpProgramRegisters(void)
+{
 	rregister eax = { EAX };
 	rregister ecx = { ECX };
 	rregister edx = { EDX };
@@ -153,7 +164,9 @@ void dumpProgramRegisters(void) {
 /*
  * Output the contents of the YESS processor registers to standard out.
  */
-void dumpProcessorRegisters(void) {
+void
+dumpProcessorRegisters(void)
+{
     struct fregister F = getFregister();
     struct dregister D = getDregister();
     struct eregister E = getEregister();
