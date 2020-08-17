@@ -500,6 +500,8 @@ grabDataByte(const char *record, short byteNum, bool *error)
 
 	int result = strtoint(bytestr, HEX);
 	if (result == -1) {
+		log_debug("error converting string '%s' to data",
+		    bytestr);
 		*error = TRUE;
 		return 0;
 	}
