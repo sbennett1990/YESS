@@ -35,7 +35,7 @@ static bool validatedata(const char *record);
 static bool validline(const char *line, int len, int prev_addr);
 static bool hashexdigits(const char * line, int start, int end);
 static bool hasspaces(const char * line, int start, int end);
-static int grabAddress(const char *line);
+static int grabAddress(const char *line, int *error);
 static uint8_t grabDataByte(const char *record, short byteNum, bool *error);
 static bool iscommentrecord(const char *line);
 static bool isdatarecord(const char *line);
@@ -102,7 +102,8 @@ load(const char * fileName)
 		}
 
 		if (hasaddress(buf)) {
-			byteAddress = grabAddress(buf);
+			int error;
+			byteAddress = grabAddress(buf, &error);
 			short numBytes;
 			if ((numBytes = hasdata(buf)) != 0) {
 				for (short byteNumber = 1; byteNumber <= numBytes; byteNumber++) {
@@ -242,27 +243,34 @@ hashexdigits(const char * record, int start, int end)
  * the record is in fact a data record.
  *
  * Parameters:
- *     *record    a record with an address
+ *	*record     a record with an address
+ *	*error      indicates if an error occured
  *
  * Return the address in base 10
  */
 int
-grabAddress(const char *record)
+grabAddress(const char *record, int *error)
 {
-    char hex_addr[8] = {
-        record[0],
-        record[1],
-        record[2],
-        record[3],
-        record[4],
-        record[5],
-        record[6],
-        '\0'
-    };
+	char hex_addr[8] = {
+		record[0],
+		record[1],
+		record[2],
+		record[3],
+		record[4],
+		record[5],
+		record[6],
+		'\0'
+	};
+	*error = 0;
 
-    // TODO: check for the error value -1
-    int addr = strtoint(hex_addr, HEX);
-    return addr;
+	// TODO: check for the error value -1
+	int addr = strtoint(hex_addr, HEX);
+	if (addr == -1) {
+		log_debug("error converting string '%s' to an address",
+		    hex_addr);
+		*error = 1;
+	}
+	return addr;
 }
 
 /*
@@ -292,7 +300,8 @@ validateaddress(const char *line, int prev_addr)
     }
 
     // current must be > prev_addr
-    int current_addr = grabAddress(line);
+    int error;
+    int current_addr = grabAddress(line, &error);
 
     if (current_addr > prev_addr) {
         return TRUE;
