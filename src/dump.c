@@ -19,10 +19,10 @@
 #define WORDSPERLINE 8
 #define LINELENGTH
 
-static void dumpLine(int *line, short arrlen, int address);
-static void buildLine(int *line, short arrlen, int address);
-static int areEqual(int *, int *, short);
-static void copy(int *pLine, int *cLine, short arrlen);
+static void dumpLine(unsigned int *line, short arrlen, int address);
+static void buildLine(unsigned int *line, short arrlen, int address);
+static int areEqual(unsigned int *, unsigned int *, short);
+static void copy(unsigned int *pLine, unsigned int *cLine, short arrlen);
 
 /*
  * Outputs the contents of the YESS little-endian memory WORDSPERLINE
@@ -33,8 +33,8 @@ static void copy(int *pLine, int *cLine, short arrlen);
 void
 dumpMemory(void)
 {
-	int prevLine[WORDSPERLINE];
-	int currLine[WORDSPERLINE];
+	unsigned int prevLine[WORDSPERLINE];
+	unsigned int currLine[WORDSPERLINE];
 
 	/* first dump the 0th line */
 	int address = 0;
@@ -74,7 +74,7 @@ dumpMemory(void)
  * Return pLine - set to values in cLine (current line)
  */
 void
-copy(int *pLine, int *cLine, short arrlen)
+copy(unsigned int *pLine, unsigned int *cLine, short arrlen)
 {
 	int i;
 	for (i = 0; i < arrlen; i++) {
@@ -91,7 +91,7 @@ copy(int *pLine, int *cLine, short arrlen)
  *	address  starting byte address of the line of memory
  */
 void
-dumpLine(int *line, short arrlen, int address)
+dumpLine(unsigned int *line, short arrlen, int address)
 {
 	printf("%03x: ", address * 4);
 
@@ -114,7 +114,7 @@ dumpLine(int *line, short arrlen, int address)
  *	line - array set to values in memory
  */
 void
-buildLine(int *line, short arrlen, int address)
+buildLine(unsigned int *line, short arrlen, int address)
 {
 	bool memError;
 	int i;
@@ -139,7 +139,7 @@ buildLine(int *line, short arrlen, int address)
  * Return TRUE if the arrays are identical.
  */
 int
-areEqual(int *arr1, int *arr2, short arrlen)
+areEqual(unsigned int *arr1, unsigned int *arr2, short arrlen)
 {
 	int i;
 	for (i = 0; i < arrlen; i++) {
