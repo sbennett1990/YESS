@@ -20,7 +20,7 @@
 #define LINELENGTH
 
 static void dumpLine(int line[WORDSPERLINE], int address);
-static void buildLine(int line[WORDSPERLINE], int address);
+static void buildLine(int *line, short arrlen, int address);
 static int isEqual(int prevLine[WORDSPERLINE], int currLine[WORDSPERLINE]);
 static void copy(int *, int *);
 
@@ -39,11 +39,11 @@ dumpMemory(void)
     int star = 0;
 
     /* first dump the 0th line */
-    buildLine(prevLine, address);
+    buildLine(prevLine, WORDSPERLINE, address);
     dumpLine(prevLine, address);
 
     for (address = WORDSPERLINE; address < MEMSIZE; address += WORDSPERLINE) {
-        buildLine(currLine, address);
+        buildLine(currLine, WORDSPERLINE, address);
 
         if (isEqual(prevLine, currLine)) {
             if (!star) {
@@ -105,17 +105,18 @@ dumpLine(int line[WORDSPERLINE], int address)
  *
  * Parameters:
  *	line     array of words read from memory
+ *	arrlen   length of the line array
  *	address  starting index of memory access
  *
  * Modifies:
  *	line - array set to values in memory
  */
 void
-buildLine(int line[WORDSPERLINE], int address)
+buildLine(int *line, short arrlen, int address)
 {
 	bool memError;
 	int i;
-	for (i = 0; i < WORDSPERLINE; i++, address++) {
+	for (i = 0; i < arrlen; i++, address++) {
 		line[i] = getWord((address * 4), &memError);
 		if (memError) {
 			log_warn("dumpMemory: couldn't read word at %03x",
