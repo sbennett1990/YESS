@@ -17,7 +17,6 @@
 #include "logger.h"
 
 #define WORDSPERLINE 8
-#define LINELENGTH
 
 static void dumpLine(unsigned int *line, short arrlen, int address);
 static void buildLine(unsigned int *line, short arrlen, int address);
