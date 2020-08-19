@@ -14,6 +14,8 @@
 #include "memoryStage.h"
 #include "writebackStage.h"
 
+#include "logger.h"
+
 #define WORDSPERLINE 8
 #define LINELENGTH
 
@@ -36,6 +38,7 @@ dumpMemory(void)
     int currLine[WORDSPERLINE];
     int star = 0;
 
+    /* first dump the 0th line */
     buildLine(prevLine, address);
     dumpLine(prevLine, address);
 
@@ -101,20 +104,24 @@ dumpLine(int line[WORDSPERLINE], int address)
  * WORDSPERLINE words from memory.
  *
  * Parameters:
- *      line         array of ints
- *      address   starting index to access memory
+ *	line     array of words read from memory
+ *	address  starting index of memory access
  *
  * Modifies:
- *      line - array initialized to values in memory
+ *	line - array set to values in memory
  */
 void
 buildLine(int line[WORDSPERLINE], int address)
 {
-    int i;
-    bool memError;
-    for (i = 0; i < WORDSPERLINE; i++, address++) {
-        line[i] = getWord((address * 4), &memError);
-    }
+	bool memError;
+	int i;
+	for (i = 0; i < WORDSPERLINE; i++, address++) {
+		line[i] = getWord((address * 4), &memError);
+		if (memError) {
+			log_warn("dumpMemory: couldn't read word at %03x",
+			    address);
+		}
+	}
 }
 
 /*
