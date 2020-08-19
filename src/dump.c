@@ -19,7 +19,7 @@
 #define WORDSPERLINE 8
 #define LINELENGTH
 
-static void dumpLine(int line[WORDSPERLINE], int address);
+static void dumpLine(int *line, short arrlen, int address);
 static void buildLine(int *line, short arrlen, int address);
 static int isEqual(int prevLine[WORDSPERLINE], int currLine[WORDSPERLINE]);
 static void copy(int *, int *);
@@ -40,7 +40,7 @@ dumpMemory(void)
 
     /* first dump the 0th line */
     buildLine(prevLine, WORDSPERLINE, address);
-    dumpLine(prevLine, address);
+    dumpLine(prevLine, WORDSPERLINE, address);
 
     for (address = WORDSPERLINE; address < MEMSIZE; address += WORDSPERLINE) {
         buildLine(currLine, WORDSPERLINE, address);
@@ -52,7 +52,7 @@ dumpMemory(void)
             }
         } else {
             printf("\n");
-            dumpLine(currLine, address);
+            dumpLine(currLine, WORDSPERLINE, address);
             star = 0;
         }
 
@@ -81,22 +81,22 @@ copy(int pLine[WORDSPERLINE], int cLine[WORDSPERLINE])
 }
 
 /*
- * Output the starting address in the variable address and the contents of the
- * line array.
+ * Print the memory address and the contents of the line array.
  *
  * Parameters:
- *      line         array of ints to output
- *      address   row header
+ *	line     array of words read from memory to output
+ *	arrlen   length of the line array
+ *	address  starting byte address of the line of memory
  */
 void
-dumpLine(int line[WORDSPERLINE], int address)
+dumpLine(int *line, short arrlen, int address)
 {
-    int i;
-    printf("%03x: ", address * 4);
+	printf("%03x: ", address * 4);
 
-    for (i = 0; i < WORDSPERLINE; i++) {
-        printf("%08x ", line[i]);
-    }
+	int i;
+	for (i = 0; i < arrlen; i++) {
+		printf("%08x ", line[i]);
+	}
 }
 
 /*
