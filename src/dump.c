@@ -152,41 +152,42 @@ areEqual(unsigned int *arr1, unsigned int *arr2, short arrlen)
 }
 
 /*
- * Output the contents of the YESS program registers to standard out.
+ * Print the contents of the YESS program registers.
  */
 void
 dumpProgramRegisters(void)
 {
-    printf("%%eax: %08x %%ecx: %08x %%edx: %08x %%ebx: %08x\n",
-           getRegister(r_eax), getRegister(r_ecx), getRegister(r_edx),
-           getRegister(r_ebx));
-    printf("%%esp: %08x %%ebp: %08x %%esi: %08x %%edi: %08x\n\n",
-           getRegister(r_esp), getRegister(r_ebp), getRegister(r_esi),
-           getRegister(r_edi));
+	printf("%%eax: %08x %%ecx: %08x %%edx: %08x %%ebx: %08x\n",
+	    getRegister(r_eax), getRegister(r_ecx), getRegister(r_edx),
+	    getRegister(r_ebx));
+	printf("%%esp: %08x %%ebp: %08x %%esi: %08x %%edi: %08x\n\n",
+	    getRegister(r_esp), getRegister(r_ebp), getRegister(r_esi),
+	    getRegister(r_edi));
 }
 
 /*
- * Output the contents of the YESS processor registers to standard out.
+ * Print the contents of the YESS processor registers.
  */
 void
 dumpProcessorRegisters(void)
 {
-    struct fregister F = getFregister();
-    struct dregister D = getDregister();
-    struct eregister E = getEregister();
-    struct mregister M = getMregister();
-    struct wregister W = getWregister();
+	struct fregister F = getFregister();
+	struct dregister D = getDregister();
+	struct eregister E = getEregister();
+	struct mregister M = getMregister();
+	struct wregister W = getWregister();
 
-    printf("CC - ZF: %01x SF: %01x OF: %01x\n", getCC(ZF), getCC(SF), getCC(OF));
-    printf("F - predPC: %08x\n", F.predPC);
-    printf("D - stat: %01x icode: %01x ifun: %01x rA: %01x rB: %01x valC: %08x  valP: %08x\n",
-           D.stat.s, D.icode.ic, D.ifun, D.rA.reg, D.rB.reg, D.valC, D.valP);
-    printf("E - stat: %01x icode: %01x ifun: %01x  valC: %08x valA: %08x valB: %08x\n",
-           E.stat.s, E.icode.ic, E.ifun, E.valC, E.valA, E.valB);
-    printf("    dstE: %01x dstM: %01x srcA: %01x srcB: %01x\n",
-           E.dstE.reg, E.dstM.reg, E.srcA.reg, E.srcB.reg);
-    printf("M - stat: %01x icode: %01x Cnd: %01x valE: %08x valA: %08x dstE: %01x dstM: %01x\n",
-           M.stat.s, M.icode.ic, M.Cnd, M.valE, M.valA, M.dstE.reg, M.dstM.reg);
-    printf("W - stat: %01x icode: %01x valE: %08x valM: %08x dstE: %01x dstM: %01x\n\n",
-           W.stat.s, W.icode.ic, W.valE, W.valM, W.dstE.reg, W.dstM.reg);
+	printf("CC - ZF: %01x SF: %01x OF: %01x\n",
+	    getCC(ZF), getCC(SF), getCC(OF));
+	printf("F - predPC: %08x\n", F.predPC);
+	printf("D - stat: %01x icode: %01x ifun: %01x rA: %01x rB: %01x valC: %08x  valP: %08x\n",
+	    D.stat.s, D.icode.ic, D.ifun, D.rA.reg, D.rB.reg, D.valC, D.valP);
+	printf("E - stat: %01x icode: %01x ifun: %01x  valC: %08x valA: %08x valB: %08x\n",
+	    E.stat.s, E.icode.ic, E.ifun, E.valC, E.valA, E.valB);
+	printf("    dstE: %01x dstM: %01x srcA: %01x srcB: %01x\n",
+	    E.dstE.reg, E.dstM.reg, E.srcA.reg, E.srcB.reg);
+	printf("M - stat: %01x icode: %01x Cnd: %01x valE: %08x valA: %08x dstE: %01x dstM: %01x\n",
+	    M.stat.s, M.icode.ic, M.Cnd, M.valE, M.valA, M.dstE.reg, M.dstM.reg);
+	printf("W - stat: %01x icode: %01x valE: %08x valM: %08x dstE: %01x dstM: %01x\n\n",
+	    W.stat.s, W.icode.ic, W.valE, W.valM, W.dstE.reg, W.dstM.reg);
 }
