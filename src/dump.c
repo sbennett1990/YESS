@@ -33,33 +33,34 @@ static void copy(int *pLine, int *cLine, short arrlen);
 void
 dumpMemory(void)
 {
-    int address = 0;
-    int prevLine[WORDSPERLINE];
-    int currLine[WORDSPERLINE];
-    int star = 0;
+	int prevLine[WORDSPERLINE];
+	int currLine[WORDSPERLINE];
 
-    /* first dump the 0th line */
-    buildLine(prevLine, WORDSPERLINE, address);
-    dumpLine(prevLine, WORDSPERLINE, address);
+	/* first dump the 0th line */
+	int address = 0;
+	buildLine(prevLine, WORDSPERLINE, address);
+	dumpLine(prevLine, WORDSPERLINE, address);
 
-    for (address = WORDSPERLINE; address < MEMSIZE; address += WORDSPERLINE) {
-        buildLine(currLine, WORDSPERLINE, address);
+	int star = 0;
+	for (address = WORDSPERLINE; address < MEMSIZE; address += WORDSPERLINE) {
+		buildLine(currLine, WORDSPERLINE, address);
 
-        if (areEqual(prevLine, currLine, WORDSPERLINE)) {
-            if (!star) {
-                printf("*\n");
-                star = 1;
-            }
-        } else {
-            printf("\n");
-            dumpLine(currLine, WORDSPERLINE, address);
-            star = 0;
-        }
+		if (areEqual(prevLine, currLine, WORDSPERLINE)) {
+			if (!star) {
+				printf("*\n");
+				star = 1;
+			}
+		}
+		else {
+			printf("\n");
+			dumpLine(currLine, WORDSPERLINE, address);
+			star = 0;
+		}
 
-        copy(prevLine, currLine, WORDSPERLINE);
-    }
+		copy(prevLine, currLine, WORDSPERLINE);
+	}
 
-    printf("\n");
+	printf("\n");
 }
 
 /*
