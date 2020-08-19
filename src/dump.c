@@ -21,7 +21,7 @@
 
 static void dumpLine(int *line, short arrlen, int address);
 static void buildLine(int *line, short arrlen, int address);
-static int isEqual(int prevLine[WORDSPERLINE], int currLine[WORDSPERLINE]);
+static int areEqual(int *, int *, short);
 static void copy(int *, int *);
 
 /*
@@ -45,7 +45,7 @@ dumpMemory(void)
     for (address = WORDSPERLINE; address < MEMSIZE; address += WORDSPERLINE) {
         buildLine(currLine, WORDSPERLINE, address);
 
-        if (isEqual(prevLine, currLine)) {
+        if (areEqual(prevLine, currLine, WORDSPERLINE)) {
             if (!star) {
                 printf("*\n");
                 star = 1;
@@ -126,25 +126,27 @@ buildLine(int *line, short arrlen, int address)
 }
 
 /*
- * Compare the contents of prevLine and currLine. Return TRUE if the are equal.
+ * Compare the contents of two arrays. Return TRUE if all
+ * values are equal.
  *
  * Parameters:
- *      prevLine   array of ints
- *      currLine    array of ints
+ *	arr1     array of ints
+ *	arr2     array of ints
+ *	arrlen   length of both arrays
  *
- * Return TRUE if prevLine and currLine are identical
+ * Return TRUE if the arrays are identical.
  */
 int
-isEqual(int prevLine[WORDSPERLINE], int currLine[WORDSPERLINE])
+areEqual(int *arr1, int *arr2, short arrlen)
 {
-    int i;
-    for (i = 0; i < WORDSPERLINE; i++) {
-        if (prevLine[i] != currLine[i]) {
-            return FALSE;
-        }
-    }
+	int i;
+	for (i = 0; i < arrlen; i++) {
+		if (arr1[i] != arr2[i]) {
+			return FALSE;
+		}
+	}
 
-    return TRUE;
+	return TRUE;
 }
 
 /*
