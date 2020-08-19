@@ -145,20 +145,12 @@ isEqual(int prevLine[WORDSPERLINE], int currLine[WORDSPERLINE])
 void
 dumpProgramRegisters(void)
 {
-	rregister eax = { EAX };
-	rregister ecx = { ECX };
-	rregister edx = { EDX };
-	rregister ebx = { EBX };
-	rregister esp = { ESP };
-	rregister ebp = { EBP };
-	rregister esi = { ESI };
-	rregister edi = { EDI };
     printf("%%eax: %08x %%ecx: %08x %%edx: %08x %%ebx: %08x\n",
-           getRegister(eax), getRegister(ecx), getRegister(edx),
-           getRegister(ebx));
+           getRegister(r_eax), getRegister(r_ecx), getRegister(r_edx),
+           getRegister(r_ebx));
     printf("%%esp: %08x %%ebp: %08x %%esi: %08x %%edi: %08x\n\n",
-           getRegister(esp), getRegister(ebp), getRegister(esi),
-           getRegister(edi));
+           getRegister(r_esp), getRegister(r_ebp), getRegister(r_esi),
+           getRegister(r_edi));
 }
 
 /*
