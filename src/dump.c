@@ -22,7 +22,7 @@
 static void dumpLine(int *line, short arrlen, int address);
 static void buildLine(int *line, short arrlen, int address);
 static int areEqual(int *, int *, short);
-static void copy(int *, int *);
+static void copy(int *pLine, int *cLine, short arrlen);
 
 /*
  * Outputs the contents of the YESS little-endian memory WORDSPERLINE
@@ -56,7 +56,7 @@ dumpMemory(void)
             star = 0;
         }
 
-        copy(prevLine, currLine);
+        copy(prevLine, currLine, WORDSPERLINE);
     }
 
     printf("\n");
@@ -66,18 +66,19 @@ dumpMemory(void)
  * Copies the contents of the cLine array into the pLine array.
  *
  * Parameters:
- *     cLine    array of ints (current line)
+ *	pLine    array of ints (previous line)
+ *	cLine    array of ints (current line)
+ *	arrlen   length of both arrays
  *
- * Return pLine - initialized to values in cLine (previous line)
+ * Return pLine - set to values in cLine (current line)
  */
 void
-copy(int pLine[WORDSPERLINE], int cLine[WORDSPERLINE])
+copy(int *pLine, int *cLine, short arrlen)
 {
-    int i;
-
-    for (i = 0; i < WORDSPERLINE; i++) {
-        pLine[i] = cLine[i];
-    }
+	int i;
+	for (i = 0; i < arrlen; i++) {
+		pLine[i] = cLine[i];
+	}
 }
 
 /*
