@@ -4,15 +4,15 @@
 
 #include <stdio.h>
 
-#include "bool.h"
 #include "dump.h"
+#include "bool.h"
+#include "registers.h"
+#include "memory.h"
 #include "fetchStage.h"
 #include "decodeStage.h"
 #include "executeStage.h"
 #include "memoryStage.h"
 #include "writebackStage.h"
-#include "registers.h"
-#include "memory.h"
 
 #define WORDSPERLINE 8
 #define LINELENGTH
