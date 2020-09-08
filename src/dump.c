@@ -16,8 +16,9 @@
 
 #include "logger.h"
 
-#define WORDSPERLINE 8
+#define WORDSPERLINE	8
 
+static void dumpMem(short wordsperline);
 static void dumpLine(unsigned int *line, short arrlen, int address);
 static void buildLine(unsigned int *line, short arrlen, int address);
 static int areEqual(unsigned int *, unsigned int *, short);
@@ -30,21 +31,21 @@ static void copy(unsigned int *pLine, unsigned int *cLine, short arrlen);
  * identical to the * line.
  */
 void
-dumpMemory(void)
+dumpMem(short wordsperline)
 {
-	unsigned int prevLine[WORDSPERLINE];
-	unsigned int currLine[WORDSPERLINE];
+	unsigned int prevLine[wordsperline];
+	unsigned int currLine[wordsperline];
 
 	/* first dump the 0th line */
 	int address = 0;
-	buildLine(prevLine, WORDSPERLINE, address);
-	dumpLine(prevLine, WORDSPERLINE, address);
+	buildLine(prevLine, wordsperline, address);
+	dumpLine(prevLine, wordsperline, address);
 
 	int star = 0;
-	for (address = WORDSPERLINE; address < MEMSIZE; address += WORDSPERLINE) {
-		buildLine(currLine, WORDSPERLINE, address);
+	for (address = wordsperline; address < MEMSIZE; address += wordsperline) {
+		buildLine(currLine, wordsperline, address);
 
-		if (areEqual(prevLine, currLine, WORDSPERLINE)) {
+		if (areEqual(prevLine, currLine, wordsperline)) {
 			if (!star) {
 				printf("*\n");
 				star = 1;
@@ -52,47 +53,26 @@ dumpMemory(void)
 		}
 		else {
 			printf("\n");
-			dumpLine(currLine, WORDSPERLINE, address);
+			dumpLine(currLine, wordsperline, address);
 			star = 0;
 		}
 
-		copy(prevLine, currLine, WORDSPERLINE);
+		copy(prevLine, currLine, wordsperline);
 	}
 
 	printf("\n");
 }
 
 void
+dumpMemory(void)
+{
+	dumpMem(WORDSPERLINE);
+}
+
+void
 dumpMemoryImage(void)
 {
-	unsigned int prevLine[1];
-	unsigned int currLine[1];
-
-	/* first dump the 0th line */
-	int address = 0;
-	buildLine(prevLine, 1, address);
-	dumpLine(prevLine, 1, address);
-
-	int star = 0;
-	for (address = 1; address < MEMSIZE; address++) {
-		buildLine(currLine, 1, address);
-
-		if (areEqual(prevLine, currLine, 1)) {
-			if (!star) {
-				printf("*\n");
-				star = 1;
-			}
-		}
-		else {
-			printf("\n");
-			dumpLine(currLine, 1, address);
-			star = 0;
-		}
-
-		copy(prevLine, currLine, 1);
-	}
-
-	printf("\n");
+	dumpMem(1);
 }
 
 /*
@@ -153,7 +133,7 @@ buildLine(unsigned int *line, short arrlen, int address)
 	for (i = 0; i < arrlen; i++, address++) {
 		line[i] = getWord((address * 4), &memError);
 		if (memError) {
-			log_warn("dumpMemory: couldn't read word at %03x",
+			log_warn("dumpMem: couldn't read word at %03x",
 			    address);
 		}
 	}
