@@ -109,11 +109,16 @@ load_mem_image(const char *fileName)
 		lineno++;
 	}
 
-error:
 	free(record);
 	log_debug("closing file");
 	fclose(fp);
 	return TRUE;
+
+error:
+	free(record);
+	log_debug("closing file");
+	fclose(fp);
+	return FALSE;
 }
 
 /*
