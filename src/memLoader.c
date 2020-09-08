@@ -199,6 +199,9 @@ validline(const char *line, ssize_t len, int prevaddr)
 	if (error) {
 		return -1;
 	}
+	if (memaddr >= MEMSIZE) {
+		return -1;
+	}
 
 	if (prevaddr == -1) {
 		if (memaddr != 0) {
