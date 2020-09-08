@@ -209,7 +209,7 @@ validline(const char *line, ssize_t len, int prevaddr)
 		}
 	}
 	// XXX: how to account for '*' lines?
-	if (memaddr != prevaddr + 4) {
+	else if (memaddr != prevaddr + 4) {
 		return -1;
 	}
 
