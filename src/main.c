@@ -39,7 +39,7 @@ static void
 usage(void)
 {
 	fprintf(stderr, "usage: yess [-dsuv] -f <filename>.yo\n");
-	fprintf(stderr, "       yess [-dsuv] -m <filename>.mem\n");
+	fprintf(stderr, "       yess [-dsuv] -i <filename>.mem\n");
 	exit(EXIT_FAILURE);
 }
 
@@ -67,30 +67,30 @@ main(int argc, char **argv)
 	int ch;
 	int dflag = 0;	/* debug */
 	int fflag = 0;	/* was file given? */
-	int mflag = 0;	/* was a memory image given? */
+	int iflag = 0;	/* was a memory image given? */
 	int sflag = 0;	/* dump yess state upon completion? */
 	int vflag = 0;	/* verbose */
 	int verbosity = 0;
 	const char *sourcefile;
 
-	while ((ch = getopt(argc, argv, "df:m:suv")) != -1) {
+	while ((ch = getopt(argc, argv, "df:i:suv")) != -1) {
 		switch (ch) {
 		case 'd':
 			dflag = 1;
 			break;
 		case 'f':
-			if (mflag) {
+			if (iflag) {
 				usage(); /* EXIT */
 			}
 			sourcefile = optarg;
 			fflag = 1;
 			break;
-		case 'm':
+		case 'i':
 			if (fflag) {
 				usage(); /* EXIT */
 			}
 			sourcefile = optarg;
-			mflag = 1;
+			iflag = 1;
 			break;
 		case 's':
 			sflag = 1;
@@ -108,7 +108,7 @@ main(int argc, char **argv)
 	argc -= optind;
 	argv += optind;
 
-	if (argc > 0 || sourcefile == NULL || (!fflag && !mflag)) {
+	if (argc > 0 || sourcefile == NULL || (!fflag && !iflag)) {
 		usage(); /* EXIT */
 	}
 
@@ -135,7 +135,7 @@ main(int argc, char **argv)
 		log_debug("exiting");
 		return 1; /* EXIT */
 	}
-	if (mflag && !load_mem_image(sourcefile)) {
+	if (iflag && !load_mem_image(sourcefile)) {
 		log_warn("error loading the file");
 		log_debug("exiting");
 		return 1; /* EXIT */
