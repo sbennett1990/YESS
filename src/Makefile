@@ -1,7 +1,7 @@
 
 PROG=       yess
 SRCS=       decodeStage.c dump.c executeStage.c fetchStage.c loader.c \
-            logger.c main.c memory.c memoryStage.c registers.c \
+            logger.c main.c memLoader.c memory.c memoryStage.c registers.c \
             strtonum.c tools.c writebackStage.c
 
 NOMAN=      noman

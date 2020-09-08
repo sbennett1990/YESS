@@ -24,6 +24,7 @@
 #include "memory.h"
 #include "dump.h"
 #include "loader.h"
+#include "memLoader.h"
 #include "forwarding.h"
 #include "fetchStage.h"
 #include "decodeStage.h"
@@ -38,6 +39,7 @@ static void
 usage(void)
 {
 	fprintf(stderr, "usage: yess [-dsuv] -f <filename>.yo\n");
+	fprintf(stderr, "       yess [-dsuv] -m <filename>.mem\n");
 	exit(EXIT_FAILURE);
 }
 
@@ -65,19 +67,30 @@ main(int argc, char **argv)
 	int ch;
 	int dflag = 0;	/* debug */
 	int fflag = 0;	/* was file given? */
+	int mflag = 0;	/* was a memory image given? */
 	int sflag = 0;	/* dump yess state upon completion? */
 	int vflag = 0;	/* verbose */
 	int verbosity = 0;
 	const char *sourcefile;
 
-	while ((ch = getopt(argc, argv, "df:suv")) != -1) {
+	while ((ch = getopt(argc, argv, "df:m:suv")) != -1) {
 		switch (ch) {
 		case 'd':
 			dflag = 1;
 			break;
 		case 'f':
+			if (mflag) {
+				usage(); /* EXIT */
+			}
 			sourcefile = optarg;
 			fflag = 1;
+			break;
+		case 'm':
+			if (fflag) {
+				usage(); /* EXIT */
+			}
+			sourcefile = optarg;
+			mflag = 1;
 			break;
 		case 's':
 			sflag = 1;
@@ -95,7 +108,7 @@ main(int argc, char **argv)
 	argc -= optind;
 	argv += optind;
 
-	if (argc > 0 || sourcefile == NULL || !fflag) {
+	if (argc > 0 || sourcefile == NULL || (!fflag && !mflag)) {
 		usage(); /* EXIT */
 	}
 
@@ -116,8 +129,13 @@ main(int argc, char **argv)
 	/* initialize the 'processor' */
 	setupyess();
 
-	/* load 'program' file into 'memory'; terminate if there is a problem */
-	if (!load(sourcefile)) {
+	/* load program or memory image into yess memory */
+	if (fflag && !load(sourcefile)) {
+		log_warn("error loading the file");
+		log_debug("exiting");
+		return 1; /* EXIT */
+	}
+	if (mflag && !load_mem_image(sourcefile)) {
 		log_warn("error loading the file");
 		log_debug("exiting");
 		return 1; /* EXIT */
@@ -126,7 +144,7 @@ main(int argc, char **argv)
 	/* reduce privileges */
 	reduceprivileges();
 
-	/* execute the 'program' */
+	/* execute the program */
 	int clockCount = 0;
 	int stop = 0;
 	int hasdumped = 0;
