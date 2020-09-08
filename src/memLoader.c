@@ -132,6 +132,9 @@ error:
 int
 validatememfilename(const char *filename)
 {
+#ifdef AFL_TEST
+	return 1;
+#endif
 	int len = (int)strnlen(filename, FILENAME_LEN);
 
 	if (len < 4) {
