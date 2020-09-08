@@ -6,6 +6,7 @@
 #define	DUMP_H
 
 void dumpMemory(void);
+void dumpMemoryImage(void);
 void dumpProgramRegisters(void);
 void dumpProcessorRegisters(void);
 

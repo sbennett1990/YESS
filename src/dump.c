@@ -62,6 +62,39 @@ dumpMemory(void)
 	printf("\n");
 }
 
+void
+dumpMemoryImage(void)
+{
+	unsigned int prevLine[1];
+	unsigned int currLine[1];
+
+	/* first dump the 0th line */
+	int address = 0;
+	buildLine(prevLine, 1, address);
+	dumpLine(prevLine, 1, address);
+
+	int star = 0;
+	for (address = 1; address < MEMSIZE; address++) {
+		buildLine(currLine, 1, address);
+
+		if (areEqual(prevLine, currLine, 1)) {
+			if (!star) {
+				printf("*\n");
+				star = 1;
+			}
+		}
+		else {
+			printf("\n");
+			dumpLine(currLine, 1, address);
+			star = 0;
+		}
+
+		copy(prevLine, currLine, 1);
+	}
+
+	printf("\n");
+}
+
 /*
  * Copies the contents of the cLine array into the pLine array.
  *
