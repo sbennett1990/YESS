@@ -38,7 +38,7 @@
 static void
 usage(void)
 {
-	fprintf(stderr, "usage: yess [-dsuv] -f <filename>.yo\n");
+	fprintf(stderr, "usage: yess [-dmsuv] -f <filename>.yo\n");
 	fprintf(stderr, "       yess [-dsuv] -i <filename>.mem\n");
 	exit(EXIT_FAILURE);
 }
@@ -68,12 +68,13 @@ main(int argc, char **argv)
 	int dflag = 0;	/* debug */
 	int fflag = 0;	/* was file given? */
 	int iflag = 0;	/* was a memory image given? */
+	int mflag = 0;	/* output memory image */
 	int sflag = 0;	/* dump yess state upon completion? */
 	int vflag = 0;	/* verbose */
 	int verbosity = 0;
 	const char *sourcefile;
 
-	while ((ch = getopt(argc, argv, "df:i:suv")) != -1) {
+	while ((ch = getopt(argc, argv, "df:i:msuv")) != -1) {
 		switch (ch) {
 		case 'd':
 			dflag = 1;
@@ -86,11 +87,17 @@ main(int argc, char **argv)
 			fflag = 1;
 			break;
 		case 'i':
-			if (fflag) {
+			if (fflag || mflag) {
 				usage(); /* EXIT */
 			}
 			sourcefile = optarg;
 			iflag = 1;
+			break;
+		case 'm':
+			if (iflag) {
+				usage(); /* EXIT */
+			}
+			mflag = 1;
 			break;
 		case 's':
 			sflag = 1;
@@ -135,6 +142,13 @@ main(int argc, char **argv)
 		log_debug("exiting");
 		return 1; /* EXIT */
 	}
+	if (mflag) {
+		log_debug("dumping memory of loaded program");
+		// XXX: need a way to output correct format
+		dumpMemory();
+		return 0;
+	}
+
 	if (iflag && !load_mem_image(sourcefile)) {
 		log_warn("error loading the file");
 		log_debug("exiting");
