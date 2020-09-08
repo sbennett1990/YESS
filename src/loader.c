@@ -30,6 +30,8 @@
 #define MAXLEN		80
 #define RECORDLEN	24
 
+#define HEX		16
+
 static bool validateaddress(const char *line, int prev_addr);
 static bool validatedata(const char *record);
 static bool validline(const char *line, int len, int prev_addr);
