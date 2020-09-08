@@ -73,7 +73,7 @@ load_mem_image(const char *fileName)
 	ssize_t linelen;
 	/* attempt to load each line of the file into memory */
 	while ((linelen = getline(&record, &recordsize, fp)) != -1) {
-		if (!validline(record, linelen, prevaddr)) {
+		if (validline(record, linelen, prevaddr) == -1) {
 			/* display the erroneous line */
 			printf("Error on line %d\n", lineno);
 
