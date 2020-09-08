@@ -385,7 +385,7 @@ pledge_wrapper(const char * promises)
 void
 initialpledge(void)
 {
-    pledge_wrapper("stdio rpath");
+	pledge_wrapper("stdio rpath");
 }
 
 /*
@@ -395,5 +395,5 @@ initialpledge(void)
 void
 reduceprivileges(void)
 {
-    pledge_wrapper("stdio");
+	pledge_wrapper("stdio");
 }
