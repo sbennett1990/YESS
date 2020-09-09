@@ -2,8 +2,8 @@
                       | # This version uses a conditional jump
                       | # Execution begins at address 0
   0x000:              | 	.pos 0
-  0x000: 30f400010000 | init:	irmovl Stack, %esp  	# Set up Stack pointer
-  0x006: 30f500010000 | 	irmovl Stack, %ebp  	# Set up base pointer
+  0x000: 30f4fc0f0000 | init:	irmovl Stack, %esp  	# Set up Stack pointer
+  0x006: 30f5fc0f0000 | 	irmovl Stack, %ebp  	# Set up base pointer
   0x00c: 7024000000   | 	jmp Main		# Execute main program
                       | 
                       | # Array of 4 elements
@@ -46,7 +46,7 @@
   0x07e: b05f         | 	popl %ebp
   0x080: 90           | 	ret
                       | 
-  0x100:              | 	.pos 0x100
-  0x100:              | Stack:	# The stack goes here
+  0xffc:              | 	.pos 0xffc
+  0xffc:              | Stack:	# The stack goes here
                       | /* $end code-ysa */
                       | /* $end code-yso */

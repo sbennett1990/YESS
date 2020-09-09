@@ -46,7 +46,7 @@ End:
 	popl %ebp
 	ret
 
-	.pos 0x100
+	.pos 0xffc
 Stack:	# The stack goes here
 /* $end code-ysa */
 /* $end code-yso */
