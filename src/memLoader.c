@@ -41,7 +41,7 @@ struct memory_record {
 	size_t		 linesize;	/* size of the line string */
 	ssize_t		 linelen;	/* length of the line */
 	int		 lineno;	/* line number from the file */
-	short		 memaddress;	/* memory address */
+	short		 memaddress;	/* memory address (on word boundry) */
 	short		 prevaddress;	/* previous line's memory address */
 	unsigned int	 data;		/* data to store in memory */
 	unsigned int	 prevdata;	/* previous line's data */
@@ -109,7 +109,7 @@ load_mem_image(const char *fileName)
 		bool memError;
 		putWord(record.memaddress, record.data, &memError);
 		if (memError) {
-			log_info("error storing data at address %08x",
+			log_info("error storing data at address %03x",
 			    record.memaddress);
 			goto error;
 		}
@@ -212,7 +212,7 @@ validateline(struct memory_record *record)
 		    record->lineno);
 		return -1;
 	}
-	if (memaddr >= MEMSIZE) {
+	if (memaddr > HIGHBYTE) {
 		log_info("address is too large: %d", memaddr);
 		return -1;
 	}
