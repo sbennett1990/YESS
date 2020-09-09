@@ -99,27 +99,21 @@ load_mem_image(const char *fileName)
 		}
 
 		int error;
-		int memaddr = readaddress(record.line, &error);
-		if (error) {
-			log_info("error reading memory address");
-			goto error;
-		}
-
 		record.data = readdata(record.line, &error);
 		if (error) {
-			log_info("error reading data");
+			log_info("error reading data on line %d", record.lineno);
 			goto error;
 		}
 
 		bool memError;
-		putWord(memaddr, record.data, &memError);
+		putWord(record.memaddress, record.data, &memError);
 		if (memError) {
 			log_info("error storing data at address %08x",
-			    memaddr);
+			    record.memaddress);
 			goto error;
 		}
 
-		record.prevaddress = memaddr;
+		record.prevaddress = record.memaddress;
 		record.prevdata = record.data;
 		record.prevstarline = record.starline;
 		record.lineno++;
@@ -173,7 +167,9 @@ validatememfilename(const char *filename)
 
 /*
  * Determine if the line from the file is in the correct
- * format.
+ * format. Also validates that the memory address is
+ * correct; sets the record's memaddress member as a
+ * side effect.
  *
  * Parameters:
  *	*record       the line to check
@@ -211,9 +207,11 @@ validateline(struct memory_record *record)
 	int error;
 	int memaddr = readaddress(record->line, &error);
 	if (error) {
+		log_info("error reading memory address");
 		return -1;
 	}
 	if (memaddr >= MEMSIZE) {
+		log_info("address is too large: %08x", memaddr);
 		return -1;
 	}
 	record->memaddress = memaddr;
