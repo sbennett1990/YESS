@@ -189,7 +189,7 @@ validatememfilename(const char *filename)
  * Parameters:
  *	*record       the line to check
  *
- * Return 1 if the line is correctly formatted.
+ * Return -1 if the line is not correctly formatted.
  */
 int
 validateline(struct memory_record *record)
