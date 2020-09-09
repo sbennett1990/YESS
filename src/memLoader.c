@@ -36,8 +36,21 @@
 #define nitems(_a) (sizeof((_a)) / sizeof((_a)[0]))
 #endif
 
+struct memory_record {
+	char		*line;		/* contents of 1 line from file */
+	size_t		 linesize;	/* size of the line string */
+	ssize_t		 linelen;	/* length of the line */
+	int		 lineno;	/* line number from the file */
+	short		 memaddress;	/* memory address */
+	short		 prevaddress;	/* previous line's memory address */
+	unsigned int	 data;		/* data to store in memory */
+	unsigned int	 prevdata;	/* previous line's data */
+	int		 starline;	/* does line have a '*'? */
+	int		 prevstarline;	/* did previous line have a '*'? */
+};
+
 static int validatememfilename(const char *filename);
-static int validline(const char *line, ssize_t len, int prevaddr);
+static int validateline(struct memory_record *);
 static bool hashexdigits(const char *line, ssize_t len, int start, int end);
 static int readaddress(const char *line, int *error);
 static unsigned int readdata(const char *line, int *error);
@@ -65,57 +78,60 @@ load_mem_image(const char *fileName)
 
 	log_info("reading contents into memory");
 
-	int prevaddr = -1; /* starting address */
-	int lineno = 1;
+	struct memory_record record = {
+		.line = NULL,
+		.linesize = 0,
+		.lineno = 1,
+		.prevaddress = -1	/* starting address */
+	};
 
-	char *record = NULL;
-	size_t recordsize = 0;
-	ssize_t linelen;
 	/* attempt to load each line of the file into memory */
-	while ((linelen = getline(&record, &recordsize, fp)) != -1) {
-		if (validline(record, linelen, prevaddr) == -1) {
+	while ((record.linelen = getline(&record.line, &record.linesize, fp)) != -1) {
+		if (validateline(&record) == -1) {
 			/* display the erroneous line */
-			printf("Error on line %d\n", lineno);
+			printf("Error on line %d:\n", record.lineno);
 
-			for (int i = 0; i < linelen; i++) {
-				printf("%c", record[i]);
+			for (int i = 0; i < record.linelen; i++) {
+				printf("%c", record.line[i]);
 			}
 			printf("\n");
 			goto error;
 		}
 
 		int error;
-		int memaddr = readaddress(record, &error);
+		int memaddr = readaddress(record.line, &error);
 		if (error) {
 			log_info("error reading memory address");
 			goto error;
 		}
 
-		unsigned int data = readdata(record, &error);
+		record.data = readdata(record.line, &error);
 		if (error) {
 			log_info("error reading data");
 			goto error;
 		}
 
 		bool memError;
-		putWord(memaddr, data, &memError);
+		putWord(memaddr, record.data, &memError);
 		if (memError) {
 			log_info("error storing data at address %08x",
 			    memaddr);
 			goto error;
 		}
 
-		prevaddr = memaddr;
-		lineno++;
+		record.prevaddress = memaddr;
+		record.prevdata = record.data;
+		record.prevstarline = record.starline;
+		record.lineno++;
 	}
 
-	free(record);
+	free(record.line);
 	log_debug("closing file");
 	fclose(fp);
 	return TRUE;
 
 error:
-	free(record);
+	free(record.line);
 	log_debug("closing file");
 	fclose(fp);
 	return FALSE;
@@ -160,56 +176,81 @@ validatememfilename(const char *filename)
  * format.
  *
  * Parameters:
- *	*line       the line to check
- *	len         length of the line string
- *	prevaddr    the previously written-to memory address
+ *	*record       the line to check
  *
  * Return 1 if the line is correctly formatted.
  */
 int
-validline(const char *line, ssize_t len, int prevaddr)
+validateline(struct memory_record *record)
 {
-	if (len < MIN_LINE_LEN || len > LINE_LEN) {
+	if (record->linelen < MIN_LINE_LEN || record->linelen > LINE_LEN) {
 		return -1;
 	}
 
 	/* column 3 should have a colon */
-	if (line[3] != ':') {
+	if (record->line[3] != ':') {
 		return -1;
 	}
 
 	/* column 4 should have a blank space */
-	if (!isblank(line[4])) {
+	if (!isblank(record->line[4])) {
 		return -1;
 	}
 
 	/* first 3 characters should be an address in hex */
-	if (!hashexdigits(line, len, 0, 2)) {
+	if (!hashexdigits(record->line, record->linelen, 0, 2)) {
 		return -1;
 	}
 
 	/* characters 5 through 12 are one word of memory */
-	if (!hashexdigits(line, len, 5, 12)) {
+	if (!hashexdigits(record->line, record->linelen, 5, 12)) {
 		return -1;
 	}
 
 	/* validate the memory address is correct */
 	int error;
-	int memaddr = readaddress(line, &error);
+	int memaddr = readaddress(record->line, &error);
 	if (error) {
 		return -1;
 	}
 	if (memaddr >= MEMSIZE) {
 		return -1;
 	}
+	record->memaddress = memaddr;
 
-	if (prevaddr == -1) {
-		if (memaddr != 0) {
+	record->starline = 0;
+	if (record->linelen > MIN_LINE_LEN) {
+		/*
+		 * if present, column 14 should have a '*', but a space
+		 * is allowed
+		 */
+		if (record->line[14] != '*' && !isspace(record->line[14])) {
+			return -1;
+		}
+		if (record->line[14] == '*') {
+			record->starline = 1;
+		}
+	}
+
+	if (record->prevaddress == -1) {
+		if (record->memaddress != 0) {
 			return -1;
 		}
 	}
-	// XXX: how to account for '*' lines?
-	else if (memaddr != prevaddr + 4) {
+	/*
+	 * If the _previous_ line was a star line, memaddress should be
+	 * at least prevaddress + 8; but memaddress should always be a
+	 * multiple of WORDSIZE (currently 4).
+	 */
+	else if (record->prevstarline) {
+		if (record->memaddress < record->prevaddress + 2 * WORDSIZE ||
+		    record->memaddress % WORDSIZE) {
+			log_debug("address is not correct: %03x",
+			    record->memaddress);
+			return -1;
+		}
+	}
+	else if (record->memaddress != record->prevaddress + WORDSIZE) {
 		return -1;
 	}
 
