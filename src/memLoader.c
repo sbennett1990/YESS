@@ -82,7 +82,8 @@ load_mem_image(const char *fileName)
 		.line = NULL,
 		.linesize = 0,
 		.lineno = 1,
-		.prevaddress = -1	/* starting address */
+		.prevaddress = -1,	/* starting address */
+		.prevstarline = 0
 	};
 
 	/* attempt to load each line of the file into memory */
