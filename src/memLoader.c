@@ -101,7 +101,8 @@ load_mem_image(const char *fileName)
 		int error;
 		record.data = readdata(record.line, &error);
 		if (error) {
-			log_info("error reading data on line %d", record.lineno);
+			log_info("error reading data on line %d",
+			    record.lineno);
 			goto error;
 		}
 
@@ -207,7 +208,8 @@ validateline(struct memory_record *record)
 	int error;
 	int memaddr = readaddress(record->line, &error);
 	if (error) {
-		log_info("error reading memory address");
+		log_info("error reading memory address on line %d",
+		    record->lineno);
 		return -1;
 	}
 	if (memaddr >= MEMSIZE) {
