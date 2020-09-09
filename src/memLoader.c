@@ -52,7 +52,7 @@ struct memory_record {
 static int validatememfilename(const char *filename);
 static int validateline(struct memory_record *);
 static bool hashexdigits(const char *line, ssize_t len, int start, int end);
-static int readaddress(const char *line, int *error);
+static short readaddress(const char *line, int *error);
 static unsigned int readdata(const char *line, int *error);
 static unsigned int strtouint(const char *nptr, int base, int *error);
 static int putrepeatdata(const struct memory_record * const record);
@@ -235,17 +235,12 @@ validateline(struct memory_record *record)
 
 	/* validate the memory address is correct */
 	int error;
-	int memaddr = readaddress(record->line, &error);
+	record->memaddress = readaddress(record->line, &error);
 	if (error) {
 		log_info("error reading memory address on line %d",
 		    record->lineno);
 		return -1;
 	}
-	if (memaddr > HIGHBYTE) {
-		log_info("address is too large: %d", memaddr);
-		return -1;
-	}
-	record->memaddress = memaddr;
 
 	/* memory image files begin at address 0 */
 	if (record->prevaddress == -1) {
@@ -313,7 +308,7 @@ hashexdigits(const char *line, ssize_t len, int start, int end)
 /*
  *
  */
-int
+short
 readaddress(const char *line, int *error)
 {
 	char hexaddr[4] = {
@@ -329,8 +324,15 @@ readaddress(const char *line, int *error)
 		log_debug("error converting string '%s' to an address",
 		    hexaddr);
 		*error = 1;
+		return -1;
 	}
-	return memaddr;
+	if (memaddr > HIGHBYTE) {
+		log_debug("address is too large: %d", memaddr);
+		*error = 1;
+		return -1;
+	}
+
+	return (short)memaddr;
 }
 
 /*
