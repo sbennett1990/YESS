@@ -233,8 +233,10 @@ validateline(struct memory_record *record)
 		}
 	}
 
+	/* memory image files begin at address 0 */
 	if (record->prevaddress == -1) {
 		if (record->memaddress != 0) {
+			log_debug("memory image address must begin at 0");
 			return -1;
 		}
 	}
@@ -246,12 +248,15 @@ validateline(struct memory_record *record)
 	else if (record->prevstarline) {
 		if (record->memaddress < record->prevaddress + 2 * WORDSIZE ||
 		    record->memaddress % WORDSIZE) {
-			log_debug("address is not correct: %03x",
-			    record->memaddress);
+			log_debug("address is not correct: "
+			    "curr: %03x, prev: %03x",
+			    record->memaddress, record->prevaddress);
 			return -1;
 		}
 	}
 	else if (record->memaddress != record->prevaddress + WORDSIZE) {
+		log_debug("address is not correct: curr: %03x, prev: %03x",
+		    record->memaddress, record->prevaddress);
 		return -1;
 	}
 
