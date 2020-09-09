@@ -55,6 +55,7 @@ static bool hashexdigits(const char *line, ssize_t len, int start, int end);
 static int readaddress(const char *line, int *error);
 static unsigned int readdata(const char *line, int *error);
 static unsigned int strtouint(const char *nptr, int base, int *error);
+static int putrepeatdata(const struct memory_record *record);
 
 /*
  * Load a memory image from a file.
@@ -107,6 +108,18 @@ load_mem_image(const char *fileName)
 			goto error;
 		}
 
+		/*
+		 * If previous line had a '*', then all addresses up to
+		 * the current line's address will contain the previous
+		 * line's data.
+		 */
+		if (record.prevstarline) {
+			if (putrepeatdata(&record) == -1) {
+				goto error;
+			}
+		}
+
+		/* now store current line */
 		bool memError;
 		putWord(record.memaddress, record.data, &memError);
 		if (memError) {
@@ -375,4 +388,24 @@ strtouint(const char *nptr, int base, int *error)
 	}
 
 	return num;
+}
+
+/*
+ *
+ */
+int
+putrepeatdata(const struct memory_record *record)
+{
+	bool memError;
+	short addr = record->prevaddress + WORDSIZE;
+	for (addr; addr < record->memaddress; addr += WORDSIZE) {
+		putWord(addr, record->prevdata, &memError);
+		if (memError) {
+			log_info("error storing repeat data at address %03x",
+			    addr);
+			return -1;
+		}
+	}
+
+	return 1;
 }
