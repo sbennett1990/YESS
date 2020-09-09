@@ -29,7 +29,7 @@
 #include "tools.h"
 
 #define LINE_LEN		16
-#define MIN_LINE_LEN		13
+#define MIN_LINE_LEN		14
 #define MAX_LINE_LEN		32
 
 #ifndef nitems
