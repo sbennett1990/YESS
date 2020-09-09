@@ -398,7 +398,7 @@ putrepeatdata(const struct memory_record *record)
 {
 	bool memError;
 	short addr = record->prevaddress + WORDSIZE;
-	for (addr; addr < record->memaddress; addr += WORDSIZE) {
+	for (; addr < record->memaddress; addr += WORDSIZE) {
 		putWord(addr, record->prevdata, &memError);
 		if (memError) {
 			log_info("error storing repeat data at address %03x",
