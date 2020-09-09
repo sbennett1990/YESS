@@ -55,7 +55,7 @@ static bool hashexdigits(const char *line, ssize_t len, int start, int end);
 static int readaddress(const char *line, int *error);
 static unsigned int readdata(const char *line, int *error);
 static unsigned int strtouint(const char *nptr, int base, int *error);
-static int putrepeatdata(const struct memory_record *record);
+static int putrepeatdata(const struct memory_record * const record);
 
 /*
  * Load a memory image from a file.
@@ -394,7 +394,7 @@ strtouint(const char *nptr, int base, int *error)
  *
  */
 int
-putrepeatdata(const struct memory_record *record)
+putrepeatdata(const struct memory_record * const record)
 {
 	bool memError;
 	short addr = record->prevaddress + WORDSIZE;
