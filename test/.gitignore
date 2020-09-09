@@ -1,5 +1,9 @@
 # Ignore copied files
 bool.h
+dump.c
+dump.h
+loader.c
+loader.h
 logger.c
 logger.h
 memory.c
