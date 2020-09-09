@@ -218,20 +218,7 @@ validateline(struct memory_record *record)
 		return -1;
 	}
 
-	/* validate the memory address is correct */
-	int error;
-	int memaddr = readaddress(record->line, &error);
-	if (error) {
-		log_info("error reading memory address on line %d",
-		    record->lineno);
-		return -1;
-	}
-	if (memaddr > HIGHBYTE) {
-		log_info("address is too large: %d", memaddr);
-		return -1;
-	}
-	record->memaddress = memaddr;
-
+	/* check if this line has a '*' */
 	record->starline = 0;
 	if (record->linelen > MIN_LINE_LEN) {
 		/*
@@ -245,6 +232,20 @@ validateline(struct memory_record *record)
 			record->starline = 1;
 		}
 	}
+
+	/* validate the memory address is correct */
+	int error;
+	int memaddr = readaddress(record->line, &error);
+	if (error) {
+		log_info("error reading memory address on line %d",
+		    record->lineno);
+		return -1;
+	}
+	if (memaddr > HIGHBYTE) {
+		log_info("address is too large: %d", memaddr);
+		return -1;
+	}
+	record->memaddress = memaddr;
 
 	/* memory image files begin at address 0 */
 	if (record->prevaddress == -1) {
