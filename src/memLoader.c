@@ -213,7 +213,7 @@ validateline(struct memory_record *record)
 		return -1;
 	}
 	if (memaddr >= MEMSIZE) {
-		log_info("address is too large: %08x", memaddr);
+		log_info("address is too large: %d", memaddr);
 		return -1;
 	}
 	record->memaddress = memaddr;
