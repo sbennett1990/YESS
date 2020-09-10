@@ -8,11 +8,14 @@
 #include "bool.h"
 #include "registers.h"
 #include "memory.h"
+
+#ifndef TEST
 #include "fetchStage.h"
 #include "decodeStage.h"
 #include "executeStage.h"
 #include "memoryStage.h"
 #include "writebackStage.h"
+#endif	/* TEST */
 
 #include "logger.h"
 
@@ -163,6 +166,7 @@ areEqual(unsigned int *arr1, unsigned int *arr2, short arrlen)
 	return TRUE;
 }
 
+#ifndef TEST
 /*
  * Print the contents of the YESS program registers.
  */
@@ -203,3 +207,4 @@ dumpProcessorRegisters(void)
 	printf("W - stat: %01x icode: %01x valE: %08x valM: %08x dstE: %01x dstM: %01x\n\n",
 	    W.stat.s, W.icode.ic, W.valE, W.valM, W.dstE.reg, W.dstM.reg);
 }
+#endif	/* TEST */
