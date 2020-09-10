@@ -5,6 +5,7 @@ src/yess
 src/yess.exe
 
 # test executables
+test/loader-test
 test/memory-test
 test/registers-test
 test/tools-test
