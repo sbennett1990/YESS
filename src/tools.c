@@ -278,25 +278,6 @@ void expandBits(unsigned int source, char bits[36]) {
 }
 
 /*
- * Write 'length' zeros to the buffer, effectively "clearing" it. If length is
- * zero, this function does nothing. Can clear a buffer of any size, up to
- * SIZE_MAX.
- *
- * Parameters:
- *     *buff    buffer
- *     length   length of the buffer
- */
-void
-clearBuffer(char * buff, size_t length)
-{
-    char * p;
-
-    for (p = buff; length--; ) {
-        *p++ = 0;
-    }
-}
-
-/*
  * Reliably convert string value to an integer, between INT_MIN and INT_MAX.
  * Base must be either 10 or 16.
  *
