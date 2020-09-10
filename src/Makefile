@@ -10,8 +10,6 @@ NOMAN=      noman
 .if defined(DEBUG)
 DEBUG=      -g
 CFLAGS=     -O0 ${PIPE} ${DEBUG}
-.else
-CFLAGS=     -O1 ${PIPE}
 .endif
 
 CFLAGS+=    -std=c99 -Wall
