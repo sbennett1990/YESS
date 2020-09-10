@@ -19,6 +19,7 @@
 #include <sys/utsname.h>
 #endif
 
+#include <assert.h>
 #include <limits.h>
 #include <stddef.h>
 #include <string.h>
@@ -290,6 +291,8 @@ void expandBits(unsigned int source, char bits[36]) {
 int
 strtoint(const char *nptr, int base)
 {
+	assert(base == 10 || base == 16);
+
 	int num;
 	const char *errstr;
 
@@ -314,6 +317,8 @@ strtoint(const char *nptr, int base)
 int
 validatefilename(const char * filename)
 {
+	assert(filename != NULL);
+
     int len = (int) strnlen(filename, FILENAME_LEN);
 
     if (len < 3) {
