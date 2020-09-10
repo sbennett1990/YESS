@@ -79,7 +79,7 @@ clearFregister()
  *	*fwd     holds values forwarded from previous stages
  */
 void
-fetchStage(const forwardType *fwd)
+fetchStage(const forwardType * const fwd)
 {
 	unsigned short f_pc;
 	stat_t stat = s_okay;

@@ -30,6 +30,6 @@ struct fregister {
 
 struct fregister getFregister(void);
 void clearFregister(void);
-void fetchStage(const forwardType *);
+void fetchStage(const forwardType * const);
 
 #endif	/* FETCHSTAGE_H */
