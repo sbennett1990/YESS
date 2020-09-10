@@ -14,8 +14,6 @@
 
 #include "tools.h"
 
-static void printbuff(int * buff, size_t length);
-static int test_clearBuffer(void);
 static int test_getBits(int low, int high, unsigned int source, unsigned int expected);
 
 
@@ -43,15 +41,7 @@ int main(int argc, char * argv[]) {
     test_getBits(31, 31, 0, 0);
     test_getBits(31, 31, -1, 1);
 
-    test_clearBuffer();
-
     return 0;
-}
-
-void printbuff(int * buff, size_t length) {
-    for (size_t i = 0; i < length; i++) {
-        printf("[%2d] ", buff[i]);
-    }
 }
 
 int test_getBits(int low, int high, unsigned int source, unsigned int expected) {
@@ -66,30 +56,4 @@ int test_getBits(int low, int high, unsigned int source, unsigned int expected) 
         printf("\ngetBits() Test Passed\n");
         return 1;
     }
-}
-
-int test_clearBuffer() {
-    printf("\nTesting clearBuffer()");
-    int buff[5] = { 13, 2, 43, 4, 75 };
-    size_t length = sizeof(buff) / sizeof(int);
-
-    printf("\nTest Buffer:    ");
-    printbuff(buff, length);
-    clearBuffer((char *) buff, sizeof(buff));
-    //printf("\nExpected: %5d\nResult: %7d", expected, result);
-    printf("\nCleared Buffer: ");
-    printbuff(buff, length);
-    printf("\n");
-
-    if (length > 0) {
-        if (buff[4] != 0) {
-            printf("\nclearBuffer() Test Failed\n");
-            return 0;
-        } else {
-            printf("\nclearBuffer() Test Passed\n");
-            return 1;
-        }
-    }
-
-    return 0;
 }
