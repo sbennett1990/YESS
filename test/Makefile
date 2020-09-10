@@ -6,8 +6,9 @@ SRCS_memory-test=    memory-test.c
 SRCS_registers-test= registers-test.c
 SRCS_tools-test=     tools-test.c
 
-HEADERS=   bool.h logger.h memory.h registers.h strtonum.h tools.h
-FILES=     logger.c memory.c registers.c strtonum.c tools.c
+HEADERS=   bool.h dump.h loader.h logger.h memory.h registers.h strtonum.h \
+           tools.h
+FILES=     dump.c loader.c logger.c memory.c registers.c strtonum.c tools.c
 
 SRCS_memory-test+=    ${FILES}
 SRCS_registers-test+= ${FILES}
@@ -16,6 +17,7 @@ SRCS_tools-test+=     ${FILES}
 NOMAN=     noman
 
 CFLAGS+=   -std=c99 -Wall
+CFLAGS+=   -DTEST
 
 SRCDIR=    ../src
 
