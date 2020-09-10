@@ -16,6 +16,7 @@
 
 #include <sys/types.h>
 
+#include <assert.h>
 #include <ctype.h>
 #include <limits.h>
 #include <stdio.h>
@@ -160,6 +161,8 @@ validatememfilename(const char *filename)
 #ifdef AFL_TEST
 	return 1;
 #endif
+	assert(filename != NULL);
+
 	int len = (int)strnlen(filename, FILENAME_LEN);
 
 	if (len < 4) {
@@ -194,6 +197,8 @@ validatememfilename(const char *filename)
 int
 validateline(struct memory_record *record)
 {
+	assert(record->line != NULL);
+
 	if (record->linelen < MIN_LINE_LEN || record->linelen > LINE_LEN) {
 		return -1;
 	}
@@ -287,6 +292,9 @@ validateline(struct memory_record *record)
 bool
 hashexdigits(const char *line, ssize_t len, int start, int end)
 {
+	assert(line != NULL);
+	assert(len > 0);
+
 	if (start > end || start < 0 || end < 0) {
 		return FALSE;
 	}
@@ -311,6 +319,8 @@ hashexdigits(const char *line, ssize_t len, int start, int end)
 short
 readaddress(const char *line, int *error)
 {
+	assert(line != NULL);
+
 	char hexaddr[4] = {
 		line[0],
 		line[1],
@@ -341,6 +351,8 @@ readaddress(const char *line, int *error)
 unsigned int
 readdata(const char *line, int *error)
 {
+	assert(line != NULL);
+
 	char datastr[9] = {
 		line[5],
 		line[6],
@@ -378,6 +390,8 @@ readdata(const char *line, int *error)
 unsigned int
 strtouint(const char *nptr, int base, int *error)
 {
+	assert(base == 10 || base == 16);
+
 	unsigned int num;
 	const char *errstr;
 	*error = 0;
