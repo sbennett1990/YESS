@@ -144,7 +144,6 @@ main(int argc, char **argv)
 	}
 	if (mflag) {
 		log_debug("dumping memory of loaded program");
-		// XXX: need a way to output correct format
 		dumpMemoryImage();
 		return 0;
 	}
