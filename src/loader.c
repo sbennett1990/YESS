@@ -16,6 +16,7 @@
 
 #include <sys/types.h>
 
+#include <assert.h>
 #include <ctype.h>
 #include <stdint.h>
 #include <stdio.h>
@@ -97,9 +98,7 @@ load(const char * fileName)
 			for (int i = 0; i < linelen; i++) {
 				printf("%c", record[i]);
 			}
-
 			printf("\n");
-
 			goto error;
 		}
 
@@ -223,6 +222,8 @@ hasspaces(const char * line, int start, int end)
 bool
 hashexdigits(const char * record, int start, int end)
 {
+	assert(record != NULL);
+
     if (start > end) {
         return FALSE;
     }
@@ -258,6 +259,8 @@ hashexdigits(const char * record, int start, int end)
 int
 grabAddress(const char *record, int *error)
 {
+	assert(record != NULL);
+
 	char hex_addr[8] = {
 		record[0],
 		record[1],
@@ -297,6 +300,8 @@ grabAddress(const char *record, int *error)
 bool
 validateaddress(const char *line, int prev_addr)
 {
+	assert(line != NULL);
+
 	if (!hashexdigits(line, 4, 6)) {
 		// address not formatted correctly
 		return FALSE;
@@ -330,6 +335,8 @@ validateaddress(const char *line, int prev_addr)
 short
 hasdata(const char *line)
 {
+	assert(line != NULL);
+
 	/*
 	 * since little error checking is performed, only examine
 	 * the first index where data should be
@@ -364,6 +371,8 @@ hasdata(const char *line)
 bool
 validline(const char *line, int len, int prev_addr)
 {
+	assert(line != NULL);
+
 	if (len < 23) {
 		return FALSE;
 	}
@@ -406,6 +415,8 @@ validline(const char *line, int len, int prev_addr)
 bool
 iscommentrecord(const char *line)
 {
+	assert(line != NULL);
+
 	if (hasspaces(line, 0, 21)) {
 		return TRUE;
 	}
@@ -420,6 +431,8 @@ iscommentrecord(const char *line)
 bool
 isdatarecord(const char *line)
 {
+	assert(line != NULL);
+
 	if (!(isblank(line[0]) && isblank(line[1]) && isblank(line[8])
 	    && isblank(line[21]))) {
 		return FALSE;
@@ -451,6 +464,8 @@ isdatarecord(const char *line)
 bool
 validatedata(const char *record)
 {
+	assert(record != NULL);
+
     int len = strnlen(record, RECORDLEN);
 
     if (len < 21) {
