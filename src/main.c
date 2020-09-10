@@ -183,7 +183,8 @@ main(int argc, char **argv)
 		dumpProcessorRegisters();
 		dumpMemory();
 	}
-
+#ifndef AFL_TEST
 	printf("\nTotal clock cycles = %d\n", clockCount);
+#endif
 	return 0;
 }
