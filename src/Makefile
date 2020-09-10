@@ -12,6 +12,11 @@ DEBUG=      -g
 CFLAGS=     -O0 ${PIPE} ${DEBUG}
 .endif
 
+.ifmake afl
+#CC=         /path/to/afl-clang
+CFLAGS+=    -DAFL_TEST
+.endif
+
 CFLAGS+=    -std=c99 -Wall
 CFLAGS+=    -Wstrict-prototypes -Wmissing-prototypes
 CFLAGS+=    -Wmissing-declarations
@@ -22,5 +27,8 @@ BINDIR=     ~/bin
 
 install:
 	install -b -m 0740 ${PROG} ${BINDIR}/${PROG}
+
+# make an instrumented binary to fuzz with AFL
+afl: ${PROG} ${PROGS} _SUBDIRUSE
 
 .include <bsd.prog.mk>
