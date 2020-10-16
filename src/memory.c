@@ -14,6 +14,8 @@
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
+#include <err.h>
+#include <stdlib.h>
 #include <string.h>
 
 #include "memory.h"
@@ -22,7 +24,7 @@
 #include "logger.h"
 
 /* System Memory */
-static unsigned int memory[MEMSIZE];
+static unsigned int *memory;
 
 static unsigned int fetch(int address, bool * memError);
 static void store(int address, unsigned int value, bool * memError);
@@ -218,6 +220,27 @@ putWord(int byteAddress, unsigned int value, bool * memError)
 
 	*memError = FALSE; // XXX: this assignment is probably unnecessary
 	store((byteAddress / WORDSIZE), value, memError);
+}
+
+/*
+ * Initialize yess system memory to MEMSIZE, setting all memory
+ * locations to 0.
+ */
+void
+initMemory(void)
+{
+	if ((memory = calloc(MEMSIZE, sizeof(int))) == NULL) {
+		err(1, NULL);
+	}
+}
+
+/*
+ * Free the memory buffer. This should be called before main exits.
+ */
+void
+destroyMemory(void)
+{
+	free(memory);
 }
 
 /*

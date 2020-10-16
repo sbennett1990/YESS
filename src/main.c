@@ -53,7 +53,8 @@ setupyess(void)
 	/* initialize function pointer array */
 	initFuncPtrArray();
 
-	clearMemory();
+	/* initialize system memory */
+	initMemory();
 	clearFregister();
 	clearDregister();
 	clearEregister();
@@ -140,18 +141,18 @@ main(int argc, char **argv)
 	if (fflag && !load(sourcefile)) {
 		log_warn("error loading the file");
 		log_debug("exiting");
-		return 1; /* EXIT */
+		goto errorOut;
 	}
 	if (mflag) {
 		log_debug("dumping memory of loaded program");
 		dumpMemoryImage();
-		return 0;
+		goto out;
 	}
 
 	if (iflag && !load_mem_image(sourcefile)) {
 		log_warn("error loading the file");
 		log_debug("exiting");
-		return 1; /* EXIT */
+		goto errorOut;
 	}
 
 	/* reduce privileges */
@@ -186,5 +187,10 @@ main(int argc, char **argv)
 #ifndef AFL_TEST
 	printf("\nTotal clock cycles = %d\n", clockCount);
 #endif
+out:
+	destroyMemory();
 	return 0;
+errorOut:
+	destroyMemory();
+	return 1;
 }

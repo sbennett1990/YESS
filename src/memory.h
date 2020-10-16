@@ -26,6 +26,8 @@
 #define HIGHBYTE    4095	// Highest byte address in memory
 #define NOADDRESS      0	// Value for a "no address"
 
+void initMemory(void);
+void destroyMemory(void);
 void clearMemory(void);
 
 uint8_t getByte(int address, bool *memError);
