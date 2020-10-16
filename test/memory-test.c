@@ -16,6 +16,7 @@
 
 #include <limits.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <unistd.h>
 
 #include "bool.h"
@@ -196,6 +197,9 @@ integration(int byteAddr, short offset)
 int
 main(int argc, char **argv)
 {
+	extern char *malloc_options;
+	malloc_options = "CFGJ";
+
 	int ch;
 	while ((ch = getopt(argc, argv, "d")) != -1) {
 		switch (ch) {
