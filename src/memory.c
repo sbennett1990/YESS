@@ -182,7 +182,6 @@ getWord(int byteAddress, bool * memError)
 		return 0;
 	}
 
-	*memError = FALSE;
 	// How does this work if byteAddress is 1 or 0?
 	return fetch((byteAddress / WORDSIZE), memError);
 }
@@ -218,7 +217,6 @@ putWord(int byteAddress, unsigned int value, bool * memError)
 		return;
 	}
 
-	*memError = FALSE; // XXX: this assignment is probably unnecessary
 	store((byteAddress / WORDSIZE), value, memError);
 }
 
