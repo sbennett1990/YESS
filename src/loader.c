@@ -503,8 +503,15 @@ validatedata(const char *record)
 uint8_t
 grabDataByte(const char *record, short byteNum, bool *error)
 {
-	*error = FALSE;
+	assert(record != NULL);
 
+	*error = FALSE;
+/*
+	if (byteNum < 1 || byteNum > 4) {
+		log_debug("byteNum is invalid");
+		*error = TRUE;
+	}
+*/
 /* Calculate the start of the data byte */
 #define WHICH_BYTE_IDX(n)	(((n) * 2) + 7)
 
