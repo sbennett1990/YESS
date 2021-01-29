@@ -65,6 +65,9 @@ setupyess(void)
 int
 main(int argc, char **argv)
 {
+	extern char *malloc_options;
+	malloc_options = "CFGJ";
+
 	int ch;
 	int dflag = 0;	/* debug */
 	int fflag = 0;	/* was file given? */
