@@ -68,7 +68,7 @@ typedef struct {
 
 void clearRegisters(void);
 unsigned int getRegister(rregister regNum);
-void setRegister(rregister regNum, unsigned int regValue);
+void setRegister(rregister regNum, unsigned int data);
 
 void clearCC(void);
 int getCC(short bitNumber);

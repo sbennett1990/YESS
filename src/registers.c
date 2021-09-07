@@ -47,14 +47,14 @@ getRegister(rregister reg)
 }
 
 /*
- * Store val in program register reg.
+ * Store data in program register reg.
  *
  * Parameters:
  *	reg     Program register
- *	val     The value to put in the register
+ *	data    The value to store in the register
  */
 void
-setRegister(rregister reg, unsigned int val)
+setRegister(rregister reg, unsigned int data)
 {
 	if (reg.reg < 0 || reg.reg > REGSIZE) {
 #if DEBUG
@@ -63,7 +63,7 @@ setRegister(rregister reg, unsigned int val)
 #endif
 	}
 
-	registers[reg.reg] = val;
+	registers[reg.reg] = data;
 }
 
 /*
