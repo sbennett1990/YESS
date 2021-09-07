@@ -9,6 +9,11 @@
 
 #define INSTR_COUNT	16	/* Possible size of the instruction set */
 
+/* Instruction Code type */
+typedef struct {
+	uint8_t	ic;
+} icode_t;
+
 // Instruction Codes (icode)
 #define HALT	0x0
 #define NOP	0x1
@@ -23,6 +28,8 @@
 #define PUSHL	0xA
 #define POPL	0xB
 #define DUMP	0xC	/* Output parts of the Y86 machine state */
+
+extern const icode_t i_nop;
 
 // Instruction Functions (ifun)
 
@@ -50,26 +57,20 @@
 #define JGE	0x5	/* Jump When Greater or Equal */
 #define JG	0x6	/* Jump When Greater */
 
-/* Instruction Code type */
-typedef struct {
-	uint8_t	ic;
-} icode_t;
-
-extern const icode_t i_nop;
 
 int icode_is(icode_t it, uint8_t ic);
 
+
+/* Status Code type */
+typedef struct {
+	uint8_t	s;
+} stat_t;
 
 /* Status Codes */
 #define SAOK	1	/* Normal operation */
 #define SHLT	2	/* Halt instruction encountered */
 #define SADR	3	/* Bad address encountered */
 #define SINS	4	/* Invalid instruction encountered */
-
-/* Status Code type */
-typedef struct {
-	uint8_t	s;
-} stat_t;
 
 extern const stat_t s_okay;
 extern const stat_t s_halt;
