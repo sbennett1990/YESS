@@ -29,7 +29,9 @@ typedef struct {
 #define POPL	0xB
 #define DUMP	0xC	/* Output parts of the Y86 machine state */
 
+extern const icode_t i_halt;
 extern const icode_t i_nop;
+extern const icode_t i_dump;
 
 // Instruction Functions (ifun)
 

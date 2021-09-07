@@ -19,7 +19,9 @@
 #include "instructions.h"
 
 /* Instruction Codes */
+const icode_t i_halt = { HALT };
 const icode_t i_nop = { NOP };
+const icode_t i_dump = { DUMP };
 
 /* Status Codes */
 const stat_t s_okay = { SAOK };
