@@ -37,9 +37,6 @@ static short computeCnd(const struct eregister *);
 static bool stallM(void);
 static bool bubbleM(const forwardType *fwd);
 
-static stat_t s_okay = { SAOK };
-static icode_t i_nop = { NOP };
-
 static bool changeCC;
 
 /*

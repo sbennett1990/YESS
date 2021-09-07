@@ -55,18 +55,9 @@ typedef struct {
 	uint8_t	ic;
 } icode_t;
 
-/*
- * Determine if the given instruction code type is a specific icode.
- *
- * Parameters:
- *	it     Instruction code type
- *	ic     icode
- */
-static inline int
-icode_is(icode_t it, uint8_t ic)
-{
-	return (it.ic == ic);
-}
+extern const icode_t i_nop;
+
+int icode_is(icode_t it, uint8_t ic);
 
 
 /* Status Codes */
@@ -79,5 +70,10 @@ icode_is(icode_t it, uint8_t ic)
 typedef struct {
 	uint8_t	s;
 } stat_t;
+
+extern const stat_t s_okay;
+extern const stat_t s_halt;
+extern const stat_t s_addr;
+extern const stat_t s_inst;
 
 #endif	/* INSTRUCTIONS_H */

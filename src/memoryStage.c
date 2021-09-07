@@ -21,9 +21,6 @@ static bool mem_read(const struct mregister *);
 static bool stallW(const forwardType *);
 static bool bubbleW(void);
 
-static stat_t s_okay = { SAOK };
-static icode_t i_nop = { NOP };
-
 /*
  * Return a copy of the M register
  */

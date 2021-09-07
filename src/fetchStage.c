@@ -48,9 +48,6 @@ static bool stallF(const forwardType *);
 static bool bubbleD(const forwardType *);
 static bool stallD(const forwardType *);
 
-static stat_t s_okay = { SAOK };
-static icode_t i_nop = { NOP };
-
 /*
  * Return a copy of the F register.
  *
