@@ -26,11 +26,11 @@
 /* System Memory */
 static unsigned int *memory;
 
-static unsigned int fetch(int address, bool * memError);
-static void store(int address, unsigned int value, bool * memError);
+static unsigned int fetch(int address, bool *memError);
+static void store(int address, unsigned int data, bool *memError);
 
 /*
- * Retrieve a word from memory. If there is an error,
+ * Retrieve a word of data from memory. If there is an error,
  * *memError is set to true.
  *
  * Parameters:
@@ -40,41 +40,41 @@ static void store(int address, unsigned int value, bool * memError);
  * Return the contents of memory at address, or 0 on error.
  */
 unsigned int
-fetch(int address, bool * memError)
+fetch(int address, bool *memError)
 {
-    if (address < 0 || address >= MEMSIZE) {
-        *memError = TRUE;
-        return 0;
-    }
+	if (address < 0 || address >= MEMSIZE) {
+		*memError = TRUE;
+		return 0;
+	}
 
-    *memError = FALSE;
-    return memory[address];
+	*memError = FALSE;
+	return memory[address];
 }
 
 /*
- * Write a value (1 word) to memory. If there is an error,
+ * Write one word of data to memory. If there is an error,
  * *memError is set to true. If address isn't a valid memory
  * address, then memory isn't modified.
  *
  * Parameters:
  *	address     the word address [0..1023]
- *	value       the value to store in memory at address
+ *	data        the value to store in memory at address
  *	*memError   indicates memory write error
  */
 void
-store(int address, unsigned int value, bool * memError)
+store(int address, unsigned int data, bool *memError)
 {
-    if (address < 0 || address >= MEMSIZE) {
-        *memError = TRUE;
-        return;
-    }
+	if (address < 0 || address >= MEMSIZE) {
+		*memError = TRUE;
+		return;
+	}
 
-    *memError = FALSE;
-    memory[address] = value;
+	*memError = FALSE;
+	memory[address] = data;
 }
 
 /*
- * Read a byte of memory using it's byte address. If there is
+ * Read a byte of memory using its byte address. If there is
  * an error, *memError is set to true.
  *
  * Parameters:
@@ -109,17 +109,17 @@ getByte(int byteAddress, bool *memError)
 }
 
 /*
- * Store a 1-byte value in memory. If there is an error,
+ * Store one byte of data in memory. If there is an error,
  * *memError is set to true. If address isn't a valid memory
  * address, then memory isn't modified.
  *
  * Parameters:
  *	byteAddress    address of a byte of memory [0..4095]
- *	value          the 8-bit value to store in memory
+ *	data           the 8-bit value to store in memory
  *	*memError      memory error indicator
  */
 void
-putByte(int byteAddress, uint8_t value, bool *memError)
+putByte(int byteAddress, uint8_t data, bool *memError)
 {
 	if (byteAddress < 0 || byteAddress > HIGHBYTE) {
 		log_debug("can't put byte: invalid memory address %08x",
@@ -141,14 +141,14 @@ putByte(int byteAddress, uint8_t value, bool *memError)
 	}
 
 	// Modify the byte address of the word, store in newWord
-	unsigned int newWord = putByteNumber((byteAddress % WORDSIZE), value,
+	unsigned int newWord = putByteNumber((byteAddress % WORDSIZE), data,
 	    word);
 
 	store((byteAddress / WORDSIZE), newWord, memError);
 }
 
 /*
- * Retrieve a word from memory at the given byte address. Word accesses
+ * Retrieve a word of data from memory at the given byte address. Word accesses
  * must be aligned on a 4 byte boundary. If there is an error, *memError
  * is set to true.
  *
@@ -160,7 +160,7 @@ putByte(int byteAddress, uint8_t value, bool *memError)
  * Return the contents of memory at byte address, or 0 on error.
  */
 unsigned int
-getWord(int byteAddress, bool * memError)
+getWord(int byteAddress, bool *memError)
 {
 	// TODO: test this function!
 	if (byteAddress < 0 || byteAddress > HIGHBYTE) {
@@ -187,7 +187,7 @@ getWord(int byteAddress, bool * memError)
 }
 
 /*
- * Write a value (1 word) to memory at the given byte address. Word accesses
+ * Store one word of data in memory at the given byte address. Word accesses
  * must be aligned on a 4 byte boundary. If there is an error, *memError is
  * set to true. If address isn't a valid memory address, then memory isn't
  * modified.
@@ -195,11 +195,11 @@ getWord(int byteAddress, bool * memError)
  * Parameters:
  *	byteAddress   a byte address of memory [0..4095] that is a
  *                multiple of 4
- *	value         the word to store in memory at address
+ *	data          the word to store in memory at address
  *	*memError     indicates memory write error
  */
 void
-putWord(int byteAddress, unsigned int value, bool * memError)
+putWord(int byteAddress, unsigned int data, bool *memError)
 {
 	// TODO: test this function!
 	if (byteAddress < 0 || byteAddress > HIGHBYTE) {
@@ -217,7 +217,7 @@ putWord(int byteAddress, unsigned int value, bool * memError)
 		return;
 	}
 
-	store((byteAddress / WORDSIZE), value, memError);
+	store((byteAddress / WORDSIZE), data, memError);
 }
 
 /*
