@@ -51,7 +51,7 @@ extern const icode_t i_dump;
  * Instruction Functions (ifun's)
  */
 
-#define FNONE	0x0
+#define FNONE	0x0	/* No ifun */
 
 /* Arithmetic and Logical Instructions */
 #define ADDL	0x0
