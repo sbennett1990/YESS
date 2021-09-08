@@ -23,6 +23,8 @@
 #include "memory.h"
 #include "logger.h"
 
+int num_failed = 0;
+
 void
 clearMemory_setsallzeros(int spotcheckaddr)
 {
@@ -35,6 +37,7 @@ clearMemory_setsallzeros(int spotcheckaddr)
 
 	printf("output:\t%08x\n", result);
 	if (result != 0) {
+		num_failed++;
 		printf("===> test failed!\n");
 	}
 	if (memError) {
@@ -53,6 +56,7 @@ getByte_badaddress_setsmemerror(int byteAddr)
 
 	printf("output:\tmemError = %d\n", memError);
 	if (!memError) {
+		num_failed++;
 		printf("===> test failed!\n");
 	}
 }
@@ -68,6 +72,7 @@ getByte_badaddress_returnszero(int byteAddr)
 
 	printf("output:\t%d\n", result);
 	if (result != 0) {
+		num_failed++;
 		printf("===> test failed!\n");
 	}
 }
@@ -88,6 +93,7 @@ getByte_validinput_returnsval(int byteAddr, uint8_t val)
 
 	printf("result:\t %02x\n", result);
 	if (result != val) {
+		num_failed++;
 		printf("===> test failed!\n");
 	}
 	if (memError) {
@@ -105,6 +111,7 @@ putByte_badaddress_setsmemerror(int byteAddr)
 
 	printf("output:\tmemError = %d\n", memError);
 	if (!memError) {
+		num_failed++;
 		printf("===> test failed!\n");
 	}
 }
@@ -124,6 +131,7 @@ putByte_validinput_storesvalue(int byteAddr, uint8_t val)
 	uint8_t result = getByte(byteAddr, &memError);
 	printf("result:\tAddr 0x%03x: %02x\n", byteAddr, result);
 	if (result != val) {
+		num_failed++;
 		printf("===> test failed!\n");
 	}
 	if (memError) {
@@ -142,6 +150,7 @@ getWord_badaddress_setsmemerror(int byteAddr)
 
 	printf("output:\tmemError = %d\n", memError);
 	if (!memError) {
+		num_failed++;
 		printf("===> test failed!\n");
 	}
 }
@@ -157,6 +166,7 @@ getWord_badaddress_returnszero(int byteAddr)
 
 	printf("output:\t%d\n", result);
 	if (result != 0) {
+		num_failed++;
 		printf("===> test failed!\n");
 	}
 }
@@ -219,6 +229,8 @@ main(int argc, char **argv)
 		printf("too many args... exiting\n");
 		return 1;
 	}
+
+	initMemory();
 
 	/* begin tests */
 	printf("Test: clearMemory_setsallzeros\n\n");
@@ -293,5 +305,6 @@ main(int argc, char **argv)
 	clearMemory_setsallzeros(0);
 	clearMemory_setsallzeros(4092);
 
+	printf("\nfailed tests: %d\n", num_failed);
 	return 0;
 }
