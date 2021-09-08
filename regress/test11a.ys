@@ -1,0 +1,24 @@
+#
+#   This file tests the JE instruction
+#
+    irmovl  4, %eax
+    irmovl  3, %ecx
+    addl    %ecx, %eax
+    je   target1
+    dump 1                 #This should be executed
+    dump 1                 #This should be executed
+    irmovl  3, %eax
+    irmovl  -3, %ecx
+    addl    %ecx, %eax
+    je target2
+    dump 4                 #This shouldn't be executed
+    dump 4                 #This shouldn't be executed
+    halt
+target2:
+    dump 1                 #This should be executed
+    dump 1                 #This should be executed
+    halt                   #program will stop here
+target1:
+    nop                    #control will go here and then
+    nop                    #back to the statement after the jump
+    halt
