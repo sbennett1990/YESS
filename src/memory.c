@@ -227,7 +227,7 @@ putWord(int byteAddress, unsigned int data, bool *memError)
 void
 initMemory(void)
 {
-	if ((memory = calloc(MEMSIZE, sizeof(int))) == NULL) {
+	if ((memory = calloc(MEMSIZE, sizeof(unsigned int))) == NULL) {
 		err(1, NULL);
 	}
 }
