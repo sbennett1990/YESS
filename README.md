@@ -35,7 +35,8 @@ The options are as follows:
 
 > Produce debug messages.
 > **yess**
-> will write debug information to stderr.
+> will write debug information to
+> *stderr*.
 
 **-f** *prog.yo*
 
@@ -53,9 +54,11 @@ The options are as follows:
 
 > Verbose mode.
 > **yess**
-> will write more information to stderr (but not as much as
+> will write more information to
+> *stderr*
+> (but not as much as
 > **-d**
-> mode).
+> would).
 
 # BUILD
 
@@ -104,4 +107,4 @@ infrastructure.
 Portability could be achieved with a little effort, but that is outside the
 scope of my current goals.
 
-OpenBSD 6.7 - August 15, 2020
+OpenBSD 6.8 - August 15, 2020
