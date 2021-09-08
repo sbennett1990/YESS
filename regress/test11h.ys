@@ -1,0 +1,38 @@
+#
+#   This file tests to make sure the jumps are performed correctly 
+#   in the presence of overflow.
+#
+    irmovl 0x7fffffff, %eax
+    irmovl 0x7fffffff, %ecx
+    addl %eax, %ecx                    #positive overflow
+    jle target1                        #won't take jump 
+    dump 3
+    irmovl 0x7fffffff, %eax            #
+    irmovl 0x80000000, %ecx            #
+    subl %ecx, %eax                    #overflow
+    jl target1                         #won't take jump 
+    dump 3
+    irmovl 0x80000000, %eax
+    irmovl 0x80000000, %ecx
+    addl %ecx, %eax                    #overflow  (neg + neg = pos)
+    jg target1                         #won't take jump
+    dump 3
+    irmovl 0x80000000, %eax
+    irmovl 0x80000000, %ecx
+    addl %ecx, %eax                    #overflow  (neg + neg = pos)
+    jge target1                        #won't take jump
+    dump 3
+    irmovl 0x7fffffff, %eax
+    irmovl 0x7fffffff, %ecx
+    addl %ecx, %eax                    #overflow  (neg + neg = pos)
+    jge target2                        #will take jump  (SF = 1, OF = 1)
+    dump 4
+    halt
+target1:
+    nop
+    nop
+    dump 4
+    halt
+target2:
+    dump 3
+    halt
