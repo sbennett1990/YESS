@@ -53,7 +53,7 @@ clearDregister()
 {
 	D.stat = s_okay;
 	D.icode = i_nop;
-	D.ifun = 0;
+	D.ifun = FNONE;
 	D.rA = r_none;
 	D.rB = r_none;
 	D.valC = 0;
@@ -85,7 +85,7 @@ decodeStage(forwardType *fwd)
 	// Bubble E?
 	if (bubbleE(fwd)) {
 		// Insert a NOP
-		updateEregister(s_okay, i_nop, 0, 0, 0, 0, r_none, r_none,
+		updateEregister(s_okay, i_nop, FNONE, 0, 0, 0, r_none, r_none,
 		    r_none, r_none);
 	}
 	else {

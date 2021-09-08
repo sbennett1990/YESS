@@ -165,7 +165,7 @@ updateregs:
 
 	if (bubbleD(fwd)) {
 		/* Insert a NOP */
-		updateDregister(s_okay, i_nop, 0, r_none, r_none, 0, 0);
+		updateDregister(s_okay, i_nop, FNONE, r_none, r_none, 0, 0);
 	}
 	else if (!stallD(fwd)) {
 		/* Update D as normal */
@@ -305,7 +305,7 @@ uint8_t
 getIfun(uint8_t memByte, bool memError)
 {
 	if (memError) {
-		return 0;
+		return FNONE;
 	}
 
 	uint8_t ifun = getBits(0, 3, memByte);

@@ -56,7 +56,7 @@ clearEregister()
 {
 	E.stat = s_okay;
 	E.icode = i_nop;
-	E.ifun = 0;
+	E.ifun = FNONE;
 	E.valC = 0;
 	E.valA = 0;
 	E.valB = 0;
