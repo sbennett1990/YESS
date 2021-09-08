@@ -7,7 +7,7 @@
 
 #include <stdint.h>
 
-#define INSTR_COUNT	16	/* Possible size of the instruction set */
+#define INSTR_COUNT	16	/* Size of the instruction set */
 
 /* Instruction Code type */
 typedef struct {
@@ -15,7 +15,7 @@ typedef struct {
 } icode_t;
 
 /*
- * Instruction Codes (icode)
+ * Instruction Codes (icode's)
  */
 #define HALT	0x0
 #define NOP	0x1
@@ -36,7 +36,7 @@ extern const icode_t i_nop;
 extern const icode_t i_dump;
 
 /*
- * Instruction Functions (ifun)
+ * Instruction Functions (ifun's)
  */
 
 /* Arithmetic and Logical Instructions */
@@ -45,14 +45,14 @@ extern const icode_t i_dump;
 #define ANDL	0x2
 #define XORL	0x3
 
-/* Conditional Move Instructions */
-#define RRMOVLF	0x0
-#define CMOVLE	0x1
-#define CMOVL	0x2
-#define CMOVE	0x3
-#define CMOVNE	0x4
-#define CMOVGE	0x5
-#define CMOVG	0x6
+/* Conditional Move Instructions (Register -> Register) */
+#define RRMOVLF	0x0	/* Move Unconditionally */
+#define CMOVLE	0x1	/* Move When Less or Equal */
+#define CMOVL	0x2	/* Move When Less */
+#define CMOVE	0x3	/* Move When Equal */
+#define CMOVNE	0x4	/* Move When Not Equal */
+#define CMOVGE	0x5	/* Move When Greater or Equal */
+#define CMOVG	0x6	/* Move When Greater */
 
 /* Jump Instructions */
 #define JMP	0x0	/* Jump Unconditionally */
@@ -75,7 +75,6 @@ typedef struct {
 /*
  * Status Codes
  */
-
 #define SAOK	1	/* Normal operation */
 #define SHLT	2	/* Halt instruction encountered */
 #define SADR	3	/* Bad address encountered */
