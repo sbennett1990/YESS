@@ -1,6 +1,8 @@
 # sed(1) script to "fix" a dump instruction.
 # To get dump, place the following instruction into your assembly:
 #
+# call $0x01 # dump
+# call $0x05 # dump
 # call $0x07 # dump
 #
 # This script will turn it into a dump instruction that the yess
