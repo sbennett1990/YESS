@@ -14,7 +14,9 @@ typedef struct {
 	uint8_t	ic;
 } icode_t;
 
-// Instruction Codes (icode)
+/*
+ * Instruction Codes (icode)
+ */
 #define HALT	0x0
 #define NOP	0x1
 #define RRMOVL	0x2	/* Move Operation: Register  -> Register */
@@ -33,7 +35,9 @@ extern const icode_t i_halt;
 extern const icode_t i_nop;
 extern const icode_t i_dump;
 
-// Instruction Functions (ifun)
+/*
+ * Instruction Functions (ifun)
+ */
 
 /* Arithmetic and Logical Instructions */
 #define ADDL	0x0
@@ -68,7 +72,10 @@ typedef struct {
 	uint8_t	s;
 } stat_t;
 
-/* Status Codes */
+/*
+ * Status Codes
+ */
+
 #define SAOK	1	/* Normal operation */
 #define SHLT	2	/* Halt instruction encountered */
 #define SADR	3	/* Bad address encountered */
