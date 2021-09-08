@@ -1,0 +1,10 @@
+                      | # Execution begins at address 0
+  0x000:              | 	.pos 0
+  0x000: 308400040000 | init:	irmovl Stack, %esp  	# Set up Stack pointer
+  0x006: 308500040000 | 	irmovl Stack, %ebp  	# Set up base pointer
+  0x00c: 7024000000   | 	jmp Main		# Execute main program
+                     |  # Error here: non-space character
+                      | # Array of 2 elements
+  0x014:              | 	.align 4
+  0x014: 0d000000     | array:	.long 0xd
+  0x018: c0000000     | 	.long 0xc0
