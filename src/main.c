@@ -144,8 +144,6 @@ main(int argc, char **argv)
 	if (fflag && !load(sourcefile)) {
 		log_warn("error loading the file");
 		if (sflag) {
-			dumpProgramRegisters();
-			dumpProcessorRegisters();
 			dumpMemory();
 		}
 		log_debug("exiting");
