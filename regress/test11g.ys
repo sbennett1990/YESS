@@ -1,0 +1,17 @@
+#
+#   This file tests the JMP instruction.
+#
+    nop
+    nop
+    jmp target1
+    dump 4            #won't be executed
+target1:
+    dump 1
+    jmp target2
+    dump 4           #won't be executed
+target2:
+    dump 1
+    jmp target3
+target3:
+    dump 1
+    halt
