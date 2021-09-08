@@ -81,7 +81,7 @@ Optionally install to
 
 # SEE ALSO
 
-y86\_obj\_code(7)
+y86\_obj\_code(5)
 
 Randal E. Bryant,
 David R. O'Hallaron,
