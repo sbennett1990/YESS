@@ -4,7 +4,7 @@ YESS?=		~/bin/yess
 
 YO_ERROR_TESTS=	error1 error2 error3 error4
 
-YO_TEST_PROGS=	test12b test12c test12g
+YO_TEST_PROGS=	test12b test12c test12d test12g
 
 .for y in ${YO_ERROR_TESTS}
 REGRESS_TARGETS+=	run-errors-$y
