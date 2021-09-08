@@ -143,6 +143,11 @@ main(int argc, char **argv)
 	/* load program or memory image into yess memory */
 	if (fflag && !load(sourcefile)) {
 		log_warn("error loading the file");
+		if (sflag) {
+			dumpProgramRegisters();
+			dumpProcessorRegisters();
+			dumpMemory();
+		}
 		log_debug("exiting");
 		goto errorOut;
 	}
