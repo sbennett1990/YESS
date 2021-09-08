@@ -1,0 +1,24 @@
+#
+#   This file tests the JL instruction
+#
+    irmovl  4, %eax
+    irmovl  -5, %ecx
+    addl    %ecx, %eax     #result is less than 0
+    jl  target1
+    dump 4                 #This shouldn't be executed
+    dump 4                 #This shouldn't be executed
+    halt
+target1:
+    dump 1                 #This should be executed
+    dump 1                 #This should be executed
+    irmovl  4, %eax
+    irmovl  -3, %ecx
+    addl    %ecx, %eax     #result is greater than 0
+    jl target2
+    dump 1                 #This should be executed
+    dump 1                 #This should be executed
+    halt
+target2:
+    nop                    #control will be transferred here 
+    nop                    #and then go back
+    halt

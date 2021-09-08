@@ -4,7 +4,7 @@ YESS?=		~/bin/yess
 
 YO_ERROR_TESTS=	error1 error2 error3 error4
 
-YO_TEST_PROGS=	test11a test11b \
+YO_TEST_PROGS=	test11a test11b test11c \
 		test12a test12b test12c test12d test12e test12f test12g test12h
 
 .for y in ${YO_ERROR_TESTS}
