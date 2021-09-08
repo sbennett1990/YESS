@@ -95,7 +95,7 @@ fetchStage(const forwardType * const fwd)
 	bool memError;
 	uint8_t data = getByte(f_pc, &memError);
 	if (memError) {
-		stat.s = SADR;
+		stat = s_addr;
 	}
 
 	icode = getIcode(data, memError);
@@ -112,7 +112,7 @@ fetchStage(const forwardType * const fwd)
 
     if (instructionValid(icode)) {
         if (icode_is(icode, HALT)) {
-            stat.s = SHLT;
+            stat = s_halt;
         }
 
         // Get register ids if necessary
@@ -120,7 +120,7 @@ fetchStage(const forwardType * const fwd)
 		// try to get rA and rB from the next byte of memory
 		data = getByte(f_pc + 1, &memError);
 		if (memError) {
-			stat.s = SADR;
+			stat = s_addr;
 		}
 
 		rA = getRegA(data, memError);
@@ -137,12 +137,12 @@ fetchStage(const forwardType * const fwd)
 
             valC = getValC(tempPC, &memError);
             if (memError) {
-                stat.s = SADR;
+                stat = s_addr;
             }
         }
     }
     else {
-        stat.s = SINS;
+        stat = s_inst;
         F.predPC = F.predPC + 1;
     }
 
@@ -283,7 +283,7 @@ pcIncrement(unsigned short f_pc, icode_t icode)
 icode_t
 getIcode(uint8_t memByte, bool memError)
 {
-	icode_t icode = { NOP };
+	icode_t icode = i_nop;
 	if (memError) {
 		return icode;
 	}

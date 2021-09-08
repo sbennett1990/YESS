@@ -372,7 +372,7 @@ performOpl()
 		break;
 
 	default:
-		E.stat.s = SINS;
+		E.stat = s_inst;
 		log_info("invalid ifun %d encountered executing OPL", E.ifun);
 		break;
 	}
