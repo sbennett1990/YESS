@@ -305,6 +305,8 @@ main(int argc, char **argv)
 	clearMemory_setsallzeros(0);
 	clearMemory_setsallzeros(4092);
 
+	destroyMemory();
+
 	printf("\nfailed tests: %d\n", num_failed);
 	return 0;
 }
