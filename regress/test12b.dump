@@ -1,0 +1,16 @@
+%eax: 0000001c %ecx: 00000007 %edx: 00000000 %ebx: 00000004
+%esp: 00000000 %ebp: 00000000 %esi: 00000000 %edi: 00000000
+
+CC - ZF: 0 SF: 0 OF: 0
+F - predPC: 0000001c
+D - stat: 2 icode: 0 ifun: 0 rA: f rB: f valC: 00000000  valP: 0000001c
+E - stat: 2 icode: 0 ifun: 0 valC: 00000000 valA: 00000000 valB: 00000000
+    dstE: f dstM: f srcA: f srcB: f
+M - stat: 2 icode: 0 Cnd: 0 valE: 00000000 valA: 00000000 dstE: f dstM: f
+W - stat: 1 icode: c valE: 00000007 valM: 00000000 dstE: f dstM: f
+
+000: 0003f130 f0300000 0000001c 00003050 31600000 000007c0 00000000 00000004 
+020: 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000 *
+
+
+Total clock cycles = 11
