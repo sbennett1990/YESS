@@ -1,0 +1,34 @@
+#
+#   This file tests the JGE instruction
+#
+    irmovl  4, %eax
+    irmovl  -5, %ecx
+    addl    %ecx, %eax     #result is less than 0
+    jge   target1          #don't take branch
+    dump 1                 #This should be executed
+    dump 1                 #This should be executed
+    irmovl 4, %eax
+    irmovl -4, %ecx
+    addl    %ecx, %eax     #result is equal to 0
+    jge  target2           #take branch   
+    dump 4
+    dump 4
+    halt
+target1:
+    nop                    #control will be transferred
+    nop                    #here and then back to dump 1
+    halt
+target2:    
+    dump 1                 #This should be executed
+    dump 1                 #This should be executed
+    irmovl  4, %eax
+    irmovl  -3, %ecx
+    addl    %ecx, %eax     #result is greater than 0
+    jge target3
+    dump 4                 #This shouldn't be executed
+    dump 4                 #This shouldn't be executed
+    halt
+target3:
+    dump 1                 #This should be executed
+    dump 1                 #This should be executed
+    halt
