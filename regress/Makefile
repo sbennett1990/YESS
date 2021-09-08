@@ -2,7 +2,7 @@
 YESS?=		~/bin/yess
 #YESS?=		../src/obj/yess
 
-YO_ERROR_TESTS=	error1 error2 error3
+YO_ERROR_TESTS=	error1 error2 error3 error4
 
 YO_TEST_PROGS=
 
