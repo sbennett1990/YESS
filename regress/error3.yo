@@ -1,0 +1,10 @@
+                      | # Error Case: instruction too short
+  0x000:              | 	.pos 0
+  0x000: 30f400040000 | init:	irmovl Stack, %esp  	# Set up Stack pointer
+  0x006: 30f500040000 | 	irmovl Stack, %ebp  	# Set up base pointer
+  0x00c: 702400000    | 	jmp Main		# instruction not long enough
+                      |
+                      | # Array of 2 elements
+  0x014:              | 	.align 4
+  0x014: 0d000000     | array:	.long 0xd
+  0x018: c0000000     | 	.long 0xc0
