@@ -247,5 +247,7 @@ destroyMemory(void)
 void
 clearMemory(void)
 {
-	memset(memory, 0, sizeof(memory));
+	for (int i = 0; i < MEMSIZE; i++) {
+		memory[i] = 0;
+	}
 }
