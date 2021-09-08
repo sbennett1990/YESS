@@ -11,6 +11,10 @@ install: yess
 SUBDIR+= test
 #SUBDIR+= contrib
 
+regression-tests:
+	@echo '===> running regression tests...'
+	@cd ${.CURDIR}/regress && ${MAKE} depend && exec ${MAKE} regress
+
 MAN=	yess.1
 README=	README.md
 
