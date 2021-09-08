@@ -1,4 +1,4 @@
-# Makefile for yess regression tests
+# Makefile for yess unit tests
 
 PROGS=     memory-test registers-test tools-test
 
@@ -26,7 +26,7 @@ all: beforebuild ${PROG} ${PROGS} _SUBDIRUSE
 
 # Just copy yess sources here to build tests
 beforebuild:
-	@echo 'preparing to build regression tests...'
+	@echo 'preparing to build unit tests...'
 .for s in ${HEADERS}
 	cp ${SRCDIR}/$s .
 .endfor
