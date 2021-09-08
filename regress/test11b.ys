@@ -1,0 +1,34 @@
+#
+#   This file tests the JLE instruction
+#
+    irmovl  4, %eax
+    irmovl  -5, %ecx
+    addl    %ecx, %eax     #result is less than 0
+    jle   target1
+    dump 1                 #This shouldn't be executed
+    dump 1                 #This shouldn't be executed
+    halt
+target1:
+    dump 4                 #This should be executed
+    dump 4                 #This should be executed
+    irmovl  4, %eax
+    irmovl  -4, %ecx
+    addl    %ecx, %eax     #result is equal to 0
+    jle target2
+    dump 1                 #This shouldn't be executed
+    dump 1                 #This shouldn't be executed
+    halt
+target2:
+    dump 4                 #This should be executed
+    dump 4                 #This should be executed
+    irmovl  5, %eax
+    irmovl  -4, %ecx
+    addl  %ecx, %eax       #result is greater than 0
+    jle target3
+    dump 4                 #This should be executed
+    dump 4                 #This should be executed
+    halt
+target3:
+    nop                    #control will branch here and
+    nop                    #then back to dump 4
+    halt
