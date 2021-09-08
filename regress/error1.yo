@@ -1,4 +1,4 @@
-                      | # Execution begins at address 0
+                      | # Error Case: missing one space
   0x000:              | 	.pos 0
   0x000: 308400040000 | init:	irmovl Stack, %esp  	# Set up Stack pointer
   0x006: 308500040000 | 	irmovl Stack, %ebp  	# Set up base pointer
