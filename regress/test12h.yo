@@ -1,6 +1,6 @@
                       | 
                       | #  
-                      | #   This program tests the stall required after a mrmovl instruction
+                      | #   This program tests the stall required after popl/pushl instruction
                       | #
   0x000: 30f400010000 |     irmovl Stack, %esp
   0x006: 30f003000000 |     irmovl 3, %eax
