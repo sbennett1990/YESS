@@ -1,0 +1,34 @@
+#
+#    This file tests the call and return instructions
+#
+    .pos 0
+    irmovl Stack, %esp
+    irmovl Stack, %ebp
+    jmp Main
+#
+Main:   irmovl $11, %ecx
+        pushl %ecx                  #push parameter
+        call AddOne                 #result is returned in %eax
+        popl %ecx                   #pop parameter
+        dump 7
+        irmovl $13, %ecx
+        pushl %ecx
+        call AddOne
+        popl %ecx
+        dump 7
+        halt
+#
+AddOne: pushl %ebp
+        rrmovl %esp, %ebp
+        mrmovl 8(%ebp), %eax         #eax set to parameter
+        irmovl 1, %edx
+        addl %edx, %eax              
+        rrmovl %ebp, %esp            #eax set to the result
+        popl %ebp
+        ret                          #need 3 nops since no stalling
+        nop
+        nop
+        nop
+        .pos 0x100
+Stack:
+
