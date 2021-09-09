@@ -1,0 +1,98 @@
+#tests forwarding when the ESP register is involved
+    irmovl Stack, %esp
+    irmovl 0xabc, %eax
+    pushl %eax      # should be xabc
+    popl  %ecx      # should be xabc, Stack pointer should be 0x400
+    dump 5        
+#
+    irmovl Stack, %esp
+    irmovl 0xabc, %eax
+    irmovl 0xdef, %ebx
+    pushl %eax       # %eax = xabc
+    popl  %ecx       # %ecx = xabc
+    pushl %ebx       # %ebx = xdef
+    popl  %edx       # %edx = xdef
+    dump 5           # %esp = x400
+#
+    irmovl Stack, %esp
+    irmovl 0xabc, %eax
+    irmovl 0xdef, %ecx
+    irmovl 0x111, %ebx
+    pushl %eax       # %eax = 0xabc
+    nop
+    pushl %ecx       # %ecx = 0xdef
+    nop
+    pushl %ebx       # %ebx = 0x111
+    nop
+    popl  %edx       # %edx = 0x111
+    nop
+    popl  %esi       # %esi = 0xdef
+    nop
+    popl  %edi       # %edi = 0xabc
+    dump 5           # %esp = 0x100 
+#
+    irmovl 0, %eax
+    irmovl 0, %ecx
+    irmovl 0, %edx
+    irmovl 0, %ebx
+    irmovl 0, %edi
+    irmovl 0, %esi
+    irmovl Stack, %esp
+    pushl %esp             #This should push original value of esp (0x400)
+    nop
+    popl %eax
+    dump 1                 #eax should be 0x400
+#
+    irmovl 0xabc, %eax
+    irmovl 0, %ecx
+    irmovl 0, %edx
+    irmovl 0, %ebx
+    irmovl 0, %edi
+    irmovl 0, %esi
+    irmovl Stack, %esp
+    pushl %eax             
+    popl %esp              #This should set esp to value pushed to memory (abc)
+    dump 1
+#
+    irmovl 0, %eax
+    irmovl 0, %ecx
+    irmovl 0, %edx
+    irmovl 0, %ebx
+    irmovl 0, %edi
+    irmovl 0, %esi
+    irmovl Stack, %esp
+    pushl %esp             #pushes original value of esp (Stack)      
+    pushl %esp             #pushes Stack - 4 
+    pushl %esp             #pushes Stack - 8 
+    popl %esp              
+    nop
+    popl %esp            
+    nop
+    popl %esp              
+    dump 5
+##
+    irmovl -4, %eax
+    irmovl Stack, %esp
+    addl %eax, %esp
+    pushl %esp            #pushes Stack - 4
+    popl  %eax            # %eax should be Stack - 4
+    dump 1
+##
+    irmovl Stack, %esp
+    irmovl 0xabc, %eax
+    pushl %eax
+    irmovl 0xdef, %eax
+    pushl %eax
+    irmovl 4, %eax
+    addl %eax, %esp
+    popl %eax            #eax should be abc
+    dump 5
+    halt
+    nop
+    nop
+    nop
+    nop
+    .pos 0x400
+Stack:  .long 0
+        .long 0
+        .long 0
