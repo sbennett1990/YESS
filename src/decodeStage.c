@@ -25,11 +25,11 @@
  */
 static struct dregister D;
 
-static rregister getSrcA(const struct dregister *);
-static rregister getSrcB(const struct dregister *);
-static rregister getDstE(const struct dregister *);
-static rregister getDstM(const struct dregister *);
-static unsigned int selectFwdA(const struct dregister *, rregister srcA,
+static rregister getSrcA(const struct dregister * const);
+static rregister getSrcB(const struct dregister * const);
+static rregister getDstE(const struct dregister * const);
+static rregister getDstM(const struct dregister * const);
+static unsigned int selectFwdA(const struct dregister * const, rregister srcA,
     const forwardType *);
 static unsigned int forwardB(rregister srcB, const forwardType *);
 static bool stallE(void);
@@ -127,7 +127,7 @@ decodeStage(forwardType *fwd)
  * @return register id needed
  */
 rregister
-getSrcA(const struct dregister *dreg)
+getSrcA(const struct dregister * const dreg)
 {
 	rregister srcA;
 
@@ -158,7 +158,7 @@ getSrcA(const struct dregister *dreg)
  * @return register id needed
  */
 rregister
-getSrcB(const struct dregister *dreg)
+getSrcB(const struct dregister * const dreg)
 {
 	rregister srcB;
 
@@ -189,7 +189,7 @@ getSrcB(const struct dregister *dreg)
  * @return Destination register id
  */
 rregister
-getDstE(const struct dregister *dreg)
+getDstE(const struct dregister * const dreg)
 {
 	rregister dstE;
 
@@ -220,7 +220,7 @@ getDstE(const struct dregister *dreg)
  * @return Destination register id
  */
 rregister
-getDstM(const struct dregister *dreg)
+getDstM(const struct dregister * const dreg)
 {
 	rregister dstM = r_none;
 
@@ -240,7 +240,7 @@ getDstM(const struct dregister *dreg)
  * @return Value (valA) to send to E register
  */
 unsigned int
-selectFwdA(const struct dregister *dreg, rregister srcA,
+selectFwdA(const struct dregister * const dreg, rregister srcA,
     const forwardType *fwd)
 {
 	if (icode_is(dreg->icode, CALL) || icode_is(dreg->icode, JXX)) {

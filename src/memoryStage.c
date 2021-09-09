@@ -15,10 +15,10 @@
  */
 static struct mregister M;
 
-static unsigned int select_memory_addr(const struct mregister *);
-static bool mem_write(const struct mregister *);
-static bool mem_read(const struct mregister *);
-static bool stallW(const forwardType *);
+static unsigned int select_memory_addr(const struct mregister * const);
+static bool mem_write(const struct mregister * const);
+static bool mem_read(const struct mregister * const);
+static bool stallW(const forwardType * const);
 static bool bubbleW(void);
 
 /*
@@ -116,7 +116,7 @@ memoryStage(forwardType *fwd)
  * @return The memory address. Default is NOADDRESS.
  */
 unsigned int
-select_memory_addr(const struct mregister *mreg)
+select_memory_addr(const struct mregister * const mreg)
 {
 	unsigned int address;
 
@@ -144,7 +144,7 @@ select_memory_addr(const struct mregister *mreg)
  * Should data be read from memory?
  */
 bool
-mem_read(const struct mregister *mreg)
+mem_read(const struct mregister * const mreg)
 {
 	switch (mreg->icode.ic) {
 	case MRMOVL:
@@ -161,7 +161,7 @@ mem_read(const struct mregister *mreg)
  * Should data (valA) be written to memory?
  */
 bool
-mem_write(const struct mregister *mreg)
+mem_write(const struct mregister * const mreg)
 {
 	switch (mreg->icode.ic) {
 	case RMMOVL:
@@ -180,7 +180,7 @@ mem_write(const struct mregister *mreg)
  * @param status Holds values of statuses forwarded from later stages
  */
 bool
-stallW(const forwardType *fwd)
+stallW(const forwardType * const fwd)
 {
 	if (fwd->W_stat.s == SADR
 	    || fwd->W_stat.s == SINS
