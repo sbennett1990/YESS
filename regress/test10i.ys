@@ -1,0 +1,40 @@
+#This file tests to make sure the correct value is forwarded
+    irmovl 3, %eax
+    irmovl 4, %eax
+    rrmovl %eax, %ecx
+    dump 1              # %eax, %ecx should both be 4
+#
+    irmovl 5, %ecx
+    irmovl 4, %eax
+    irmovl 5, %eax
+    addl %ecx, %eax
+    dump 1              # %eax should both be 10
+#
+    irmovl Data, %eax
+    mrmovl 0(%eax), %eax
+    irmovl 5, %eax
+    rrmovl %eax, %ecx   # %eax, %ecx should both be 5
+    dump 1
+#
+    irmovl Data, %eax
+    irmovl 5, %ecx
+    mrmovl 0(%eax), %ecx
+    nop
+    rrmovl %ecx, %edx   # %edx, %ecx should both be 6
+    dump 1
+#
+    irmovl 5, %edx
+    irmovl Data, %eax
+    irmovl 5, %ecx
+    mrmovl 0(%eax), %ecx
+    nop
+    addl %edx, %ecx   # %ecx should 11 (0xb)
+    dump 1
+#
+    halt
+    nop
+    nop
+    nop
+    nop
+    .align 4
+Data: .long 6
