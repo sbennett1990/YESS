@@ -15,7 +15,7 @@
  */
 static struct mregister M;
 
-static unsigned int memory_addr(const struct mregister *);
+static unsigned int select_memory_addr(const struct mregister *);
 static bool mem_write(const struct mregister *);
 static bool mem_read(const struct mregister *);
 static bool stallW(const forwardType *);
@@ -76,7 +76,8 @@ memoryStage(forwardType *fwd)
 	bool memError = FALSE;
 
 	{
-		unsigned int memaddress = memory_addr(&M);
+		unsigned int memaddress = select_memory_addr(&M);
+
 		// read data from memory?
 		if (mem_read(&M)) {
 			valM = getWord(memaddress, &memError);
@@ -115,9 +116,9 @@ memoryStage(forwardType *fwd)
  * @return The memory address. Default is NOADDRESS.
  */
 unsigned int
-memory_addr(const struct mregister *mreg)
+select_memory_addr(const struct mregister *mreg)
 {
-	unsigned int address = NOADDRESS;
+	unsigned int address;
 
 	switch (mreg->icode.ic) {
 	case RMMOVL:
