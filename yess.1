@@ -63,24 +63,25 @@ will write more information to
 .Fl d
 would).
 .El
-.Sh BUILD
-Making the obj directory first will keep the
-.Pa src
-directory clean:
-.Bd -literal -offset indent
-$ cd src
-$ make obj && make
-.Ed
+.Sh BUILD AND INSTALL
+To build
+.Nm :
+.Pp
+.Dl $ make yess
 .Pp
 The
 .Nm
 executable is now at
-.Pa obj/yess .
+.Pa src/obj/yess .
 .Pp
-Optionally install to
+To install locally to
 .Pa ~/bin :
 .Pp
 .Dl $ make install
+.Pp
+To run the regression test suite:
+.Pp
+.Dl $ make regression-tests
 .Sh SEE ALSO
 .Xr y86_obj_code 5
 .Rs

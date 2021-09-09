@@ -60,24 +60,26 @@ The options are as follows:
 > **-d**
 > would).
 
-# BUILD
+# BUILD AND INSTALL
 
-Making the obj directory first will keep the
-*src*
-directory clean:
+To build
+**yess**:
 
-	$ cd src
-	$ make obj && make
+	$ make yess
 
 The
 **yess**
 executable is now at
-*obj/yess*.
+*src/obj/yess*.
 
-Optionally install to
+To install locally to
 *~/bin*:
 
 	$ make install
+
+To run the regression test suite:
+
+	$ make regression-tests
 
 # SEE ALSO
 
