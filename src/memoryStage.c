@@ -31,8 +31,7 @@ getMregister()
 }
 
 /*
- * Clear M register then initialize its icode to NOP and
- * its stat to SAOK.
+ * Clear M register then initialize its icode to NOP and its stat to SAOK.
  */
 void
 clearMregister()
@@ -44,6 +43,22 @@ clearMregister()
 	M.valA = 0;
 	M.dstE = r_none;
 	M.dstM = r_none;
+}
+
+/*
+ * Update the values in the M register.
+ */
+void
+updateMRegister(stat_t stat, icode_t icode, unsigned int Cnd,
+    unsigned int valE, unsigned int valA, rregister dstE, rregister dstM)
+{
+	M.stat = stat;
+	M.icode = icode;
+	M.Cnd = Cnd;
+	M.valE = valE;
+	M.valA = valA;
+	M.dstE = dstE;
+	M.dstM = dstM;
 }
 
 /*
@@ -92,22 +107,6 @@ memoryStage(forwardType *fwd)
 		 */
 		updateWRegister(stat, M.icode, M.valE, valM, M.dstE, M.dstM);
 	}
-}
-
-/*
- * Update the values in the M register.
- */
-void
-updateMRegister(stat_t stat, icode_t icode, unsigned int Cnd,
-    unsigned int valE, unsigned int valA, rregister dstE, rregister dstM)
-{
-	M.stat = stat;
-	M.icode = icode;
-	M.Cnd = Cnd;
-	M.valE = valE;
-	M.valA = valA;
-	M.dstE = dstE;
-	M.dstM = dstM;
 }
 
 /*

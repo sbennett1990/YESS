@@ -27,8 +27,8 @@ struct mregister {
 
 struct mregister getMregister(void);
 void clearMregister(void);
-void memoryStage(forwardType *);
 void updateMRegister(stat_t stat, icode_t icode, unsigned int Cnd,
     unsigned int valE, unsigned int valA, rregister dstE, rregister dstM);
+void memoryStage(forwardType *);
 
 #endif	/* MEMORYSTAGE_H */

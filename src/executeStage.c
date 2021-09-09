@@ -67,6 +67,26 @@ clearEregister()
 }
 
 /*
+ * Update the values in the E register.
+ */
+void
+updateEregister(stat_t stat, icode_t icode, unsigned int ifun,
+    unsigned int valC, unsigned int valA, unsigned int valB, rregister dstE,
+    rregister dstM, rregister srcA, rregister srcB)
+{
+	E.stat = stat;
+	E.icode = icode;
+	E.ifun = ifun;
+	E.valC = valC;
+	E.valA = valA;
+	E.valB = valB;
+	E.dstE = dstE;
+	E.dstM = dstM;
+	E.srcA = srcA;
+	E.srcB = srcB;
+}
+
+/*
  * Perform the operation based on the instruction.
  * Compute e_Cnd and dstE and update the values in the M
  * register.
@@ -113,26 +133,6 @@ executeStage(forwardType *fwd)
 		updateMRegister(E.stat, E.icode, e_Cnd, valE, E.valA,
 		    dstE, dstM);
 	}
-}
-
-/*
- * Update the values in the E register.
- */
-void
-updateEregister(stat_t stat, icode_t icode, unsigned int ifun,
-    unsigned int valC, unsigned int valA, unsigned int valB, rregister dstE,
-    rregister dstM, rregister srcA, rregister srcB)
-{
-	E.stat = stat;
-	E.icode = icode;
-	E.ifun = ifun;
-	E.valC = valC;
-	E.valA = valA;
-	E.valB = valB;
-	E.dstE = dstE;
-	E.dstM = dstM;
-	E.srcA = srcA;
-	E.srcB = srcB;
 }
 
 /*

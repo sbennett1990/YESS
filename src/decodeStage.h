@@ -38,8 +38,8 @@ struct dregister {
 
 struct dregister getDregister(void);
 void clearDregister(void);
-void decodeStage(forwardType *);
 void updateDregister(stat_t stat, icode_t icode, unsigned int ifun,
     rregister rA, rregister rB, unsigned int valC, unsigned short valP);
+void decodeStage(forwardType *);
 
 #endif	/* DECODESTAGE_H */

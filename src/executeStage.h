@@ -28,12 +28,13 @@ struct eregister {
 	rregister srcB;		/* Program Register */
 };
 
+void initFuncPtrArray(void);
 
 struct eregister getEregister(void);
 void clearEregister(void);
-void executeStage(forwardType *);
-void initFuncPtrArray(void);
 void updateEregister(stat_t stat, icode_t icode, unsigned int ifun,
     unsigned int valC, unsigned int valA, unsigned int valB, rregister dstE,
     rregister dstM, rregister srcA, rregister srcB);
+void executeStage(forwardType *);
+
 #endif	/* EXECUTESTAGE_H */

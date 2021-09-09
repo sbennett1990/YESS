@@ -61,6 +61,31 @@ clearDregister()
 }
 
 /*
+ * Update the values in the D register.
+ *
+ * Parameters:
+ *	stat     Status code from Fetch Stage
+ *	icode    Instruction Code from Fetch Stage
+ *	ifun     Instruction Function from Fetch Stage
+ *	rA       Program Register A from icode
+ *	rB       Program Register B from icode
+ *	valC     Constant word from icode
+ *	valP     Address of next sequential instruction in memory
+ */
+void
+updateDregister(stat_t stat, icode_t icode, unsigned int ifun,
+    rregister rA, rregister rB, unsigned int valC, unsigned short valP)
+{
+	D.stat = stat;
+	D.icode = icode;
+	D.ifun = ifun;
+	D.rA = rA;
+	D.rB = rB;
+	D.valC = valC;
+	D.valP = valP;
+}
+
+/*
  * Read up to two operands from the register file, giving values
  * to valA and/or valB.
  *
@@ -93,31 +118,6 @@ decodeStage(forwardType *fwd)
 		updateEregister(D.stat, D.icode, D.ifun, D.valC, valA, valB,
 		    dstE, dstM, srcA, srcB);
 	}
-}
-
-/*
- * Update the values in the D register.
- *
- * Parameters:
- *	stat     Status code from Fetch Stage
- *	icode    Instruction Code from Fetch Stage
- *	ifun     Instruction Function from Fetch Stage
- *	rA       Program Register A from icode
- *	rB       Program Register B from icode
- *	valC     Constant word from icode
- *	valP     Address of next sequential instruction in memory
- */
-void
-updateDregister(stat_t stat, icode_t icode, unsigned int ifun,
-    rregister rA, rregister rB, unsigned int valC, unsigned short valP)
-{
-	D.stat = stat;
-	D.icode = icode;
-	D.ifun = ifun;
-	D.rA = rA;
-	D.rB = rB;
-	D.valC = valC;
-	D.valP = valP;
 }
 
 /*

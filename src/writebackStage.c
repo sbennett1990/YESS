@@ -27,8 +27,7 @@ getWregister()
 }
 
 /*
- * Clear the W register then initialize its icode to NOP and
- * its stat to SAOK.
+ * Clear W register then initialize its icode to NOP and its stat to SAOK.
  */
 void
 clearWregister()
@@ -39,6 +38,29 @@ clearWregister()
 	W.valM = 0;
 	W.dstE = r_none;
 	W.dstM = r_none;
+}
+
+/*
+ * Update the values in the W register.
+ *
+ * Parameters:
+ *	stat     Status (?)
+ *	icode    Instruction Code from the M register
+ *	valE     Value destined for program register 'E'
+ *	valM     Value destined for program register 'M', if applicable
+ *	dstE     Destination program register 'E', from the M register
+ *	dstM     Destination program register 'M', from the M register
+ */
+void
+updateWRegister(stat_t stat, icode_t icode, unsigned int valE,
+    unsigned int valM, rregister dstE, rregister dstM)
+{
+	W.stat = stat;
+	W.icode = icode;
+	W.valE = valE;
+	W.valM = valM;
+	W.dstE = dstE;
+	W.dstM = dstM;
 }
 
 /*
@@ -106,27 +128,4 @@ writebackStage(forwardType *fwd, int *dump)
 	setRegister(W.dstM, W.valM);
 
 	return 1;
-}
-
-/*
- * Update the values in the W register.
- *
- * Parameters:
- *	stat     Status (?)
- *	icode    Instruction Code from the M register
- *	valE     Value destined for program register 'E'
- *	valM     Value destined for program register 'M', if applicable
- *	dstE     Destination program register 'E', from the M register
- *	dstM     Destination program register 'M', from the M register
- */
-void
-updateWRegister(stat_t stat, icode_t icode, unsigned int valE,
-    unsigned int valM, rregister dstE, rregister dstM)
-{
-	W.stat = stat;
-	W.icode = icode;
-	W.valE = valE;
-	W.valM = valM;
-	W.dstE = dstE;
-	W.dstM = dstM;
 }
