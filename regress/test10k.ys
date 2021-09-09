@@ -1,0 +1,19 @@
+#
+#   test exception handling
+#
+    irmovl $-3, %eax
+    irmovl addr, %ecx
+    nop                      #need nop until stalls are implemented
+    mrmovl 0(%ecx), %ecx     #%ecx is set to 0xffffffff
+    nop
+    mrmovl 0(%ecx), %edx     #this will cause a memory error
+    andl %eax, %eax          #shouldn't set condition codes
+    dump 1                   #won't be executed because of the error
+    halt
+    nop
+    nop
+    nop
+    nop
+#
+    .align 4
+addr:  .long 0xffffffff
