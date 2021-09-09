@@ -1,0 +1,19 @@
+#
+#   test exception handling
+#
+    irmovl $-3, %eax
+    irmovl addr, %ecx
+    nop                      #need nop until stalls are implemented
+    mrmovl 0(%ecx), %ecx     #this causes a memory error because
+                             #the value in %ecx isn't a multiple of 4
+    nop
+    mrmovl 0(%ecx), %edx     #the rest of this code won't 
+    andl %eax, %eax          #change the state of the processor                            
+    dump 1                   #
+    halt
+    nop
+    nop
+    nop
+    nop
+#
+addr:  .long 0x4
