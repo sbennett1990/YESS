@@ -72,7 +72,7 @@ void
 memoryStage(forwardType *fwd)
 {
 	stat_t stat = M.stat;
-	unsigned int valM = NOADDRESS;	/* value read from memory */
+	unsigned int valM = 0;	/* the data read from memory */
 	bool memError = FALSE;
 
 	{
