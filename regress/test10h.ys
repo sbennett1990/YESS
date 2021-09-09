@@ -1,0 +1,96 @@
+# This tests forwarding to valB when the target instruction is a
+# mrmovl instruction.
+    irmovl Data, %eax
+    mrmovl 0(%eax), %ecx    #irmovl to mrmovl
+    dump 1                  # %eax=Data, %ecx=m[Data]
+#
+    irmovl 0, %eax
+    irmovl 0, %ecx
+    irmovl Data, %eax
+    nop
+    mrmovl 0(%eax), %ecx    #irmovl to mrmovl
+    dump 1                  # %eax=Data, %ecx=m[Data]
+#
+    irmovl 0, %eax
+    irmovl 0, %ecx
+    irmovl Data, %eax
+    irmovl 4, %ecx
+    addl %ecx, %eax
+    mrmovl 0(%eax), %ecx    # addl to mrmovl
+    dump 1                  # %eax=Data + 4, %ecx=m[eax]
+#
+    irmovl 0, %eax
+    irmovl 0, %ecx
+    irmovl Data, %eax
+    irmovl 4, %ecx
+    addl %ecx, %eax
+    nop
+    mrmovl 0(%eax), %ecx    # addl to mrmovl
+    dump 1                  # %eax=Data + 4, %ecx=m[eax]
+#
+    irmovl 0, %eax
+    irmovl 0, %ecx
+    irmovl 0, %edx
+    irmovl Data, %eax
+    irmovl 8, %ecx
+    addl %ecx, %eax
+    rrmovl %eax, %edx
+    mrmovl 0(%edx), %ecx    # rrmovl to mrmovl
+    dump 1                  # %eax,%edx=Data + 8, %ecx=m[eax]
+#
+    irmovl 0, %eax
+    irmovl 0, %ecx
+    irmovl 0, %edx
+    irmovl Data, %eax
+    irmovl 8, %ecx
+    addl %ecx, %eax
+    rrmovl %eax, %edx
+    nop
+    mrmovl 0(%edx), %ecx    # rrmovl to mrmovl
+    dump 1                  # %eax,%edx=Data + 8, %ecx=m[eax]
+#
+    irmovl 0, %eax
+    irmovl 0, %ecx
+    irmovl 0, %edx
+    irmovl Data, %eax
+    rmmovl %eax, 0(%eax)   #m[Data] = Data
+    mrmovl 0(%eax), %ecx   #%ecx = Data
+    nop
+    mrmovl 4(%ecx), %eax   #mrmovl to mrmovl
+    dump 5                 #%eax = m[Data + 4]     
+#
+    irmovl 0, %eax
+    irmovl 0, %ecx
+    irmovl 0, %edx
+    irmovl Data, %eax
+    rmmovl %eax, 0(%eax)   #m[Data] = Data
+    mrmovl 0(%eax), %ecx   #%ecx = Data
+    nop
+    nop
+    mrmovl 4(%ecx), %eax   #mrmovl to mrmovl
+    dump 5                 #%eax = m[Data + 4]     
+#
+    irmovl Stack, %esp
+    irmovl Data, %eax
+    irmovl 0, %ecx
+    irmovl 0, %edx
+    pushl %eax
+    nop
+    nop
+    popl %ecx
+    nop
+    mrmovl 8(%ecx), %eax   #mrmovl to mrmovl
+    dump 5                 #%eax = m[Data + 8]     
+#
+    halt
+    nop
+    nop
+    nop
+    nop
+    .align 4
+Data: .long 0x111
+      .long 0x222
+      .long 0x333
+      .long 0x444
+    .pos 0x400
+Stack: .long 0
