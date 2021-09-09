@@ -146,20 +146,15 @@ select_memory_addr(const struct mregister *mreg)
 bool
 mem_read(const struct mregister *mreg)
 {
-	bool read = FALSE;
-
 	switch (mreg->icode.ic) {
 	case MRMOVL:
 	case POPL:
 	case RET:
-		read = TRUE;
-		break;
+		return TRUE;
 
 	default:
-		read = FALSE;
+		return FALSE;
 	}
-
-	return read;
 }
 
 /*
@@ -168,20 +163,15 @@ mem_read(const struct mregister *mreg)
 bool
 mem_write(const struct mregister *mreg)
 {
-	bool write = FALSE;
-
 	switch (mreg->icode.ic) {
 	case RMMOVL:
 	case PUSHL:
 	case CALL:
-		write = TRUE;
-		break;
+		return TRUE;
 
 	default:
-		write = FALSE;
+		return FALSE;
 	}
-
-	return write;
 }
 
 /*
@@ -192,15 +182,13 @@ mem_write(const struct mregister *mreg)
 bool
 stallW(const forwardType *fwd)
 {
-	bool stall = FALSE;
-
 	if (fwd->W_stat.s == SADR
 	    || fwd->W_stat.s == SINS
 	    || fwd->W_stat.s == SHLT) {
-		stall = TRUE;
+		return TRUE;
 	}
 
-	return stall;
+	return FALSE;
 }
 
 /*
