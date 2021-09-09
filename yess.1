@@ -13,7 +13,7 @@
 .\" ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
 .\" OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 .\"
-.Dd August 15, 2020
+.Dd September 8, 2021
 .Dt YESS 1
 .Os
 .Sh NAME
@@ -100,7 +100,9 @@ and
 .Nm
 only builds and works on
 .Ox 6.6
-or newer because it relies on the built-in
+or newer because it relies on
+.Xr pledge 2
+and the built-in
 .Xr make 1
 infrastructure.
 Portability could be achieved with a little effort, but that is outside the

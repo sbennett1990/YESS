@@ -103,10 +103,12 @@ Alex Svarda.
 **yess**
 only builds and works on
 OpenBSD 6.6
-or newer because it relies on the built-in
+or newer because it relies on
+pledge(2)
+and the built-in
 make(1)
 infrastructure.
 Portability could be achieved with a little effort, but that is outside the
 scope of my current goals.
 
-OpenBSD 6.8 - August 15, 2020
+OpenBSD 6.8 - September 8, 2021
