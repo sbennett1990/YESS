@@ -1,0 +1,82 @@
+#This tests forwarding to valB when the target instruction is a
+#RMMOVL
+    irmovl 0xabc, %eax
+    irmovl Data, %ecx
+    rrmovl %ecx, %edx
+    rmmovl %eax, 0(%edx)
+    dump 5                  #%ecx, %edx = Data, %eax = 0xabc, m[Data] = 0xabc
+#
+    irmovl 0, %eax
+    irmovl 0, %ecx
+    irmovl 0, %edx
+    irmovl 0xabc, %eax
+    irmovl Data, %ecx
+    rrmovl %ecx, %edx
+    nop
+    rmmovl %eax, 0(%edx)
+    dump 5                  #%ecx, %edx = Data, %eax = 0xabc, m[Data] = 0xabc
+#
+    irmovl 0, %eax
+    irmovl 0, %ecx
+    irmovl 0, %edx
+    irmovl 0xdef, %eax
+    irmovl Data, %ecx
+    rmmovl %eax, 0(%ecx)
+    dump 5                  #%eax is 0xdef, %ecx = Data, m[Data] = 0xdef
+#
+    irmovl 0, %eax
+    irmovl 0, %ecx
+    irmovl 0, %edx
+    irmovl 0xdef, %eax
+    irmovl Data, %ecx
+    rmmovl %eax, 0(%ecx)
+    nop
+    dump 5                  #%eax is 0xdef, %ecx = Data, m[Data] = 0xdef
+#
+    irmovl 0, %eax
+    irmovl 0, %ecx
+    irmovl 0x111, %edx
+    irmovl Data, %ecx
+    rmmovl %ecx, 0(%ecx)
+    mrmovl 0(%ecx), %eax
+    nop
+    rmmovl %edx, 0(%eax)
+    dump 5                  #%edx is 0x111, %eax, %ecx = Data, m[Data] = 0x111
+#
+    irmovl 0x222, %eax
+    irmovl 0x4, %edx
+    irmovl Data, %ecx
+    addl   %edx, %ecx 
+    rmmovl %eax, 0(%ecx)
+    dump 5                  #%eax is 0x222, %edx=4, %ecx=Data + 4, m[ecx] = 0x222
+
+    irmovl 0x333, %eax
+    irmovl 4, %edx
+    irmovl Data, %ecx
+    addl   %edx, %ecx 
+    nop
+    rmmovl %eax, 0(%ecx)
+    dump 5                  #%eax is 0x333, %edx=4, %ecx=Data + 4, m[ecx]=0x333
+#
+    irmovl Stack, %esp
+    irmovl Data, %eax
+    irmovl 0x444, %edx
+    pushl %eax
+    nop
+    nop
+    popl %ecx
+    nop
+    rmmovl %edx, 0(%ecx)   #%esp=Stack, %eax,%ecx=Data, %edx=0x444, m[Data]=0x444
+    dump 5
+    halt
+    nop
+    nop
+    nop
+    nop
+    .align 4
+Data: .long 0
+      .long 0x111
+      .long 0
+      .long 0
+    .pos 0x400
+Stack: .long 0
