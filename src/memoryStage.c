@@ -88,7 +88,7 @@ memoryStage(forwardType *fwd)
 	}
 
 	if (memError) {
-		stat.s = SADR;
+		stat = s_addr;
 	}
 
 	fwd->m_stat = stat;
