@@ -47,7 +47,7 @@ clearWregister()
  *	stat     Status (?)
  *	icode    Instruction Code from the M register
  *	valE     Value destined for program register 'E'
- *	valM     Value destined for program register 'M', if applicable
+ *	valM     Value read from memory and destined for program register 'M', if applicable
  *	dstE     Destination program register 'E', from the M register
  *	dstM     Destination program register 'M', from the M register
  */
