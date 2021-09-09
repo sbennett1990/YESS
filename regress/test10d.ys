@@ -1,0 +1,96 @@
+#This program tests forwarding into decode stage for valA
+#Value being forwarded is produced by an IRMOVL instruction. 
+    irmovl 1, %eax
+    rrmovl %eax, %ecx
+    dump 1
+    irmovl 2, %ecx
+    rrmovl %ecx, %edx
+    dump 1
+    irmovl 3, %edx
+    rrmovl %edx, %ebx
+    dump 1
+    irmovl 4, %ebx
+    rrmovl %ebx, %esp
+    dump 1
+    irmovl 5, %esp
+    rrmovl %esp, %ebp
+    dump 1
+    irmovl 6, %ebp
+    rrmovl %ebp, %esi
+    dump 1
+    irmovl 7, %esi
+    rrmovl %esi, %edi
+    dump 1
+    irmovl 8, %edi 
+    rrmovl %edi, %eax
+    dump 1
+    irmovl 0, %eax
+    irmovl 0, %ecx
+    irmovl 0, %edx
+    irmovl 0, %ebx
+    irmovl 0, %esp
+    irmovl 0, %esi
+    irmovl 0, %edi
+    irmovl 0, %ebp
+    irmovl 1, %eax
+    addl %eax, %ecx
+    dump 1                  #%ecx should be 1
+    irmovl 2, %ecx
+    nop
+    subl   %ecx, %eax      
+    dump 1                  #%eax should be -1
+    irmovl 0, %eax
+    irmovl 0, %ecx
+    irmovl 0, %edx
+    irmovl 0, %ebx
+    irmovl 0, %esp
+    irmovl 0, %esi
+    irmovl 0, %edi
+    irmovl 0, %ebp
+    irmovl 3, %ebx
+    xorl %ebx, %ecx
+    dump 1                  #%ecx should be 3
+    irmovl 2, %ebx
+    andl %ebx, %ecx
+    dump 1                  #%ecx should be 2
+    irmovl 0, %eax
+    irmovl 0, %ecx
+    irmovl 0, %edx
+    irmovl 0, %ebx
+    irmovl Stack, %esp
+    irmovl 0, %esi
+    irmovl 0, %edi
+    irmovl 0, %ebp
+    irmovl 3, %ebx
+    pushl %ebx
+    nop
+    nop
+    popl %ecx
+    dump 1                 #%ecx should be 3
+    irmovl 5, %ebx
+    nop
+    pushl %ebx
+    nop
+    nop
+    popl %ecx
+    dump 1                 #%ecx should be 5
+    irmovl Data, %ebx
+    irmovl 0, %ecx
+    irmovl 0xabc, %eax
+    rmmovl %eax, 0(%ebx)
+    dump 5
+    irmovl Data, %ebx
+    irmovl 0, %ecx
+    irmovl 0xdef, %eax
+    nop
+    rmmovl %eax, 4(%ebx)
+    dump 5
+    halt 
+    nop
+    nop
+    nop
+    nop
+    .align 4
+Data: .long 0
+    .pos 0x400
+Stack: .long 0
