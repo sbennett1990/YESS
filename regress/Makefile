@@ -1,9 +1,11 @@
 
 YESS?=		~/bin/yess
-#YESS?=		../src/obj/yess
+#YESS=		../src/obj/yess
 
+# programs that test error conditions
 YO_ERROR_TESTS=	error1 error2 error3 error4
 
+# programs that test for correct functionality
 YO_TEST_PROGS=	test10a test10b test10c \
 		test11a test11b test11c test11d test11e test11f test11g test11h \
 		test11i test11j \
