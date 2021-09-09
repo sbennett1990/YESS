@@ -1,0 +1,172 @@
+#   This file tests forwarding into VALA
+#   Value being forwarded is produced by a POPL instruction.
+#   Forwarding is through the
+#   register file when two NOPs separate the instructions.  Forwarding
+#   is from the W register to the Decode stage when one NOP separates
+#   the instructions.
+    irmovl Stack, %esp
+    irmovl -1, %eax
+    irmovl 2, %ecx
+    pushl %ecx        #need two NOPS to allow esp to be calculated
+    nop
+    nop
+    popl  %edx
+    nop               #two nop between popl and addl
+    nop               
+    addl %edx, %eax   #eax should be set to 1
+    dump 1            #dump number 1
+#
+    irmovl 0, %eax
+    irmovl 0, %ecx
+    irmovl 0, %edx
+    irmovl -1, %eax
+    irmovl 2, %ecx
+    pushl %ecx
+    nop                 #need two NOPS to allow esp to be calculated
+    nop
+    popl  %edx          
+    nop                 #one nop between popl and addl
+    addl %edx, %eax     #eax should be set to 1
+    dump 1              #dump number 2
+#
+    irmovl 0, %eax
+    irmovl 0, %ecx
+    irmovl 0, %edx
+    irmovl 3, %eax
+    irmovl 2, %ecx
+    pushl %ecx
+    nop                 #need two NOPS to allow esp to be calculated
+    nop
+    popl  %edx          
+    nop                 #two nops between popl and andl
+    nop               
+    andl %edx, %eax     #eax should be set to 2
+    dump 1              #dump number 3
+#
+    irmovl 0, %eax
+    irmovl 0, %ecx
+    irmovl 0, %edx
+    irmovl 3, %eax
+    irmovl 2, %ecx
+    pushl %ecx
+    nop                 #need two NOPS to allow esp to be calculated
+    nop
+    popl  %edx          
+    nop                 #one nop between popl and andl
+    andl %edx, %eax     #eax should be set to 2
+    dump 1              #dump number 4
+#
+    irmovl 0, %eax
+    irmovl 0, %ecx
+    irmovl 0, %edx
+    irmovl 3, %eax
+    irmovl 2, %ecx
+    pushl %ecx
+    nop                 #need two NOPS to allow esp to be calculated
+    nop
+    popl  %edx          
+    nop                 #two nops between popl and xorl
+    nop                
+    xorl %edx, %eax     #eax should be set to 1
+    dump 1              #dump number 5
+#
+    irmovl 0, %eax
+    irmovl 0, %ecx
+    irmovl 0, %edx
+    irmovl 3, %eax
+    irmovl 2, %ecx
+    pushl %ecx
+    nop                 #need two NOPS to allow esp to be calculated
+    nop
+    popl  %edx          
+    nop                 #one nop between popl and xorl
+    xorl %edx, %eax     #eax should be set to 1
+    dump 1              #dump number 6
+#
+    irmovl 0, %eax
+    irmovl 0, %ecx
+    irmovl 0, %edx
+    irmovl 1, %eax
+    irmovl 2, %ecx
+    pushl %ecx
+    nop                 #need two NOPS to allow esp to be calculated
+    nop
+    popl  %edx          
+    nop                 #two nops between popl and subl
+    nop
+    subl %edx, %eax     #eax should be set to -1
+    dump 1              #dump number 7
+#
+    irmovl 0, %eax
+    irmovl 0, %ecx
+    irmovl 0, %edx
+    irmovl 1, %eax
+    irmovl 2, %ecx
+    pushl %ecx
+    nop                 #need two NOPS to allow esp to be calculated
+    nop
+    popl  %edx          
+    nop                 #one nop between popl and subl
+    subl %edx, %eax     #eax should be set to -1
+    dump 1              #dump number 8
+#
+#test forwarding from popl to rrmovl
+    irmovl 0, %eax
+    irmovl 0, %ecx
+    irmovl 0, %edx
+    irmovl 1, %ecx
+    pushl %ecx
+    nop                 #need two NOPS to allow esp to be calculated
+    nop
+    popl  %eax          
+    nop                 #one nop between popl and rrmovl
+    rrmovl %eax, %edx     #eax, edx, ecx should be set to 1
+    dump 1              #dump number 9
+#
+    irmovl 1, %eax
+    irmovl 0, %ecx
+    irmovl 0, %edx
+    pushl %eax
+    nop                 #need two NOPS to allow esp to be calculated
+    nop
+    popl  %ecx          
+    nop                 #two nops between popl and rrmovl
+    nop          
+    rrmovl %ecx, %edx     #eax, ecx, edx should be set to 1
+    dump 1                #dump number 10
+#
+#Test forwarding from popl to pushl
+    irmovl 1, %eax
+    irmovl 0, %ecx
+    irmovl 0, %edx
+    pushl %eax
+    nop                 #need two NOPS to allow esp to be calculated
+    nop
+    popl  %ecx          
+    nop
+    nop                 #one nop between popl and pushl
+    pushl %ecx          
+    nop
+    nop
+    popl %edx     #edx, eax, ecx should be set to 1
+    dump 1        #dump number 11
+    irmovl 0xabc, %eax
+    irmovl Data, %ebx
+    irmovl 0, %ecx
+    irmovl 0, %edx
+    pushl %eax
+    nop                 #need two NOPS to allow esp to be calculated
+    nop
+    popl  %ecx          
+    nop
+    rmmovl %ecx, 0(%ebx)
+    dump  5
+    halt
+    nop
+    nop
+    nop
+    nop
+    .align 4
+Data:  .long 0
+    .pos 0x400
+Stack: .long   0
