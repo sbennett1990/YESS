@@ -1,0 +1,74 @@
+# This tests forwarding to valB when the target instruction is a
+# OPL instruction.
+    irmovl 0xabc, %eax
+    rrmovl %eax, %edx
+    addl %edx, %ecx         # rrmovl to addl
+    dump 1                  # %eax=0xabc, %edx=0xabc, %ecx=0xabc
+#
+    irmovl 0, %ecx
+    irmovl 0xabc, %eax
+    rrmovl %eax, %edx
+    nop
+    addl %edx, %ecx         # rrmovl to addl
+    dump 1                  # %eax=0xabc, %edx=0xabc, %edx
+#
+    irmovl 0, %edx
+    irmovl 0xd00, %ecx
+    irmovl 0x0ef, %eax
+    addl %ecx, %eax         # irmovl to addl
+    dump 1                  # %eax=0xdef, %ecx=0xd00
+#
+    irmovl 0, %edx
+    irmovl 0xd00, %ecx
+    irmovl 0x0ef, %eax
+    nop
+    addl %ecx, %eax         # irmovl to addl
+    dump 1                  # %eax=0xdef, %ecx=0xd00
+#
+    irmovl 0xa00, %edx
+    irmovl Data, %eax
+    mrmovl (%eax), %ecx
+    nop
+    addl %ecx, %edx         #mrmovl to addl
+    dump 1                  #%edx=0xabc, %eax=Data, %ecx=0xbc
+#
+    irmovl 0, %edx
+    irmovl 0xbc, %ecx
+    irmovl 0xa00, %eax
+    addl %ecx, %edx       
+    addl %eax, %edx         #addl to addl
+    dump 1                  #%edx=0xabc, %eax=0xa00, %ecx=0xbc
+#
+    irmovl 0, %edx
+    irmovl 0xef, %ecx
+    irmovl 0xd00, %eax
+    addl %ecx, %edx       
+    nop
+    addl %eax, %edx         #addl to addl
+    dump 1                  #%edx=0xdef, %eax=0xd00, %ecx=0xef
+#
+    irmovl Stack, %esp
+    irmovl 0, %ecx
+    irmovl 1, %edx
+    irmovl Data, %eax
+    mrmovl 4(%eax), %eax
+    nop
+    pushl %eax
+    nop
+    nop
+    popl %ecx
+    nop
+    addl %edx, %ecx        #popl to addl
+    dump 1                 #%edx = 0x223
+    halt
+    nop
+    nop
+    nop
+    nop
+    .align 4
+Data: .long 0x0bc
+      .long 0x222
+      .long 0x333
+      .long 0x444
+    .pos 0x400
+Stack: .long 0
