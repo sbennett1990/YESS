@@ -1,0 +1,3 @@
+                      | # extremely basic test program
+  0x000: 10           |   nop
+  0x001: 00           |   halt
