@@ -8,6 +8,7 @@
 #include "executeStage.h"
 #include "bool.h"
 #include "instructions.h"
+#include "memory.h"
 #include "memoryStage.h"
 
 #include "logger.h"
@@ -399,7 +400,7 @@ performJXX()
 unsigned int
 performCall()
 {
-	return E.valB - 4;
+	return E.valB - WORDSIZE;
 }
 
 /*
@@ -410,7 +411,7 @@ performCall()
 unsigned int
 performRet()
 {
-	return E.valB + 4;
+	return E.valB + WORDSIZE;
 }
 
 /*
@@ -421,7 +422,7 @@ performRet()
 unsigned int
 performPushl()
 {
-	return E.valB - 4;
+	return E.valB - WORDSIZE;
 }
 
 /*
@@ -432,7 +433,7 @@ performPushl()
 unsigned int
 performPopl()
 {
-	return E.valB + 4;
+	return E.valB + WORDSIZE;
 }
 
 /*
