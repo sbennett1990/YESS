@@ -1,3 +1,5 @@
+/* $ yas.h,v 1.1 2002/08/18 bryant Exp $ */
+
 void save_line(char *);
 void finish_line();
 void add_reg(char *);

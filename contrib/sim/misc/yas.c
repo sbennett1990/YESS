@@ -1,3 +1,5 @@
+/* $ yas.c,v 1.1 2011/01/18 bryant Exp $ */
+
 /* Assembler for Y86 instruction set */
 /* If want to enable code generation for > 4096 bytes, compile
    with flag -DBIG_MEM
