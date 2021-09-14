@@ -176,8 +176,8 @@ getWord(int byteAddress, bool *memError)
 
 	/* ensure byteAddress is a multiple of WORDSIZE */
 	if (byteAddress % WORDSIZE) {
-		log_debug("can't get word: %03x is not a multiple of 4",
-		    byteAddress);
+		log_debug("can't get word: %03x is not a multiple of %d",
+		    byteAddress, WORDSIZE);
 		*memError = TRUE;
 		return 0;
 	}
@@ -211,8 +211,8 @@ putWord(int byteAddress, unsigned int data, bool *memError)
 
 	/* ensure byteAddress is a multiple of WORDSIZE */
 	if (byteAddress % WORDSIZE) {
-		log_debug("can't put word: %03x is not a multiple of 4",
-		    byteAddress);
+		log_debug("can't put word: %03x is not a multiple of %d",
+		    byteAddress, WORDSIZE);
 		*memError = TRUE;
 		return;
 	}
