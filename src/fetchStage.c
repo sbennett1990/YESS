@@ -110,7 +110,12 @@ fetchStage(const forwardType * const fwd)
 		goto updateregs;
 	}
 
-    if (instructionValid(icode)) {
+	if (!instructionValid(icode)) {
+		stat = s_inst;
+		F.predPC = F.predPC + 1;
+		goto updateregs;
+	}
+
         if (icode_is(icode, HALT)) {
             stat = s_halt;
         }
@@ -140,11 +145,6 @@ fetchStage(const forwardType * const fwd)
                 stat = s_addr;
             }
         }
-    }
-    else {
-        stat = s_inst;
-        F.predPC = F.predPC + 1;
-    }
 
 updateregs:
 	/* Calculate valP */
