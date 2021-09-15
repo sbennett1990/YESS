@@ -238,7 +238,7 @@ main(int argc, char **argv)
 	clearMemory_setsallzeros(4092);
 
 #define BASZ	4
-	int badaddresses[BASZ] = { -1, 4096, INT_MAX, INT_MIN };
+	int badaddresses[BASZ] = { -1, 65536, INT_MAX, INT_MIN };
 	int i;
 
 	printf("\n");
