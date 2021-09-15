@@ -34,7 +34,7 @@ static void store(int address, unsigned int data, bool *memError);
  * *memError is set to true.
  *
  * Parameters:
- *	address     the word address [0..1023]
+ *	address     the word address [0..MEMSIZE]
  *	*memError   indicates memory read error
  *
  * Return the contents of memory at address, or 0 on error.
@@ -57,7 +57,7 @@ fetch(int address, bool *memError)
  * address, then memory isn't modified.
  *
  * Parameters:
- *	address     the word address [0..1023]
+ *	address     the word address [0..MEMSIZE]
  *	data        the value to store in memory at address
  *	*memError   indicates memory write error
  */
@@ -78,7 +78,7 @@ store(int address, unsigned int data, bool *memError)
  * an error, *memError is set to true.
  *
  * Parameters:
- *	byteAddress    address of a byte of memory [0..4095]
+ *	byteAddress    address of a byte of memory
  *	*memError      memory error indicator
  *
  * Return the contents of memory at the byte address, or 0 on error.
@@ -114,7 +114,7 @@ getByte(int byteAddress, bool *memError)
  * address, then memory isn't modified.
  *
  * Parameters:
- *	byteAddress    address of a byte of memory [0..4095]
+ *	byteAddress    address of a byte of memory
  *	data           the 8-bit value to store in memory
  *	*memError      memory error indicator
  */
@@ -153,8 +153,8 @@ putByte(int byteAddress, uint8_t data, bool *memError)
  * is set to true.
  *
  * Parameters:
- *	byteAddress   a byte address of memory [0..4095] that is a
- *                multiple of 4
+ *	byteAddress   a byte address of memory that is a
+ *                multiple of WORDSIZE
  *	*memError     indicates memory read error
  *
  * Return the contents of memory at byte address, or 0 on error.
@@ -193,8 +193,8 @@ getWord(int byteAddress, bool *memError)
  * modified.
  *
  * Parameters:
- *	byteAddress   a byte address of memory [0..4095] that is a
- *                multiple of 4
+ *	byteAddress   a byte address of memory that is a
+ *                multiple of WORDSIZE
  *	data          the word to store in memory at address
  *	*memError     indicates memory write error
  */
