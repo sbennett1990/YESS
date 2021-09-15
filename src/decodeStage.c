@@ -74,7 +74,7 @@ clearDregister()
  */
 void
 updateDregister(stat_t stat, icode_t icode, unsigned int ifun,
-    rregister rA, rregister rB, unsigned int valC, unsigned short valP)
+    rregister rA, rregister rB, unsigned int valC, unsigned int valP)
 {
 	D.stat = stat;
 	D.icode = icode;
