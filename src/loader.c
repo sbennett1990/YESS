@@ -77,7 +77,7 @@ load(const char * fileName)
 	/* initial value since no address has been modified yet */
 	int prevaddr = -1;
 	int lineno = 1;
-	int byteAddress;        // memory address of one byte [0..4095]
+	int byteAddress;        // memory address of one byte [0..HIGHBYTE]
 
 	char *record = NULL;
 	size_t recordsize = 0;
@@ -85,8 +85,7 @@ load(const char * fileName)
 	char buf[RECORDLEN];
 	/* attempt to load each line of the file into memory */
 	while ((linelen = getline(&record, &recordsize, fp)) != -1) {
-		strncpy(buf, record, sizeof(buf) - 1);
-		buf[sizeof(buf) - 1] = '\0';
+		strlcpy(buf, record, sizeof(buf));
 
 		// Error checking...
 		// 1: check line format (ie, don't check address correctness yet)
