@@ -116,12 +116,12 @@ fetchStage(const forwardType * const fwd)
 		goto updateregs;
 	}
 
-        if (icode_is(icode, HALT)) {
-            stat = s_halt;
-        }
+	if (icode_is(icode, HALT)) {
+		stat = s_halt;
+	}
 
-        // Get register ids if necessary
-        if (needRegids(icode)) {
+	// Get register ids if necessary
+	if (needRegids(icode)) {
 		// try to get rA and rB from the next byte of memory
 		data = getByte(f_pc + 1, &memError);
 		if (memError) {
@@ -130,21 +130,21 @@ fetchStage(const forwardType * const fwd)
 
 		rA = getRegA(data, memError);
 		rB = getRegB(data, memError);
-        }
+	}
 
-        // Get valC if necessary
-        if (needValC(icode)) {
-            unsigned short tempPC = f_pc;
+	// Get valC if necessary
+	if (needValC(icode)) {
+		unsigned int tempPC = f_pc;
 
-            if (needRegids(icode)) {
-                tempPC += 1;
-            }
+		if (needRegids(icode)) {
+			tempPC += 1;
+		}
 
-            valC = getValC(tempPC, &memError);
-            if (memError) {
-                stat = s_addr;
-            }
-        }
+		valC = getValC(tempPC, &memError);
+		if (memError) {
+			stat = s_addr;
+		}
+	}
 
 updateregs:
 	/* Calculate valP */
