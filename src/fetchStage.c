@@ -85,7 +85,7 @@ fetchStage(const forwardType * const fwd)
 	rregister rA = r_none;
 	rregister rB = r_none;
 	unsigned int valC = 0;	/* constant word: part of instruction */
-	unsigned short valP = 0;	/* address of next sequential instruction in memory */
+	unsigned int valP = 0;	/* address of next sequential instruction in memory */
 
 	f_pc = selectPC(fwd, &F);
 	if (f_pc > HIGHBYTE) {
