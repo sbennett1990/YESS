@@ -150,6 +150,95 @@ error:
 }
 
 /*
+ * Determine if the record (one line from the file) is in the correct
+ * format (syntactically and semantically correct).
+ *
+ * Parameters:
+ *     *line       the line to check
+ *     prev_addr   the previously written-to memory address
+ *
+ * Return true if the line is correctly formatted; false otherwise
+ */
+bool
+validline(const char *line, int len, int prev_addr)
+{
+	assert(line != NULL);
+
+	if (len < 23) {
+		return FALSE;
+	}
+
+	// the pipe character is supposed to be on every line
+	if (line[22] != '|') {
+		return FALSE;
+	}
+	// columns 0, 1, 8, and 21 should always have a blank space
+	if (!(isblank(line[0]) && isblank(line[1]) && isblank(line[8])
+	    && isblank(line[21]))) {
+		return FALSE;
+	}
+
+	if (iscommentrecord(line)) {
+		return TRUE;
+	}
+
+	/* this must be a data line */
+
+	if (!isdatarecord(line)) {
+		return FALSE;
+	}
+
+	// check for address and data correctness
+	bool ret = FALSE;
+	if (validateaddress(line, prev_addr)) {
+		ret = TRUE;
+
+		if (hasdata(line)) {
+			ret = validatedata(line);
+		}
+	}
+	return ret;
+}
+
+/*
+ * Determine if the line is a comment line.
+ */
+bool
+iscommentrecord(const char *line)
+{
+	assert(line != NULL);
+
+	if (hasspaces(line, 0, 21)) {
+		return TRUE;
+	}
+
+	return FALSE;
+}
+
+/*
+ * Determine if the line is a data line (i.e. has an address and data,
+ * if applicable).
+ */
+bool
+isdatarecord(const char *line)
+{
+	assert(line != NULL);
+
+	if (!(isblank(line[0]) && isblank(line[1]) && isblank(line[8])
+	    && isblank(line[21]))) {
+		return FALSE;
+	}
+
+	if (line[2] == '0'
+	    && line[3] == 'x'
+	    && line[7] == ':') {
+		return TRUE;
+	}
+
+	return FALSE;
+}
+
+/*
  * Determine if the line contains an address. No error
  * checking is done on the address, but the syntax of
  * the address is checked.
@@ -356,95 +445,6 @@ hasdata(const char *line)
 	}
 
 	return num;
-}
-
-/*
- * Determine if the record (one line from the file) is in the correct
- * format (syntactically and semantically correct).
- *
- * Parameters:
- *     *line       the line to check
- *     prev_addr   the previously written-to memory address
- *
- * Return true if the line is correctly formatted; false otherwise
- */
-bool
-validline(const char *line, int len, int prev_addr)
-{
-	assert(line != NULL);
-
-	if (len < 23) {
-		return FALSE;
-	}
-
-	// the pipe character is supposed to be on every line
-	if (line[22] != '|') {
-		return FALSE;
-	}
-	// columns 0, 1, 8, and 21 should always have a blank space
-	if (!(isblank(line[0]) && isblank(line[1]) && isblank(line[8])
-	    && isblank(line[21]))) {
-		return FALSE;
-	}
-
-	if (iscommentrecord(line)) {
-		return TRUE;
-	}
-
-	/* this must be a data line */
-
-	if (!isdatarecord(line)) {
-		return FALSE;
-	}
-
-	// check for address and data correctness
-	bool ret = FALSE;
-	if (validateaddress(line, prev_addr)) {
-		ret = TRUE;
-
-		if (hasdata(line)) {
-			ret = validatedata(line);
-		}
-	}
-	return ret;
-}
-
-/*
- * Determine if the line is a comment line.
- */
-bool
-iscommentrecord(const char *line)
-{
-	assert(line != NULL);
-
-	if (hasspaces(line, 0, 21)) {
-		return TRUE;
-	}
-
-	return FALSE;
-}
-
-/*
- * Determine if the line is a data line (i.e. has an address and data,
- * if applicable).
- */
-bool
-isdatarecord(const char *line)
-{
-	assert(line != NULL);
-
-	if (!(isblank(line[0]) && isblank(line[1]) && isblank(line[8])
-	    && isblank(line[21]))) {
-		return FALSE;
-	}
-
-	if (line[2] == '0'
-	    && line[3] == 'x'
-	    && line[7] == ':') {
-		return TRUE;
-	}
-
-	return FALSE;
 }
 
 /*
