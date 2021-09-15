@@ -21,9 +21,9 @@
 
 #include "bool.h"
 
-#define MEMSIZE     1024	/* Total number of words of memory */
+#define MEMSIZE    16384	/* Total number of words of memory */
 #define WORDSIZE       4	/* Size of one word in bytes */
-#define HIGHBYTE    4095	/* Highest byte address in memory */
+#define HIGHBYTE   65535	/* Highest byte address in memory */
 #define NOADDRESS      0	/* Value for "not a memory address" */
 
 void initMemory(void);
