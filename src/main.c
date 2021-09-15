@@ -66,7 +66,7 @@ int
 main(int argc, char **argv)
 {
 	extern char *malloc_options;
-	malloc_options = "CFGJ";
+	malloc_options = "CFGJS";
 
 	int ch;
 	int dflag = 0;	/* debug */
