@@ -7,7 +7,7 @@ YO_ERROR_TESTS=	error1 error2 error3 error4
 
 # programs that test for correct functionality
 YO_TEST_PROGS=	test01 \
-		test05b test07a test07b test07c \
+		test05b test07a test07b test07c test07d \
 		test10a test10b test10c test10d test10e test10f test10g test10h \
 		test10i test10j test10k test10l test10m \
 		test11a test11b test11c test11d test11e test11f test11g test11h \
