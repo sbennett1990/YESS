@@ -1,0 +1,47 @@
+%eax: 00000000 %ecx: ffffffff %edx: 00000000 %ebx: 00000000
+%esp: 0000003c %ebp: 00000000 %esi: 00000000 %edi: 00000000
+
+CC - ZF: 0 SF: 0 OF: 0
+F - predPC: 00000019
+D - stat: 1 icode: 1 ifun: 0 rA: f rB: f valC: 00000000  valP: 00000019
+E - stat: 1 icode: 1 ifun: 0 valC: 00000000 valA: 00000000 valB: 00000000
+    dstE: f dstM: f srcA: f srcB: f
+M - stat: 1 icode: 1 Cnd: 0 valE: 00000000 valA: 00000000 dstE: f dstM: f
+W - stat: 1 icode: c valE: 00000007 valM: 00000000 dstE: f dstM: f
+
+000: 0040f430 f1300000 ffffffff a0101010 0007c01f 10100000 00f13010 c0000000 
+020: 00000007 b0101010 0007c01f 10000000 00101010 00000000 00000000 ffffffff 
+040: 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000 *
+
+%eax: 00000000 %ecx: 00000000 %edx: 00000000 %ebx: 00000000
+%esp: 0000003c %ebp: 00000000 %esi: 00000000 %edi: 00000000
+
+CC - ZF: 0 SF: 0 OF: 0
+F - predPC: 00000027
+D - stat: 1 icode: 1 ifun: 0 rA: f rB: f valC: 00000000  valP: 00000027
+E - stat: 1 icode: 1 ifun: 0 valC: 00000000 valA: 00000000 valB: 00000000
+    dstE: f dstM: f srcA: f srcB: f
+M - stat: 1 icode: 1 Cnd: 0 valE: 00000000 valA: 00000000 dstE: f dstM: f
+W - stat: 1 icode: c valE: 00000007 valM: 00000000 dstE: f dstM: f
+
+000: 0040f430 f1300000 ffffffff a0101010 0007c01f 10100000 00f13010 c0000000 
+020: 00000007 b0101010 0007c01f 10000000 00101010 00000000 00000000 ffffffff 
+040: 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000 *
+
+%eax: 00000000 %ecx: ffffffff %edx: 00000000 %ebx: 00000000
+%esp: 00000040 %ebp: 00000000 %esi: 00000000 %edi: 00000000
+
+CC - ZF: 0 SF: 0 OF: 0
+F - predPC: 00000031
+D - stat: 1 icode: 1 ifun: 0 rA: f rB: f valC: 00000000  valP: 00000031
+E - stat: 1 icode: 1 ifun: 0 valC: 00000000 valA: 00000000 valB: 00000000
+    dstE: f dstM: f srcA: f srcB: f
+M - stat: 2 icode: 0 Cnd: 0 valE: 00000000 valA: 00000000 dstE: f dstM: f
+W - stat: 1 icode: c valE: 00000007 valM: 00000000 dstE: f dstM: f
+
+000: 0040f430 f1300000 ffffffff a0101010 0007c01f 10100000 00f13010 c0000000 
+020: 00000007 b0101010 0007c01f 10000000 00101010 00000000 00000000 ffffffff 
+040: 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000 *
+
+
+Total clock cycles = 22
