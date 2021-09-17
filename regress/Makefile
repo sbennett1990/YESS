@@ -9,6 +9,7 @@ YO_ERROR_TESTS=	error1 error2 error3 error4
 YO_TEST_PROGS=	test01 \
 		test05b test07a test07b test07c test07d test07e test07f \
 		test08a test08b test08c test08d test08e test08f \
+		test09a \
 		test10a test10b test10c test10d test10e test10f test10g test10h \
 		test10i test10j test10k test10l test10m test10n test10o \
 		test11a test11b test11c test11d test11e test11f test11g test11h \
