@@ -1,0 +1,101 @@
+%eax: 00000001 %ecx: 00000000 %edx: 00000000 %ebx: 00000000
+%esp: 00000000 %ebp: 00000000 %esi: 00000000 %edi: 00000000
+
+CC - ZF: 0 SF: 0 OF: 0
+F - predPC: 0000001c
+D - stat: 1 icode: 3 ifun: 0 rA: f rB: 2 valC: 00000003  valP: 0000001c
+E - stat: 1 icode: c ifun: 0 valC: 00000003 valA: 00000000 valB: 00000000
+    dstE: f dstM: f srcA: f srcB: f
+M - stat: 1 icode: 3 Cnd: 0 valE: 00000002 valA: 00000000 dstE: 1 dstM: f
+W - stat: 1 icode: c valE: 00000003 valM: 00000000 dstE: f dstM: f
+
+%eax: 00000001 %ecx: 00000002 %edx: 00000000 %ebx: 00000000
+%esp: 00000000 %ebp: 00000000 %esi: 00000000 %edi: 00000000
+
+CC - ZF: 0 SF: 0 OF: 0
+F - predPC: 00000027
+D - stat: 1 icode: 3 ifun: 0 rA: f rB: 3 valC: 00000004  valP: 00000027
+E - stat: 1 icode: c ifun: 0 valC: 00000003 valA: 00000000 valB: 00000000
+    dstE: f dstM: f srcA: f srcB: f
+M - stat: 1 icode: 3 Cnd: 0 valE: 00000003 valA: 00000000 dstE: 2 dstM: f
+W - stat: 1 icode: c valE: 00000003 valM: 00000000 dstE: f dstM: f
+
+%eax: 00000001 %ecx: 00000002 %edx: 00000003 %ebx: 00000000
+%esp: 00000000 %ebp: 00000000 %esi: 00000000 %edi: 00000000
+
+CC - ZF: 0 SF: 0 OF: 0
+F - predPC: 00000032
+D - stat: 1 icode: 3 ifun: 0 rA: f rB: 4 valC: 00000005  valP: 00000032
+E - stat: 1 icode: c ifun: 0 valC: 00000003 valA: 00000000 valB: 00000000
+    dstE: f dstM: f srcA: f srcB: f
+M - stat: 1 icode: 3 Cnd: 0 valE: 00000004 valA: 00000000 dstE: 3 dstM: f
+W - stat: 1 icode: c valE: 00000003 valM: 00000000 dstE: f dstM: f
+
+%eax: 00000001 %ecx: 00000002 %edx: 00000003 %ebx: 00000004
+%esp: 00000000 %ebp: 00000000 %esi: 00000000 %edi: 00000000
+
+CC - ZF: 0 SF: 0 OF: 0
+F - predPC: 0000003d
+D - stat: 1 icode: 3 ifun: 0 rA: f rB: 5 valC: 00000006  valP: 0000003d
+E - stat: 1 icode: c ifun: 0 valC: 00000003 valA: 00000000 valB: 00000000
+    dstE: f dstM: f srcA: f srcB: f
+M - stat: 1 icode: 3 Cnd: 0 valE: 00000005 valA: 00000000 dstE: 4 dstM: f
+W - stat: 1 icode: c valE: 00000003 valM: 00000000 dstE: f dstM: f
+
+%eax: 00000001 %ecx: 00000002 %edx: 00000003 %ebx: 00000004
+%esp: 00000005 %ebp: 00000000 %esi: 00000000 %edi: 00000000
+
+CC - ZF: 0 SF: 0 OF: 0
+F - predPC: 00000048
+D - stat: 1 icode: 3 ifun: 0 rA: f rB: 6 valC: 00000007  valP: 00000048
+E - stat: 1 icode: c ifun: 0 valC: 00000003 valA: 00000000 valB: 00000000
+    dstE: f dstM: f srcA: f srcB: f
+M - stat: 1 icode: 3 Cnd: 0 valE: 00000006 valA: 00000000 dstE: 5 dstM: f
+W - stat: 1 icode: c valE: 00000003 valM: 00000000 dstE: f dstM: f
+
+%eax: 00000001 %ecx: 00000002 %edx: 00000003 %ebx: 00000004
+%esp: 00000005 %ebp: 00000006 %esi: 00000000 %edi: 00000000
+
+CC - ZF: 0 SF: 0 OF: 0
+F - predPC: 00000053
+D - stat: 1 icode: 3 ifun: 0 rA: f rB: 7 valC: 00000008  valP: 00000053
+E - stat: 1 icode: c ifun: 0 valC: 00000003 valA: 00000000 valB: 00000000
+    dstE: f dstM: f srcA: f srcB: f
+M - stat: 1 icode: 3 Cnd: 0 valE: 00000007 valA: 00000000 dstE: 6 dstM: f
+W - stat: 1 icode: c valE: 00000003 valM: 00000000 dstE: f dstM: f
+
+%eax: 00000001 %ecx: 00000002 %edx: 00000003 %ebx: 00000004
+%esp: 00000005 %ebp: 00000006 %esi: 00000007 %edi: 00000000
+
+CC - ZF: 0 SF: 0 OF: 0
+F - predPC: 0000005f
+D - stat: 1 icode: 3 ifun: 0 rA: f rB: 1 valC: fffffffe  valP: 0000005f
+E - stat: 1 icode: 3 ifun: 0 valC: ffffffff valA: 00000000 valB: 00000000
+    dstE: 0 dstM: f srcA: f srcB: f
+M - stat: 1 icode: 3 Cnd: 0 valE: 00000008 valA: 00000000 dstE: 7 dstM: f
+W - stat: 1 icode: c valE: 00000003 valM: 00000000 dstE: f dstM: f
+
+%eax: ffffffff %ecx: fffffffe %edx: fffffffd %ebx: fffffffc
+%esp: fffffffb %ebp: fffffffa %esi: 00000007 %edi: 00000008
+
+CC - ZF: 0 SF: 0 OF: 0
+F - predPC: 0000008d
+D - stat: 1 icode: c ifun: 0 rA: f rB: f valC: 00000003  valP: 0000008d
+E - stat: 1 icode: 3 ifun: 0 valC: fffffffa valA: 00000000 valB: 00000000
+    dstE: 7 dstM: f srcA: f srcB: f
+M - stat: 1 icode: 3 Cnd: 0 valE: fffffff9 valA: 00000000 dstE: 6 dstM: f
+W - stat: 1 icode: c valE: 00000003 valM: 00000000 dstE: f dstM: f
+
+%eax: ffffffff %ecx: fffffffe %edx: fffffffd %ebx: fffffffc
+%esp: fffffffb %ebp: fffffffa %esi: fffffff9 %edi: fffffffa
+
+CC - ZF: 0 SF: 0 OF: 0
+F - predPC: 00000090
+D - stat: 1 icode: 1 ifun: 0 rA: f rB: f valC: 00000000  valP: 00000090
+E - stat: 1 icode: 1 ifun: 0 valC: 00000000 valA: 00000000 valB: 00000000
+    dstE: f dstM: f srcA: f srcB: f
+M - stat: 2 icode: 0 Cnd: 0 valE: 00000000 valA: 00000000 dstE: f dstM: f
+W - stat: 1 icode: c valE: 00000003 valM: 00000000 dstE: f dstM: f
+
+
+Total clock cycles = 30
