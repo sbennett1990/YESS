@@ -1,0 +1,35 @@
+%eax: 00000003 %ecx: 00000007 %edx: 00000002 %ebx: 00000006
+%esp: 00000008 %ebp: 00000009 %esi: 00000007 %edi: 0000000a
+
+CC - ZF: 0 SF: 0 OF: 0
+F - predPC: 00000042
+D - stat: 1 icode: c ifun: 0 rA: f rB: f valC: 00000003  valP: 00000042
+E - stat: 1 icode: 6 ifun: 3 valC: 00000000 valA: 00000003 valB: 00000007
+    dstE: 6 dstM: f srcA: 0 srcB: 6
+M - stat: 1 icode: 6 Cnd: 0 valE: 00000002 valA: 00000003 dstE: 3 dstM: f
+W - stat: 1 icode: c valE: 00000003 valM: 00000000 dstE: f dstM: f
+
+%eax: 00000003 %ecx: 00000007 %edx: 00000002 %ebx: 00000002
+%esp: 00000008 %ebp: 00000009 %esi: 00000004 %edi: 0000000a
+
+CC - ZF: 0 SF: 0 OF: 0
+F - predPC: 0000004b
+D - stat: 1 icode: c ifun: 0 rA: f rB: f valC: 00000003  valP: 0000004b
+E - stat: 1 icode: 6 ifun: 1 valC: 00000000 valA: 00000002 valB: 00000009
+    dstE: 5 dstM: f srcA: 2 srcB: 5
+M - stat: 1 icode: 6 Cnd: 0 valE: 0000000f valA: 00000007 dstE: 4 dstM: f
+W - stat: 1 icode: c valE: 00000003 valM: 00000000 dstE: f dstM: f
+
+%eax: 00000003 %ecx: 00000007 %edx: 00000002 %ebx: 00000002
+%esp: 0000000f %ebp: 00000007 %esi: 00000004 %edi: 0000000a
+
+CC - ZF: 0 SF: 0 OF: 0
+F - predPC: 0000004e
+D - stat: 1 icode: 1 ifun: 0 rA: f rB: f valC: 00000000  valP: 0000004e
+E - stat: 1 icode: 1 ifun: 0 valC: 00000000 valA: 00000000 valB: 00000000
+    dstE: f dstM: f srcA: f srcB: f
+M - stat: 2 icode: 0 Cnd: 0 valE: 00000000 valA: 00000000 dstE: f dstM: f
+W - stat: 1 icode: c valE: 00000003 valM: 00000000 dstE: f dstM: f
+
+
+Total clock cycles = 22
