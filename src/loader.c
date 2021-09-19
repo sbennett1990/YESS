@@ -28,8 +28,8 @@
 #include "logger.h"
 #include "tools.h"
 
+#define RECORDLEN	25
 #define MAXLEN		80
-#define RECORDLEN	24
 
 #define HEX		16
 
@@ -37,7 +37,8 @@ static bool validline(const char *line, size_t len, int prev_addr);
 static bool iscommentrecord(const char *line, size_t len);
 static bool isdatarecord(const char *line, size_t len);
 static bool hasaddress(const char *line, size_t len);
-static bool hasspaces(const char *line, size_t len, int start, int end);
+static bool hasspaces(const char *line, size_t len, unsigned int start,
+    unsigned int end);
 static bool hashexdigits(const char * line, int start, int end);
 static bool validateaddress(const char *line, int prev_addr);
 static bool validatedata(const char *record);
@@ -276,7 +277,7 @@ hasaddress(const char *line, size_t len)
  * false otherwise
  */
 bool
-hasspaces(const char *line, size_t len, int start, int end)
+hasspaces(const char *line, size_t len, unsigned int start, unsigned int end)
 {
 	assert(line != NULL);
 	assert(start <= end);
@@ -285,7 +286,7 @@ hasspaces(const char *line, size_t len, int start, int end)
 		return FALSE;
 	}
 
-	for (int i = start; i <= end; i++) {
+	for (unsigned int i = start; i <= end; i++) {
 		if (line[i] != ' ') {
 			return FALSE;
 		}
