@@ -33,16 +33,17 @@
 
 #define HEX		16
 
+static bool validline(const char *line, size_t len, int prev_addr);
+static bool iscommentrecord(const char *line, size_t len);
+static bool isdatarecord(const char *line, size_t len);
+static bool hasaddress(const char *line, size_t len);
+static bool hasspaces(const char *line, size_t len, int start, int end);
+static bool hashexdigits(const char * line, int start, int end);
 static bool validateaddress(const char *line, int prev_addr);
 static bool validatedata(const char *record);
-static bool validline(const char *line, int len, int prev_addr);
-static bool hashexdigits(const char * line, int start, int end);
-static bool hasspaces(const char * line, int start, int end);
 static int grabAddress(const char *line, int *error);
 static uint8_t grabDataByte(const char *record, short byteNum, bool *error);
-static bool iscommentrecord(const char *line);
-static bool isdatarecord(const char *line);
-static bool hasaddress(const char *line);
+
 static short hasdata(const char *line);
 
 /*
@@ -97,7 +98,7 @@ load(const char * fileName)
 			goto error;
 		}
 
-		if (hasaddress(buf)) {
+		if (hasaddress(buf, sizeof(buf))) {
 			int error;
 			byteAddress = grabAddress(buf, &error);
 			if (error) {
@@ -155,11 +156,11 @@ error:
  * Return true if the line is correctly formatted; false otherwise
  */
 bool
-validline(const char *line, int len, int prev_addr)
+validline(const char *line, size_t len, int prev_addr)
 {
 	assert(line != NULL);
 
-	if (len < 23) {
+	if (len < RECORDLEN) {
 		return FALSE;
 	}
 
@@ -173,13 +174,13 @@ validline(const char *line, int len, int prev_addr)
 		return FALSE;
 	}
 
-	if (iscommentrecord(line)) {
+	if (iscommentrecord(line, len)) {
 		return TRUE;
 	}
 
 	/* this must be a data line */
 
-	if (!isdatarecord(line)) {
+	if (!isdatarecord(line, len)) {
 		return FALSE;
 	}
 
@@ -199,11 +200,12 @@ validline(const char *line, int len, int prev_addr)
  * Determine if the line is a comment line.
  */
 bool
-iscommentrecord(const char *line)
+iscommentrecord(const char *line, size_t len)
 {
 	assert(line != NULL);
+	assert(len > 21);
 
-	if (hasspaces(line, 0, 21)) {
+	if (hasspaces(line, len, 0, 21)) {
 		return TRUE;
 	}
 
@@ -215,9 +217,10 @@ iscommentrecord(const char *line)
  * if applicable).
  */
 bool
-isdatarecord(const char *line)
+isdatarecord(const char *line, size_t len)
 {
 	assert(line != NULL);
+	assert(len > 21);
 
 	if (!(isblank(line[0]) && isblank(line[1]) && isblank(line[8])
 	    && isblank(line[21]))) {
@@ -244,8 +247,11 @@ isdatarecord(const char *line)
  * Return true if the record has an address; false otherwise
  */
 bool
-hasaddress(const char *line)
+hasaddress(const char *line, size_t len)
 {
+	assert(line != NULL);
+	assert(len > 7);
+
 	if (line[2] == '0'
 	    && line[3] == 'x'
 	    && line[7] == ':') {
@@ -270,26 +276,22 @@ hasaddress(const char *line)
  * false otherwise
  */
 bool
-hasspaces(const char * line, int start, int end)
+hasspaces(const char *line, size_t len, int start, int end)
 {
-    if (start > end) {
-        return FALSE;
-    }
+	assert(line != NULL);
+	assert(start <= end);
 
-    int len = strnlen(line, MAXLEN);
+	if (len <= end) {
+		return FALSE;
+	}
 
-    if (len <= end) {
-        return FALSE;
-    }
+	for (int i = start; i <= end; i++) {
+		if (line[i] != ' ') {
+			return FALSE;
+		}
+	}
 
-    int i;
-    for (i = start; i <= end; i++) {
-        if (line[i] != ' ') {
-            return FALSE;
-        }
-    }
-
-    return TRUE;
+	return TRUE;
 }
 
 /*
