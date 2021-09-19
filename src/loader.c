@@ -39,13 +39,13 @@ static bool isdatarecord(const char *line, size_t len);
 static bool hasaddress(const char *line, size_t len);
 static bool hasspaces(const char *line, size_t len, unsigned int start,
     unsigned int end);
-static bool hashexdigits(const char * line, int start, int end);
-static bool validateaddress(const char *line, int prev_addr);
+static bool hashexdigits(const char *line, size_t len, unsigned int start,
+    unsigned int end);
+static short hasdata(const char *line, size_t len);
+static bool validateaddress(const char *line, size_t len, int prev_addr);
 static bool validatedata(const char *record);
 static int grabAddress(const char *line, int *error);
 static uint8_t grabDataByte(const char *record, short byteNum, bool *error);
-
-static short hasdata(const char *line);
 
 /*
  * Loads machine source code (instructions and data) into yess
@@ -108,7 +108,7 @@ load(const char * fileName)
 			}
 
 			short numBytes;
-			if ((numBytes = hasdata(buf)) != 0) {
+			if ((numBytes = hasdata(buf, sizeof(buf))) != 0) {
 				for (short byteNumber = 1; byteNumber <= numBytes; byteNumber++) {
 					uint8_t data; /* byte to store in mem */
 					data = grabDataByte(buf, byteNumber, &memError);
@@ -187,10 +187,10 @@ validline(const char *line, size_t len, int prev_addr)
 
 	// check for address and data correctness
 	bool ret = FALSE;
-	if (validateaddress(line, prev_addr)) {
+	if (validateaddress(line, len, prev_addr)) {
 		ret = TRUE;
 
-		if (hasdata(line)) {
+		if (hasdata(line, len)) {
 			ret = validatedata(line);
 		}
 	}
@@ -300,36 +300,29 @@ hasspaces(const char *line, size_t len, unsigned int start, unsigned int end)
  * through end index.
  *
  * Parameters:
- *     *record    one record to check
+ *     *line      one record to check
  *     start      the starting index
  *     end        the ending index
  *
  * Return true if every digit is a hex digit; false otherwise
  */
 bool
-hashexdigits(const char * record, int start, int end)
+hashexdigits(const char *line, size_t len, unsigned int start, unsigned int end)
 {
-	assert(record != NULL);
+	assert(line != NULL);
+	assert(start <= end);
 
-    if (start > end) {
-        return FALSE;
-    }
+	if (len <= end) {
+		return FALSE;
+	}
 
-    int len = strnlen(record, RECORDLEN);
+	for (unsigned int i = start; i <= end; i++) {
+		if (!(isxdigit(line[i]))) {
+			return FALSE;
+		}
+	}
 
-    if (len <= end) {
-        return FALSE;
-    }
-
-    int i;
-
-    for (i = start; i <= end; i++) {
-        if (!(isxdigit(record[i]))) {
-            return FALSE;
-        }
-    }
-
-    return TRUE;
+	return TRUE;
 }
 
 /*
@@ -385,11 +378,11 @@ grabAddress(const char *record, int *error)
  * Return true if the address is correct; false otherwise
  */
 bool
-validateaddress(const char *line, int prev_addr)
+validateaddress(const char *line, size_t len, int prev_addr)
 {
 	assert(line != NULL);
 
-	if (!hashexdigits(line, 4, 6)) {
+	if (!hashexdigits(line, len, 4, 6)) {
 		// address not formatted correctly
 		return FALSE;
 	}
@@ -420,9 +413,10 @@ validateaddress(const char *line, int prev_addr)
  * Return the number of data bytes the record contains (0 to 6)
  */
 short
-hasdata(const char *line)
+hasdata(const char *line, size_t len)
 {
 	assert(line != NULL);
+	assert(len > 21);
 
 	/*
 	 * since little error checking is performed, only examine
@@ -436,7 +430,7 @@ hasdata(const char *line)
 	short end = 10;
 	short num = 0;
 
-	while (hashexdigits(line, start, end)) {
+	while (hashexdigits(line, len, start, end)) {
 		start += 2;
 		end += 2;
 		num += 1;
@@ -471,7 +465,7 @@ validatedata(const char *record)
     }
 
     // data must be in at least columns 9 & 10
-    if (!hashexdigits(record, 9, 10)) {
+    if (!hashexdigits(record, len, 9, 10)) {
         return FALSE;
     }
 
