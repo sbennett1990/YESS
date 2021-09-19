@@ -93,11 +93,7 @@ load(const char * fileName)
 		if (!validline(buf, sizeof(buf), prevaddr)) {
 			/* Display the erroneous line */
 			printf("Error on line %d\n", lineno);
-
-			for (int i = 0; i < linelen; i++) {
-				printf("%c", record[i]);
-			}
-			printf("\n");
+			printf("%s\n", record);
 			goto error;
 		}
 
