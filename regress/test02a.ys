@@ -1,0 +1,3 @@
+# extremely basic test program for BIGMEM
+  nop
+  halt

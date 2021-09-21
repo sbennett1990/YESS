@@ -19,6 +19,8 @@ YO_TEST_PROGS=	test01 \
 		test11i test11j \
 		test12a test12b test12c test12d test12e test12f test12g test12h
 
+REGRESS_EXPECTED_FAILURES+=	test02a
+
 REGRESS_FAIL_EARLY=	yes
 
 .for y in ${YO_ERROR_TESTS}
