@@ -3,7 +3,7 @@ YESS?=		~/bin/yess
 #YESS=		../src/obj/yess
 
 # programs that test error conditions
-YO_ERROR_TESTS=	error1 error2 error3 error4 error5 error7
+YO_ERROR_TESTS=	error1 error2 error3 error4 error5 error7 error8
 
 REGRESS_EXPECTED_FAILURES=	error6
 
