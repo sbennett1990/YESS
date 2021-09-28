@@ -42,8 +42,8 @@ struct memory_record {
 	size_t		 linesize;	/* size of the line string */
 	ssize_t		 linelen;	/* length of the line */
 	int		 lineno;	/* line number from the file */
-	short		 memaddress;	/* memory address (on word boundry) */
-	short		 prevaddress;	/* previous line's memory address */
+	int		 memaddress;	/* memory address (on word boundry) */
+	int		 prevaddress;	/* previous line's memory address */
 	unsigned int	 data;		/* data to store in memory */
 	unsigned int	 prevdata;	/* previous line's data */
 	int		 starline;	/* does line have a '*'? */
@@ -53,7 +53,7 @@ struct memory_record {
 static int validatememfilename(const char *filename);
 static int validateline(struct memory_record *);
 static bool hashexdigits(const char *line, ssize_t len, int start, int end);
-static short readaddress(const char *line, int *error);
+static int readaddress(const char *line, int *error);
 static unsigned int readdata(const char *line, int *error);
 static unsigned int strtouint(const char *nptr, int base, int *error);
 static int putrepeatdata(const struct memory_record * const record);
@@ -93,11 +93,7 @@ load_mem_image(const char *fileName)
 		if (validateline(&record) == -1) {
 			/* display the erroneous line */
 			printf("Error on line %d:\n", record.lineno);
-
-			for (int i = 0; i < record.linelen; i++) {
-				printf("%c", record.line[i]);
-			}
-			printf("\n");
+			printf("%s\n", record.line);
 			goto error;
 		}
 
@@ -303,8 +299,7 @@ hashexdigits(const char *line, ssize_t len, int start, int end)
 		return FALSE;
 	}
 
-	int i;
-	for (i = start; i <= end; i++) {
+	for (int i = start; i <= end; i++) {
 		if (!isxdigit(line[i])) {
 			return FALSE;
 		}
@@ -316,7 +311,7 @@ hashexdigits(const char *line, ssize_t len, int start, int end)
 /*
  *
  */
-short
+int
 readaddress(const char *line, int *error)
 {
 	assert(line != NULL);
@@ -342,7 +337,7 @@ readaddress(const char *line, int *error)
 		return -1;
 	}
 
-	return (short)memaddr;
+	return memaddr;
 }
 
 /*
@@ -414,7 +409,7 @@ int
 putrepeatdata(const struct memory_record * const record)
 {
 	bool memError;
-	short addr = record->prevaddress + WORDSIZE;
+	int addr = record->prevaddress + WORDSIZE;
 	for (; addr < record->memaddress; addr += WORDSIZE) {
 		putWord(addr, record->prevdata, &memError);
 		if (memError) {
