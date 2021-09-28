@@ -136,7 +136,7 @@ buildLine(unsigned int *line, short arrlen, int address)
 	for (i = 0; i < arrlen; i++, address++) {
 		line[i] = getWord((address * 4), &memError);
 		if (memError) {
-			log_warn("dumpMem: couldn't read word at %03x",
+			log_warn("dumpMem: couldn't read word at %04x",
 			    address);
 		}
 	}

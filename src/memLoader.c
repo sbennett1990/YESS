@@ -120,7 +120,7 @@ load_mem_image(const char *fileName)
 		bool memError;
 		putWord(record.memaddress, record.data, &memError);
 		if (memError) {
-			log_info("error storing data at address %03x",
+			log_info("error storing data at address %04x",
 			    record.memaddress);
 			goto error;
 		}
@@ -259,13 +259,13 @@ validateline(struct memory_record *record)
 		if (record->memaddress < record->prevaddress + 2 * WORDSIZE ||
 		    record->memaddress % WORDSIZE) {
 			log_debug("address is not correct: "
-			    "curr: %03x, prev: %03x",
+			    "curr: %04x, prev: %04x",
 			    record->memaddress, record->prevaddress);
 			return -1;
 		}
 	}
 	else if (record->memaddress != record->prevaddress + WORDSIZE) {
-		log_debug("address is not correct: curr: %03x, prev: %03x",
+		log_debug("address is not correct: curr: %04x, prev: %04x",
 		    record->memaddress, record->prevaddress);
 		return -1;
 	}
@@ -332,7 +332,7 @@ readaddress(const char *line, int *error)
 		return -1;
 	}
 	if (memaddr > HIGHBYTE) {
-		log_debug("address is too large: %d", memaddr);
+		log_debug("address is too large: %04x", memaddr);
 		*error = 1;
 		return -1;
 	}
@@ -413,7 +413,7 @@ putrepeatdata(const struct memory_record * const record)
 	for (; addr < record->memaddress; addr += WORDSIZE) {
 		putWord(addr, record->prevdata, &memError);
 		if (memError) {
-			log_info("error storing repeat data at address %03x",
+			log_info("error storing repeat data at address %04x",
 			    addr);
 			return -1;
 		}
