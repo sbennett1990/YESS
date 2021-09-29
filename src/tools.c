@@ -315,27 +315,27 @@ strtoint(const char *nptr, int base)
  * Return >0 if file ends in ".yo"; -1 otherwise
  */
 int
-validatefilename(const char * filename)
+validatefilename(const char *filename)
 {
 	assert(filename != NULL);
+	char *p;
 
-    int len = (int) strnlen(filename, FILENAME_LEN);
+	size_t len = strnlen(filename, FILENAME_LEN);
 
-    if (len < 3) {
-        log_warn("filename too short");
-        return -1;
-    }
+	if (len < 3) {
+		log_warnx("filename too short");
+		return -1;
+	}
 
-    if (filename[len - 1] == 'o'
-        && filename[len - 2] == 'y'
-        && filename[len - 3] == '.') {
-        log_debug("filename valid");
-        return 1;
-    }
-    else {
-        log_warn("filename not valid");
-        return -1;
-    }
+	p = strrchr(filename, '.');
+	if (p == NULL || strcmp(p, ".yo")) {
+		log_warnx("filename not valid");
+		return -1;
+	}
+	else {
+		log_debug("filename valid");
+		return 1;
+	}
 }
 
 /*
