@@ -18,6 +18,7 @@
 
 #include <assert.h>
 #include <ctype.h>
+#include <limits.h>
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -44,7 +45,7 @@ static bool hashexdigits(const char *line, size_t len, unsigned int start,
 static short hasdata(const char *line, size_t len);
 static bool validateaddress(const char *line, size_t len, int prev_addr);
 static bool validatedata(const char *record);
-static int grabAddress(const char *line, int *error);
+static int grabAddress(const char *line, size_t len, int *error);
 static uint8_t grabDataByte(const char *record, short byteNum, bool *error);
 
 /*
@@ -101,9 +102,8 @@ load(const char * fileName)
 
 		if (hasaddress(buf, sizeof(buf))) {
 			int error;
-			byteAddress = grabAddress(buf, &error);
+			byteAddress = grabAddress(buf, sizeof(buf), &error);
 			if (error) {
-				log_info("error extracting address");
 				goto error;
 			}
 
@@ -337,23 +337,23 @@ hashexdigits(const char *line, size_t len, unsigned int start, unsigned int end)
  * Return the address in base 10
  */
 int
-grabAddress(const char *record, int *error)
+grabAddress(const char *record, size_t len, int *error)
 {
 	assert(record != NULL);
+	assert(len < INT_MAX);
 
-	char hex_addr[8] = {
-		record[0],
-		record[1],
-		record[2],
-		record[3],
-		record[4],
-		record[5],
-		record[6],
-		'\0'
-	};
+	char hex_addr[10];
 	*error = 0;
 
-	// TODO: check for the error value -1
+	size_t span = strcspn(record, ":");
+	if (span < 1 || span == len - 1 || span > sizeof(hex_addr)) {
+		log_debug("could not find address in data record");
+		*error = 1;
+		return -1;
+	}
+
+	snprintf(hex_addr, span + 1, "%s", record);
+
 	int addr = strtoint(hex_addr, HEX);
 	if (addr == -1) {
 		log_debug("error converting string '%s' to an address",
@@ -393,7 +393,7 @@ validateaddress(const char *line, size_t len, int prev_addr)
 
 	// current must be > prev_addr
 	int error;
-	int current_addr = grabAddress(line, &error);
+	int current_addr = grabAddress(line, len, &error);
 
 	if (error || current_addr < prev_addr) {
 		return FALSE;
