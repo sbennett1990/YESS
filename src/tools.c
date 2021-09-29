@@ -329,7 +329,7 @@ validatefilename(const char *filename)
 
 	p = strrchr(filename, '.');
 	if (p == NULL || strcmp(p, ".yo")) {
-		log_warnx("filename not valid");
+		log_warnx("filename must end in .yo");
 		return -1;
 	}
 	else {

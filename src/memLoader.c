@@ -169,7 +169,7 @@ validatememfilename(const char *filename)
 
 	p = strrchr(filename, '.');
 	if (p == NULL || strcmp(p, ".mem")) {
-		log_warnx("filename not valid");
+		log_warnx("filename must end in .mem");
 		return -1;
 	}
 	else {
