@@ -74,7 +74,7 @@ load_mem_image(const char *fileName)
 	log_debug("opening file \'%s\'", fileName);
 	fp = fopen(fileName, "r");
 	if (fp == NULL) {
-		log_warn("error opening the file");
+		log_warnx("error opening the file");
 		return FALSE; /* EXIT */
 	}
 
@@ -163,13 +163,13 @@ validatememfilename(const char *filename)
 	size_t len = strnlen(filename, FILENAME_LEN);
 
 	if (len < 4) {
-		log_warn("filename too short");
+		log_warnx("filename too short");
 		return -1;
 	}
 
 	p = strrchr(filename, '.');
 	if (p == NULL || strcmp(p, ".mem")) {
-		log_warn("filename not valid");
+		log_warnx("filename not valid");
 		return -1;
 	}
 	else {
