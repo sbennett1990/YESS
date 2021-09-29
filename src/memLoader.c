@@ -158,24 +158,23 @@ validatememfilename(const char *filename)
 	return 1;
 #endif
 	assert(filename != NULL);
+	char *p;
 
-	int len = (int)strnlen(filename, FILENAME_LEN);
+	size_t len = strnlen(filename, FILENAME_LEN);
 
 	if (len < 4) {
 		log_warn("filename too short");
 		return -1;
 	}
 
-	if (filename[len - 1] == 'm'
-	    && filename[len - 2] == 'e'
-	    && filename[len - 3] == 'm'
-	    && filename[len - 4] == '.') {
-		log_debug("filename valid");
-		return 1;
-	}
-	else {
+	p = strrchr(filename, '.');
+	if (p == NULL || strcmp(p, ".mem")) {
 		log_warn("filename not valid");
 		return -1;
+	}
+	else {
+		log_debug("filename valid");
+		return 1;
 	}
 }
 
