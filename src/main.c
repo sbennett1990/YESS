@@ -142,7 +142,7 @@ main(int argc, char **argv)
 
 	/* load program or memory image into yess memory */
 	if (fflag && !load(sourcefile)) {
-		log_warn("error loading the file");
+		log_warnx("error loading the file");
 		if (sflag) {
 			dumpMemory();
 		}
@@ -156,7 +156,7 @@ main(int argc, char **argv)
 	}
 
 	if (iflag && !load_mem_image(sourcefile)) {
-		log_warn("error loading the file");
+		log_warnx("error loading the file");
 		log_debug("exiting");
 		goto errorOut;
 	}

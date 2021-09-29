@@ -70,7 +70,7 @@ load(const char * fileName)
 	log_debug("opening file \'%s\'", fileName);
 	fp = fopen(fileName, "r");
 	if (fp == NULL) {
-		log_warn("error opening the file");
+		log_warnx("error opening the file");
 		return FALSE; /* EXIT */
 	}
 
