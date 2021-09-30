@@ -29,8 +29,8 @@
 #include "strtonum.h"
 #include "tools.h"
 
-#define LINE_LEN		16
-#define MIN_LINE_LEN		14
+#define LINE_LEN		17
+#define MIN_LINE_LEN		15
 #define MAX_LINE_LEN		32
 
 #ifndef nitems
@@ -53,7 +53,7 @@ struct memory_record {
 static int validatememfilename(const char *filename);
 static int validateline(struct memory_record *);
 static bool hashexdigits(const char *line, ssize_t len, int start, int end);
-static int readaddress(const char *line, int *error);
+static int readaddress(const char *line, ssize_t len, int *error);
 static unsigned int readdata(const char *line, int *error);
 static unsigned int strtouint(const char *nptr, int base, int *error);
 static int putrepeatdata(const struct memory_record * const record);
@@ -198,23 +198,23 @@ validateline(struct memory_record *record)
 		return -1;
 	}
 
-	/* column 3 should have a colon */
-	if (record->line[3] != ':') {
+	/* column 4 should have a colon */
+	if (record->line[4] != ':') {
 		return -1;
 	}
 
-	/* column 4 should have a blank space */
-	if (!isblank(record->line[4])) {
+	/* column 5 should have a blank space */
+	if (!isblank(record->line[5])) {
 		return -1;
 	}
 
-	/* first 3 characters should be an address in hex */
-	if (!hashexdigits(record->line, record->linelen, 0, 2)) {
+	/* first 4 characters should be an address in hex */
+	if (!hashexdigits(record->line, record->linelen, 0, 3)) {
 		return -1;
 	}
 
-	/* characters 5 through 12 are one word of memory */
-	if (!hashexdigits(record->line, record->linelen, 5, 12)) {
+	/* characters 6 through 13 are one word of memory */
+	if (!hashexdigits(record->line, record->linelen, 6, 13)) {
 		return -1;
 	}
 
@@ -222,20 +222,20 @@ validateline(struct memory_record *record)
 	record->starline = 0;
 	if (record->linelen > MIN_LINE_LEN) {
 		/*
-		 * if present, column 14 should have a '*', but a space
+		 * if present, column 15 should have a '*', but a space
 		 * is allowed
 		 */
-		if (record->line[14] != '*' && !isspace(record->line[14])) {
+		if (record->line[15] != '*' && !isspace(record->line[15])) {
 			return -1;
 		}
-		if (record->line[14] == '*') {
+		if (record->line[15] == '*') {
 			record->starline = 1;
 		}
 	}
 
 	/* validate the memory address is correct */
 	int error;
-	record->memaddress = readaddress(record->line, &error);
+	record->memaddress = readaddress(record->line, record->linelen, &error);
 	if (error) {
 		log_info("error reading memory address on line %d",
 		    record->lineno);
@@ -311,17 +311,22 @@ hashexdigits(const char *line, ssize_t len, int start, int end)
  *
  */
 int
-readaddress(const char *line, int *error)
+readaddress(const char *line, ssize_t len, int *error)
 {
 	assert(line != NULL);
+	assert(len > 0 && len < INT_MAX);
 
-	char hexaddr[4] = {
-		line[0],
-		line[1],
-		line[2],
-		'\0'
-	};
+	char hexaddr[5];
 	*error = 0;
+
+	size_t span = strcspn(line, ":");
+	if (span < 1 || span == len - 1 || span > sizeof(hexaddr)) {
+		log_debug("could not find address in line");
+		*error = 1;
+		return -1;
+	}
+
+	snprintf(hexaddr, span + 1, "%s", line);
 
 	int memaddr = strtoint(hexaddr, 16);
 	if (memaddr == -1) {
@@ -348,7 +353,6 @@ readdata(const char *line, int *error)
 	assert(line != NULL);
 
 	char datastr[9] = {
-		line[5],
 		line[6],
 		line[7],
 		line[8],
@@ -356,6 +360,7 @@ readdata(const char *line, int *error)
 		line[10],
 		line[11],
 		line[12],
+		line[13],
 		'\0'
 	};
 	*error = 0;
